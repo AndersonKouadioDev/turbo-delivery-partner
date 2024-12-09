@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Si l'utilisateur n'est pas authentifié
-    if (!session) {
+    if (!session?.user) {
         // Redirige toutes les pages non authentifiées vers la page de connexion sauf la page d'accueil
         if (!pathname.startsWith('/auth')) {
             return NextResponse.redirect(new URL('/auth', request.url));
@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
 
         //   S'il n'a pas de restaurant
         if (!restaurant && !pathname.startsWith('/create-restaurant')) {
-            return NextResponse.redirect(new URL('/create-restaurant', request.url));
+            return NextResponse.redirect(new URL(`/create-restaurant`, request.url));
         }
         //   S'il a un restaurant mais le restaurant n'a pas d'horaire
         if (restaurant && restaurant.openingHours.length < 1 && !pathname.startsWith('/horaires')) {
