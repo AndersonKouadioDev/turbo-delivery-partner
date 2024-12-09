@@ -37,5 +37,5 @@ export async function middleware(request: NextRequest) {
 
 // Configuration des chemins à surveiller
 export const config = {
-    matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|auth|api/auth|auth/signout).*)', '/'],
+    matcher: ['/', '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|auth|api/auth|auth/signout).*)'],
 };
