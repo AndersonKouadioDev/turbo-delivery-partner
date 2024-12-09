@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
     // Si l'utilisateur n'est pas authentifié
     if (!session) {
         // Redirige toutes les pages non authentifiées vers la page de connexion sauf la page d'accueil
-        if (!pathname.startsWith('/auth') && pathname !== '/') {
+        if (!pathname.startsWith('/auth')) {
             return NextResponse.redirect(new URL('/auth', request.url));
         }
     } else {
