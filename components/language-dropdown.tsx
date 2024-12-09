@@ -5,7 +5,7 @@ import { getTranslation } from '@/i18n';
 import { IRootState } from '@/store';
 import { toggleRTL } from '@/store/themeConfigSlice';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface LanguageDropdownProps {
@@ -48,7 +48,7 @@ const LanguageDropdown = ({ className = '' }: LanguageDropdownProps) => {
                         </>
                     }
                 >
-                    <ul className="grid w-[280px] grid-cols-2 gap-2 !px-2 font-semibold text-dark dark:text-white-dark dark:text-white-light/90">
+                    <ul className="grid w-[280px] grid-cols-2 gap-2 !px-2 font-semibold text-dark dark:text-white-dark">
                         {themeConfig.languageList.map((item: any) => {
                             return (
                                 <li key={item.code}>
