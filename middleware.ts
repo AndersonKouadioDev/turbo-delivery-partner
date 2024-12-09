@@ -18,16 +18,23 @@ export async function middleware(request: NextRequest) {
         const restaurant = data?.restaurant;
 
         //   S'il n'a pas de restaurant
-        if (!restaurant && !pathname.startsWith('/create-restaurant')) {
-            return NextResponse.redirect(new URL(`/create-restaurant`, request.url));
-        }
-        //   S'il a un restaurant mais le restaurant n'a pas d'horaire
-        if (restaurant && restaurant.openingHours.length < 1 && !pathname.startsWith('/horaires')) {
-            return NextResponse.redirect(new URL('/horaires', request.url));
-        }
-        //   S'il a un restaurant mais le restaurant n'a pas d'horaire
-        if (restaurant && restaurant.status < 2 && !pathname.startsWith('/activation-pending')) {
-            return NextResponse.redirect(new URL('/activation-pending', request.url));
+        if (!restaurant) {
+            if (!pathname.startsWith('/create-restaurant')) {
+                return NextResponse.redirect(new URL(`/create-restaurant`, request.url));
+            }
+        } else {
+            //   S'il a un restaurant mais le restaurant n'a pas d'horaire
+            if (restaurant.openingHours.length == 0) {
+                if (!pathname.startsWith('/horaires')) {
+                    return NextResponse.redirect(new URL('/horaires', request.url));
+                }
+            } else {
+                if (restaurant.status < 2) {
+                    if (!pathname.startsWith('/activation-pending')) {
+                        return NextResponse.redirect(new URL('/activation-pending', request.url));
+                    }
+                }
+            }
         }
     }
 
