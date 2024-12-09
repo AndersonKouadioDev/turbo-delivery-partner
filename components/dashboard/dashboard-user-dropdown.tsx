@@ -9,6 +9,7 @@ import { Avatar } from '@nextui-org/react';
 import createUrlFile from '@/utils/createUrlFile';
 
 export const DashboardUserDropdown = ({ restaurant }: { restaurant: Restaurant | null }) => {
+    console.log(restaurant)
     return (
         <div className="flex items-center gap-2">
             <span className={title({ size: 'h4', class: 'uppercase' })}>{restaurant?.nomEtablissement ?? ''}</span>
