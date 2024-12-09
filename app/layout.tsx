@@ -4,7 +4,7 @@ import '../styles/tailwind.css';
 import { Metadata, Viewport } from 'next';
 import { Lato } from 'next/font/google';
 import { SessionProvider } from 'next-auth/react';
-import NextAuthSessionProvider from "@/providers/next-auth-session.provider";
+import NextAuthSessionProvider from '@/providers/next-auth-session.provider';
 
 export const metadata: Metadata = {
     title: {
@@ -103,6 +103,7 @@ export const metadata: Metadata = {
     },
 };
 
+
 export const viewport: Viewport = {
     width: 'device-width',
     initialScale: 1,
@@ -113,6 +114,7 @@ export const viewport: Viewport = {
         { media: '(prefers-color-scheme: dark)', color: 'black' },
     ],
 };
+
 
 const nunito = Lato({
     weight: ['100', '300', '400', '700', '900'],
