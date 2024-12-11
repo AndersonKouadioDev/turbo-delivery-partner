@@ -51,10 +51,18 @@ export interface Restaurant {
     dateService: string;
     documentUrl: string;
     cni: string;
-    pictures: string[];
+    pictures: Picture[];
     openingHours: Horaire[];
 }
-
+export interface Picture {
+    id: string;
+    status: number;
+    deleted: boolean;
+    dateCreation: string;
+    dateEdition: string;
+    pictureUrl: string;
+  }
+  
 export interface Horaire {
     id: string;
     status: number;

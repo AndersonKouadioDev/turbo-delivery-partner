@@ -6,10 +6,9 @@ import { apiClient } from '@/lib/api-client';
 import { ActionResult } from '@/types/index.d';
 import restaurantEndpoints from '@/src/endpoints/restaurants.endpoint';
 
-import { createRestaurantSchema } from '../schemas/restaurants.schema';
+import { addPictureSchema, createRestaurantSchema } from '../schemas/restaurants.schema';
 import { FindOneRestaurant, Horaire, Restaurant, User } from '@/types/models';
 import { unstable_update } from '@/auth';
-import { FcBullish } from 'react-icons/fc';
 
 export async function createRestaurant(prevState: any, formData: FormData): Promise<ActionResult<{ restaurant: Restaurant; createdBy: User }>> {
     const { success, data: formdata } = processFormData(
@@ -106,4 +105,38 @@ export async function getHoraires(): Promise<Horaire[] | null> {
     const result = await response.json();
 
     return result;
+}
+
+export async function addPicture(prevState: any, formData: FormData): Promise<ActionResult<any>> {
+    const { success, data: formdata } = processFormData(addPictureSchema, formData, {
+        useDynamicValidation: true,
+    });
+
+    if (!success) {
+        prevState.status = 'error';
+        prevState.message = 'Données manquantes ou mal formatées';
+        return prevState;
+    }
+
+    // Create a new FormData object to ensure we're sending multipart/form-data
+
+    const sendFormData = createFormData(formdata);
+
+    const response = await apiClient.post(restaurantEndpoints.uploadPicture, sendFormData, {
+        type: 'formData',
+    });
+
+    if (!response.ok) {
+        prevState.status = 'error';
+        prevState.message = "Erreur lors de l'ajout des images";
+        return prevState;
+    }
+
+    const result = await response.json();
+
+    prevState.status = 'success';
+    prevState.message = 'Images ajoutées avec succès';
+    prevState.data = result;
+
+    return prevState;
 }

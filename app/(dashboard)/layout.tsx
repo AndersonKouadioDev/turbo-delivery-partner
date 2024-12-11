@@ -21,7 +21,8 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
 
     const data = await findOneRestaurant();
     const restaurant = data?.restaurant;
-
+    console.log(restaurant);
+    
     const navItems = [
         {
             href: '/',

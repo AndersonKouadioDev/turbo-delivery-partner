@@ -43,7 +43,7 @@ export default function RestaurantDetail({ restaurant }: { restaurant: Restauran
                 <span className="font-semibold">Description:</span> {restaurant.description}
             </p>
 
-            <div className="flex justify-center mt-10">{restaurant.pictures.length > 0 && <RestaurantImages images={restaurant.pictures} />}</div>
+            {/* <div className="flex justify-center mt-10">{restaurant.pictures.length > 0 && <RestaurantImages images={restaurant.pictures} />}</div> */}
         </div>
     );
 }

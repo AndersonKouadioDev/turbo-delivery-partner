@@ -243,10 +243,15 @@ export function handleError(error: any, prevState: any, defaultMessage: string):
 
     return prevState;
 }
+
 export function createFormData(formData: Record<string, unknown>): FormData {
     const sendFormData = new FormData();
     for (const [key, value] of Object.entries(formData)) {
-        if (value instanceof File) {
+        if (Array.isArray(value)) {
+            value.forEach((file: File) => {
+                sendFormData.append(key, file);
+            });
+        } else if (value instanceof File) {
             sendFormData.append(key, value, value.name);
         } else {
             sendFormData.append(key, value as string);

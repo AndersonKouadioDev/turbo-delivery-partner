@@ -3,13 +3,17 @@ import { title } from '@/components/primitives';
 import { categories } from '@/data';
 
 import { Button, Card, CardBody, CardFooter, CardHeader, Image } from '@nextui-org/react';
+import { IconPlus } from '@tabler/icons-react';
 import { ChevronRight, HandPlatter } from 'lucide-react';
 
 export default function Content() {
     return (
         <div className="w-full h-full pb-10 flex flex-1 flex-col gap-4 lg:gap-6">
-            <div className="flex items-center">
+            <div className="flex items-center justify-between">
                 <h1 className={title({ size: 'h3', class: 'text-primary' })}>Collections</h1>
+                <Button color="primary" size="sm" startContent={<IconPlus className="h-5 w-5 text-white" />}>
+                    Ajouter une collection
+                </Button>
             </div>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {categories.slice(1).map((collection) => (

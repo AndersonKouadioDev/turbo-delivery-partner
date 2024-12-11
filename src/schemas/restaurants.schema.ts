@@ -123,3 +123,18 @@ export const createHoraireSchema = z.object({
     closingTime: z.string(),
 });
 export type _createHoraireSchema = z.infer<typeof createHoraireSchema>;
+
+// Create Restaurant
+export const addPictureSchema = z.object({
+    pictures: z
+        .array(
+            z
+                .instanceof(File)
+                .refine((file) => file.size > 0, 'Le logo est requis')
+                .refine((file) => file.size <= 2 * 1024 * 1024, 'La taille du logo ne doit pas dépasser 2 Mo')
+                .refine((file) => ['image/jpeg', 'image/png'].includes(file.type), 'Format de logo non supporté (JPEG, PNG, GIF uniquement)'),
+        )
+        .nonempty(),
+});
+
+export type _addPictureSchema = z.infer<typeof addPictureSchema>;

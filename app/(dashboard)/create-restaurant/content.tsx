@@ -103,16 +103,6 @@ export default function CreateRestaurantContent() {
                     <StepIndicator currentStep={currentStep + 1} steps={steps} />
                     <div className="flex items-center justify-center py-12">
                         <div className="mx-auto grid w-full max-w-screen-xl gap-6">
-                            {/* <AnimatedWrapper animation="fadeIn" className={state.message ? 'block' : 'hidden'} whileInView={state.message ? 'visible' : 'hidden'}>
-                                <Alert variant={state.status === 'error' ? 'destructive' : 'default'}>
-                                    {state.status === 'error' ? <IconAlertTriangle className="h-4 w-4" /> : <IconCheck className="h-4 w-4" />}
-                                    <AlertTitle>{state.status === 'error' ? 'Erreur' : 'Succès'}</AlertTitle>
-                                    <AlertDescription>
-                                        <p>{state.message}</p>
-                                        <p>{state?.code == ErrorDefaultCode.exception && 'Pensez à passer mettre à niveau votre plan'}</p>
-                                    </AlertDescription>
-                                </Alert>
-                            </AnimatedWrapper> */}
                             <div className="relative grid gap-2">
                                 <motion.h1 animate={{ opacity: 1, x: 0 }} className={cn(title({ size: 'h4' }), 'text-center')} initial={{ opacity: 0, x: -50 }} transition={{ duration: 0.3 }}>
                                     Nouvel Etablissement

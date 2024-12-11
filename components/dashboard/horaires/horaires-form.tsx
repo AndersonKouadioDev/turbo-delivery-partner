@@ -4,13 +4,11 @@ import { useState } from 'react';
 import { Switch, Button } from '@nextui-org/react';
 import { DayOfWeek, WeekSchedule } from '@/types';
 import { useFormStatus } from 'react-dom';
-import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { addHoraire } from '@/src/actions/restaurant.actions';
 
 export default function HorairesForm() {
     const { pending } = useFormStatus();
-    const router = useRouter();
 
     const [schedule, setSchedule] = useState<WeekSchedule>({
         LUNDI: { enabled: true, openingTime: '05:00', closingTime: '01:00' },
@@ -63,15 +61,6 @@ export default function HorairesForm() {
         try {
             await Promise.all(
                 enabledDays.map(async ([day, times]) => {
-                    // Validate opening and closing times
-                    // const openingTime = new Date(`1970-01-01T${times.openingTime}`);
-                    // const closingTime = new Date(`1970-01-01T${times.closingTime}`);
-
-                    // if (closingTime <= openingTime) {
-                    //     toast.error(`Les horaires pour ${dayNames[day as DayOfWeek]} sont invalides.`);
-                    //     return;
-                    // }
-
                     const formData = new FormData();
                     formData.append('dayOfWeek', day);
                     formData.append('openingTime', times.openingTime);
@@ -82,7 +71,7 @@ export default function HorairesForm() {
             );
 
             toast.success('Horaires enregistrés avec succès.');
-            router.push('/');
+            window.location.href = '/';
         } catch (error) {
             console.error('Erreur lors de l’enregistrement des horaires :', error);
             toast.error('Une erreur est survenue. Veuillez réessayer.');

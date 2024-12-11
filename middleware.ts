@@ -29,9 +29,21 @@ export async function middleware(request: NextRequest) {
                     return NextResponse.redirect(new URL('/horaires', request.url));
                 }
             } else {
-                if (restaurant.status < 2) {
+                if (restaurant.status < 2 || restaurant.status == 2) {
                     if (!pathname.startsWith('/activation-pending')) {
                         return NextResponse.redirect(new URL('/activation-pending', request.url));
+                    }
+                }
+
+                if (restaurant?.pictures && restaurant?.pictures.length < 5) {
+                    if (!pathname.startsWith('/add-pictures')) {
+                        return NextResponse.redirect(new URL(`/add-pictures`, request.url));
+                    }
+                } else {
+                    if (restaurant.status < 2) {
+                        if (!pathname.startsWith('/activation-pending')) {
+                            return NextResponse.redirect(new URL('/activation-pending', request.url));
+                        }
                     }
                 }
             }
