@@ -1,88 +1,208 @@
 'use client';
 
+import { useState, useCallback } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFormState } from 'react-dom';
-
-import { title } from '@/components/primitives';
+import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { title } from '@/components/primitives';
 import { _addPictureSchema, addPictureSchema } from '@/src/schemas/restaurants.schema';
 import { addPicture } from '@/src/actions/restaurant.actions';
 import { toast } from 'react-toastify';
 import { SubmitButton } from '@/components/ui/form-ui/submit-button';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 
-export default function CreateRestaurantContent() {
-    const [state, formAction] = useFormState(
-        async (prevState: any, formData: FormData) => {
-            const result = await addPicture(prevState, formData);
+export default function FileUploadForm() {
+  const [previews, setPreviews] = useState<string[]>([]);
+  const [dragActive, setDragActive] = useState(false);
 
-            if (result.status === 'success') {
-                toast.success(result.message);
+  const [state, formAction] = useFormState(
+    async (prevState: any, formData: FormData) => {
+      const result = await addPicture(prevState, formData);
+      if (result.status === 'success') {
+        toast.success(result.message);
+        window.location.href = '/';
+      } else {
+        toast.error(result.message);
+      }
+      return result;
+    },
+    {
+      data: null,
+      message: '',
+      errors: {},
+      status: 'idle',
+      code: undefined,
+    }
+  );
 
-                window.location.href = '/';
-            } else {
-                toast.error(result.message);
-            }
+  const {
+    formState: { errors },
+    control,
+  } = useForm<_addPictureSchema>({
+    resolver: zodResolver(addPictureSchema),
+    defaultValues: {
+      pictures: undefined,
+    },
+  });
 
-            return result;
-        },
-        {
-            data: null,
-            message: '',
-            errors: {},
-            status: 'idle',
-            code: undefined,
-        },
-    );
+  const handleDrag = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  }, []);
 
-    const {
-        formState: { errors },
-        control,
-    } = useForm<_addPictureSchema>({
-        resolver: zodResolver(addPictureSchema),
-        defaultValues: {
-            pictures: undefined,
-        },
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    const files = Array.from(e.dataTransfer.files);
+    if (files && files.length > 0) {
+      handleFiles(files);
+    }
+  }, []);
+
+  const handleFiles = (files: File[]) => {
+    const validFiles = files.filter(file => 
+      file.type.startsWith('image/') && file.size <= 5 * 1024 * 1024
+    ).slice(0, 5);
+
+    validFiles.forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviews(prev => [...prev, reader.result as string]);
+      };
+      reader.readAsDataURL(file);
     });
+  };
 
-    return (
-        <div className="p-4 lg:p-10 min-h-screen">
-            <div className="w-full relative flex justify-center">
-                <div>
-                    <div className="flex items-center justify-center py-12">
-                        <div className="mx-auto grid w-full max-w-screen-xl gap-6">
-                            <div className="relative grid gap-2">
-                                <motion.h1 animate={{ opacity: 1, x: 0 }} className={cn(title({ size: 'h4' }), 'text-center')} initial={{ opacity: 0, x: -50 }} transition={{ duration: 0.3 }}>
-                                    Ajout d&apos;images
-                                </motion.h1>
-                                <form action={formAction} encType="multipart/form-data" className={cn('mt-8')}>
-                                    <AnimatePresence mode="popLayout">
-                                        <motion.div animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 50 }} initial={{ opacity: 0, x: -50 }} transition={{ duration: 0.3 }}>
-                                            <Controller
-                                                name="pictures"
-                                                control={control}
-                                                render={({ field: { onChange, value, ...field } }) => (
-                                                    <div className="grid w-full max-w-sm items-center gap-1.5">
-                                                        <Label htmlFor="pictures">Quelques images de l&apos;établissement</Label>
-                                                        <Input {...field} type="file" accept=".jpg,.png" onChange={(e) => onChange(e.target.files?.[0])} required multiple max={5} />
-                                                    </div>
-                                                )}
-                                            />
-                                        </motion.div>
+  const removePreview = (index: number) => {
+    setPreviews(prev => prev.filter((_, i) => i !== index));
+  };
 
-                                        <motion.div animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 50 }} initial={{ opacity: 0, x: -50 }} transition={{ duration: 0.3 }}>
-                                            <SubmitButton>Soumettre</SubmitButton>
-                                        </motion.div>
-                                    </AnimatePresence>
-                                </form>
-                            </div>
+  return (
+    <div className="p-4 lg:p-10 min-h-screen">
+      <div className="w-full relative flex justify-center">
+        <div className="mx-auto w-full max-w-screen-xl">
+          <motion.h1 
+            animate={{ opacity: 1, x: 0 }} 
+            className={cn(title({ size: 'h4' }), 'text-center')} 
+            initial={{ opacity: 0, x: -50 }} 
+            transition={{ duration: 0.3 }}
+          >
+            Ajout d&apos;images
+          </motion.h1>
+          
+          <form 
+            action={formAction} 
+            encType="multipart/form-data" 
+            className="mt-8"
+            onDragEnter={handleDrag}
+          >
+            <AnimatePresence mode="popLayout">
+              <motion.div
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Controller
+                  name="pictures"
+                  control={control}
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <div className="grid gap-4">
+                      <Label htmlFor="pictures">Images de l&apos;établissement</Label>
+                      
+                      <div 
+                        className={cn(
+                          "border-2 border-dashed rounded-lg p-8 text-center",
+                          dragActive ? "border-primary" : "border-gray-300",
+                          "transition-colors duration-200"
+                        )}
+                        onDragEnter={handleDrag}
+                        onDragLeave={handleDrag}
+                        onDragOver={handleDrag}
+                        onDrop={handleDrop}
+                      >
+                        <input
+                          {...field}
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          max={5}
+                          className="hidden"
+                          id="file-upload"
+                          onChange={(e) => {
+                            const files = Array.from(e.target.files || []);
+                            handleFiles(files);
+                            onChange(e.target.files);
+                          }}
+                        />
+                        <label 
+                          htmlFor="file-upload"
+                          className="cursor-pointer text-primary hover:text-primary/80"
+                        >
+                          Cliquez pour sélectionner
+                        </label>
+                        <span className="text-muted-foreground"> ou glissez vos images ici</span>
+                        <p className="text-sm text-muted-foreground mt-2">
+                          PNG, JPG jusqu&apos;à 5MB (max 5 fichiers)
+                        </p>
+                      </div>
+
+                      {previews.length > 0 && (
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
+                          {previews.map((preview, index) => (
+                            <motion.div
+                              key={index}
+                              className="relative aspect-square rounded-lg overflow-hidden group"
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.8 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <img
+                                src={preview}
+                                alt={`Preview ${index + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removePreview(index)}
+                                className="absolute top-2 right-2 p-1 rounded-full bg-background/80 text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </motion.div>
+                          ))}
                         </div>
+                      )}
                     </div>
-                </div>
-            </div>
+                  )}
+                />
+              </motion.div>
+
+              <motion.div 
+                animate={{ opacity: 1, y: 0 }} 
+                className="mt-6"
+                exit={{ opacity: 0, y: 20 }} 
+                initial={{ opacity: 0, y: -20 }} 
+                transition={{ duration: 0.3 }}
+              >
+                <SubmitButton>Soumettre</SubmitButton>
+              </motion.div>
+            </AnimatePresence>
+          </form>
         </div>
-    );
+      </div>
+    </div>
+  );
 }
+

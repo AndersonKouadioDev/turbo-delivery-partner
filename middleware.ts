@@ -28,7 +28,9 @@ export async function middleware(request: NextRequest) {
                 if (!pathname.startsWith('/horaires')) {
                     return NextResponse.redirect(new URL('/horaires', request.url));
                 }
-            } else {
+            }
+            
+            else {
                 if (restaurant.status < 2 || restaurant.status == 2) {
                     if (!pathname.startsWith('/activation-pending')) {
                         return NextResponse.redirect(new URL('/activation-pending', request.url));
