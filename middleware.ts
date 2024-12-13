@@ -18,37 +18,19 @@ export async function middleware(request: NextRequest) {
         const restaurant = data?.restaurant;
 
         //   S'il n'a pas de restaurant
-        if (!restaurant) {
-            if (!pathname.startsWith('/create-restaurant')) {
-                return NextResponse.redirect(new URL(`/create-restaurant`, request.url));
-            }
-        } else {
-            //   S'il a un restaurant mais le restaurant n'a pas d'horaire
-            if (restaurant.openingHours.length == 0) {
-                if (!pathname.startsWith('/horaires')) {
-                    return NextResponse.redirect(new URL('/horaires', request.url));
-                }
-            }
-            
-            else {
-                if (restaurant.status < 2 || restaurant.status == 2) {
-                    if (!pathname.startsWith('/activation-pending')) {
-                        return NextResponse.redirect(new URL('/activation-pending', request.url));
-                    }
-                }
+        if (!restaurant && !pathname.startsWith('/create-restaurant')) {
+            return NextResponse.redirect(new URL(`/create-restaurant`, request.url));
+        }
+        if (restaurant && restaurant.openingHours.length == 0 && !pathname.startsWith('/horaires')) {
+            return NextResponse.redirect(new URL('/horaires', request.url));
+        }
 
-                if (restaurant?.pictures && restaurant?.pictures.length < 5) {
-                    if (!pathname.startsWith('/add-pictures')) {
-                        return NextResponse.redirect(new URL(`/add-pictures`, request.url));
-                    }
-                } else {
-                    if (restaurant.status < 2) {
-                        if (!pathname.startsWith('/activation-pending')) {
-                            return NextResponse.redirect(new URL('/activation-pending', request.url));
-                        }
-                    }
-                }
-            }
+        if (restaurant && restaurant.openingHours.length > 0 && restaurant?.pictures.length == 0 && !pathname.startsWith('/add-pictures')) {
+            return NextResponse.redirect(new URL('/add-pictures', request.url));
+        }
+
+        if (restaurant && restaurant.openingHours.length > 0 && restaurant?.pictures.length > 0 && (restaurant.status < 2 || restaurant.status == 2) && !pathname.startsWith('/activation-pending')) {
+            return NextResponse.redirect(new URL('/activation-pending', request.url));
         }
     }
 

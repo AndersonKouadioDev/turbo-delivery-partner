@@ -60,10 +60,9 @@ export async function registerStepFirst(prevState: any, formData: FormData): Pro
     }
 
     const response = await apiClient.post(usersEndpoints.register1, formdata);
-    const result = await response.json();
 
-    if (!response.ok) {
-        prevState.message = result.message || "Erreur lors de l'inscription étape 1";
+    if (response.status !== 200) {
+        prevState.message = response.data.message || "Erreur lors de l'inscription étape 1";
         return prevState;
     }
     cookies().set('email_otp', formdata.email);
@@ -78,7 +77,7 @@ export async function resendEmail(): Promise<void> {
 
         const response = await apiClient.post(usersEndpoints.register1, { email });
 
-        if (!response.ok) {
+        if (response.status !== 200) {
             throw new Error(response.statusText);
         }
     }
@@ -101,10 +100,9 @@ export async function registerStepSecond(prevState: any, formData: FormData): Pr
 
     const response = await apiClient.post(usersEndpoints.register2, formdata);
 
-    if (!response.ok) {
-        const result = await response.json();
+    if (response.status !== 200) {
         prevState.status = 'error';
-        prevState.message = result.message || "Erreur lors de l'envoi du code de validation";
+        prevState.message = response.data.message || "Erreur lors de l'envoi du code de validation";
         return prevState;
     }
 
@@ -135,17 +133,16 @@ export async function registerFinalStep(prevState: any, formData: FormData): Pro
     const email = cookies().get('email_otp')?.value;
 
     const response = await apiClient.post(usersEndpoints.register3, { ...formdata, email });
-    const result = await response.json();
-    if (!response.ok) {
+    if (response.status !== 200) {
         prevState.status = 'error';
-        prevState.message = result.message || 'Erreur lors de la création du compte';
+        prevState.message = response.data.message || 'Erreur lors de la création du compte';
         return prevState;
     }
 
     prevState.data = {
-        username: result.user.username,
-        oldPassword: result.password,
-        changePassword: result.user.changePassword,
+        username: response.data.user.username,
+        oldPassword: response.data.password,
+        changePassword: response.data.user.changePassword,
     };
     prevState.status = 'success';
     prevState.message = 'Création du compte réussi';
@@ -181,14 +178,13 @@ export async function changePassword(prevState: any, formData: FormData): Promis
         oldPassword: formdata.oldPassword,
         username: formdata.username,
     });
-    const result = await response.json();
-    if (!response.ok) {
+    if (response.status !== 200) {
         prevState.status = 'error';
-        prevState.message = result.message || 'Erreur lors du changement de mot de passe';
+        prevState.message = response.data.message || 'Erreur lors du changement de mot de passe';
         return prevState;
     }
 
-    prevState.data = result;
+    prevState.data = response.data;
     prevState.status = 'success';
     prevState.message = 'Changement de mot de passe réussi';
 
@@ -211,13 +207,12 @@ export async function forgetPassword(prevState: any, formData: FormData): Promis
     }
 
     const response = await apiClient.post(usersEndpoints.forgetPassword, formdata);
-    const result = await response.json();
-    if (!response.ok) {
-        prevState.message = result.message || 'Erreur lors du changement de mot de passe';
+    if (response.status !== 200) {
+        prevState.message = response.data.message || 'Erreur lors du changement de mot de passe';
         return prevState;
     }
     // Récupérer le token à partir de l'URL dans le champ "link"
-    const link = result.link; // Récupérer l'URL
+    const link = response.data.link; // Récupérer l'URL
     const urlParams = new URL(link); // Créer un objet URL
     const token = urlParams.searchParams.get('token'); // Extraire le token
 
@@ -249,23 +244,25 @@ export async function newPassword(prevState: any, formData: FormData): Promise<A
         prevState.message = 'Mot de passe et la confirmation ne sont pas identique';
         return prevState;
     }
-
-    const response = await apiClient.post(usersEndpoints.newPassword, {
-        token: formdata.token,
-        newPassword: formdata.newPassword,
-    });
-    const result = await response.json();
-    if (!response.ok) {
+    try {
+        const response = await apiClient.post(usersEndpoints.newPassword, {
+            token: formdata.token,
+            newPassword: formdata.newPassword,
+        });
+        if (response.status !== 200) {
+            prevState.status = 'error';
+            prevState.message = response.data.message || 'Erreur lors du changement de mot de passe';
+            return prevState;
+        }
+    } catch (error) {
         prevState.status = 'error';
-        prevState.message = result.message || 'Erreur lors du changement de mot de passe';
+        prevState.message = 'Utilisz un autre mot de passe';
         return prevState;
     }
-
     redirect('/auth');
 }
 
 export async function signOut(): Promise<void> {
-    await signOutAuth();
+    await signOutAuth({ redirectTo: '/auth' });
     revalidatePath('/', 'layout');
-    redirect('/auth');
 }

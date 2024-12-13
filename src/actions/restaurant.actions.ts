@@ -33,37 +33,43 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
     // Create a new FormData object to ensure we're sending multipart/form-data
     const sendFormData = createFormData(formdata);
 
-    const response = await apiClient.post(restaurantEndpoints.create, sendFormData, {
-        type: 'formData',
-    });
+    try {
+        const response = await apiClient.post(restaurantEndpoints.create, sendFormData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
 
-    const result = await response.json();
-    if (!response.ok) {
+        if (response.status !== 200) {
+            prevState.status = 'error';
+            prevState.message = response?.data?.message ?? 'Erreur lors de la création du restaurant';
+            return prevState;
+        }
+        prevState.status = 'success';
+        prevState.message = 'Restaurant créé avec succès';
+        prevState.data = response.data;
+
+        await unstable_update({
+            user: {
+                restaurant: response?.data?.restaurant?.nomEtablissement!,
+            },
+        });
+    } catch (error) {
         prevState.status = 'error';
-        prevState.message = result.message ?? 'Erreur lors de la création du restaurant';
+        prevState.message = 'Erreur lors de la création du restaurant';
         return prevState;
     }
-    prevState.status = 'success';
-    prevState.message = 'Restaurant créé avec succès';
-    prevState.data = result;
-
-    await unstable_update({
-        user: {
-            restaurant: result.restaurant?.nomEtablissement!,
-        },
-    });
     return prevState;
 }
 
 export async function findOneRestaurant(): Promise<FindOneRestaurant | null> {
     // Processing
-    const response = await apiClient.get(restaurantEndpoints.info);
-
-    if (!response.ok) {
+    try {
+        const response = await apiClient.get(restaurantEndpoints.info);
+        return response.data;
+    } catch (error) {
         return null;
     }
-    const data = await response.json();
-    return data;
 }
 
 export async function addHoraire(formData: FormData): Promise<ActionResult<Horaire[]>> {
@@ -78,33 +84,39 @@ export async function addHoraire(formData: FormData): Promise<ActionResult<Horai
         };
     }
 
-    const response = await apiClient.post(restaurantEndpoints.addHoraire, formdata);
+    try {
+        const response = await apiClient.post(restaurantEndpoints.addHoraire, formdata);
 
-    if (!response.ok) {
+        if (response.status !== 200) {
+            return {
+                status: 'error',
+                message: "Erreur lors de l'ajout de l'horaire",
+            };
+        }
+        return {
+            status: 'success',
+            message: 'Horaire ajouté avec succès',
+            data: response.data,
+        };
+    } catch (error) {
         return {
             status: 'error',
             message: "Erreur lors de l'ajout de l'horaire",
         };
     }
-
-    const result = await response.json();
-
-    return {
-        status: 'success',
-        message: 'Horaire ajouté avec succès',
-        data: result,
-    };
 }
 
 export async function getHoraires(): Promise<Horaire[] | null> {
-    const response = await apiClient.get(restaurantEndpoints.getHoraires);
+    try {
+        const response = await apiClient.get(restaurantEndpoints.getHoraires);
 
-    if (!response.ok) {
+        if (response.status !== 200) {
+            return null;
+        }
+        return response.data;
+    } catch (error) {
         return null;
     }
-    const result = await response.json();
-
-    return result;
 }
 
 export async function addPicture(prevState: any, formData: FormData): Promise<ActionResult<any>> {
@@ -122,21 +134,25 @@ export async function addPicture(prevState: any, formData: FormData): Promise<Ac
 
     const sendFormData = createFormData(formdata);
 
-    const response = await apiClient.post(restaurantEndpoints.uploadPicture, sendFormData, {
-        type: 'formData',
-    });
+    try {
+        const response = await apiClient.post(restaurantEndpoints.uploadPicture, sendFormData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
 
-    if (!response.ok) {
+        if (response.status !== 200) {
+            throw new Error("Erreur lors de l'ajout des images");
+        }
+
+        prevState.status = 'success';
+        prevState.message = 'Images ajoutées avec succès';
+        prevState.data = response.data;
+
+        return prevState;
+    } catch (error) {
         prevState.status = 'error';
         prevState.message = "Erreur lors de l'ajout des images";
         return prevState;
     }
-
-    const result = await response.json();
-
-    prevState.status = 'success';
-    prevState.message = 'Images ajoutées avec succès';
-    prevState.data = result;
-
-    return prevState;
 }

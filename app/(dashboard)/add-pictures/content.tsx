@@ -13,6 +13,7 @@ import { addPicture } from '@/src/actions/restaurant.actions';
 import { toast } from 'react-toastify';
 import { SubmitButton } from '@/components/ui/form-ui/submit-button';
 import { Label } from '@/components/ui/label';
+import Image from 'next/image';
 
 export default function FileUploadForm() {
   const [previews, setPreviews] = useState<string[]>([]);
@@ -168,9 +169,10 @@ export default function FileUploadForm() {
                               exit={{ opacity: 0, scale: 0.8 }}
                               transition={{ duration: 0.2 }}
                             >
-                              <img
+                              <Image
                                 src={preview}
                                 alt={`Preview ${index + 1}`}
+                                fill
                                 className="w-full h-full object-cover"
                               />
                               <button

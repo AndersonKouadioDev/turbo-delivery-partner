@@ -37,6 +37,11 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
             },
         }),
     ],
+    session: {
+        strategy: 'jwt',
+        maxAge: 60 * 60, // 1 heure (en secondes)
+        // updateAge: 30 * 60, // Mise à jour de la session toutes les 30 minutes
+    },
     callbacks: {
         async signIn({ user, account }) {
             if (account?.provider === 'credentials-user') {
