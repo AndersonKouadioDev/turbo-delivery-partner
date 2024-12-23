@@ -4,18 +4,25 @@ import { Separator } from "@/components/ui/separator";
 import { Trash2, Plus } from 'lucide-react';
 import { ConfirmationModal } from "@/components/ui/confirmation-modal";
 import { Button } from '@nextui-org/react';
+import { useRouter } from 'next/navigation';
+import { addBoisson, updateBoisson } from '@/src/actions/restaurant.actions';
+import { toast } from 'react-toastify';
+import { DishComplet } from '@/types/models';
 interface Drink {
+  id: string;
   label: string;
   price: number;
   volume: string;
 }
 
 interface DrinksSectionProps {
+  dish: DishComplet;
   drinks: Drink[];
   onUpdate: (drinks: Drink[]) => void;
 }
 
-export function DrinksSection({ drinks, onUpdate }: DrinksSectionProps) {
+export function DrinksSection({ dish, drinks, onUpdate }: DrinksSectionProps) {
+  const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [editedDrinks, setEditedDrinks] = useState(drinks);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
@@ -25,11 +32,11 @@ export function DrinksSection({ drinks, onUpdate }: DrinksSectionProps) {
       i === index ? { ...drink, [field]: field === 'price' ? parseFloat(value) : value } : drink
     );
     setEditedDrinks(updated);
-  };
+    };
 
-  const handleAdd = () => {
-    setEditedDrinks([...editedDrinks, { label: '', price: 0, volume: '' }]);
-  };
+    const handleAdd = () => {
+        setEditedDrinks([...editedDrinks, { id: '', label: '', price: 0, volume: '' }]);
+    };
 
   const handleDelete = (index: number) => {
     setDeleteIndex(index);
@@ -43,10 +50,70 @@ export function DrinksSection({ drinks, onUpdate }: DrinksSectionProps) {
     }
   };
 
-  const handleSave = () => {
-    onUpdate(editedDrinks);
-    setIsEditing(false);
-  };
+
+
+  const handleSave = async () => {
+    try {
+        // Identifier les nouveaux accompagnements
+        const newDrinks = editedDrinks.slice(drinks.length);
+
+        // Identifier les accompagnements modifiés
+        const modifiedDrinks = drinks
+            .map((original, index) => {
+                const edited = editedDrinks[index];
+                if (!edited) return null;
+
+                const hasChanged = original.label !== edited.label || original.price !== edited.price || original.volume !== edited.volume;
+
+                return hasChanged
+                    ? {
+                          id: original.id,
+                          edited: edited,
+                      }
+                    : null;
+            })
+            .filter(Boolean);
+        console.log({ modifiedDrinks, newDrinks });
+
+        // Ajouter les nouveaux accompagnements
+        for (const newDrink of newDrinks) {
+            const formData = new FormData();
+            formData.append('libelle', newDrink.label);
+            formData.append('price', newDrink.price.toString());
+            formData.append('volume', newDrink.volume);
+
+            const response = await addBoisson(formData);
+            if (response.status !== 'success') {
+                throw new Error(`Erreur lors de l'ajout : ${response.message}`);
+            }
+            toast.success(`Ajout de "${newDrink.label}" réussi`);
+            router.refresh();
+        }
+
+        // Mettre à jour les boissons modifiées
+        for (const modified of modifiedDrinks) {
+            if (!modified) continue;
+            const formData = new FormData();
+            formData.append('libelle', modified.edited.label);
+            formData.append('price', modified.edited.price.toString());
+            formData.append('volume', modified.edited.volume);
+
+            const response = await updateBoisson(modified.id, formData);
+            if (response.status !== 'success') {
+                throw new Error(`Erreur lors de la mise à jour : ${response.message}`);
+            }
+            toast.success(`Mise à jour de "${modified.edited.label}" réussie`);
+            router.refresh();
+        }
+
+        // Si tout s'est bien passé
+        onUpdate(editedDrinks);
+        setIsEditing(false);
+    } catch (error: any) {
+        toast.error(error.message || 'Une erreur est survenue lors de la sauvegarde');
+    }
+};
+
 
   return (
     <div>
@@ -104,7 +171,7 @@ export function DrinksSection({ drinks, onUpdate }: DrinksSectionProps) {
       <ConfirmationModal
         isOpen={deleteIndex !== null}
         onClose={() => setDeleteIndex(null)}
-        onConfirm={confirmDelete}
+        onConfirm={async () => await confirmDelete()}
         title="Confirmer la suppression"
         description="Êtes-vous sûr de vouloir supprimer cette boisson ?"
       />

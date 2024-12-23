@@ -90,7 +90,7 @@ export type _addPlatOptionValueSchema = z.infer<typeof addPlatOptionValueSchema>
 export const addAccompagnementSchema = z.object({
     libelle: z.string(),
     price: z.number(),
-    platId: z.string().uuid(),
+    platId: z.string(),
 });
 export type _addAccompagnementSchema = z.infer<typeof addAccompagnementSchema>;
 

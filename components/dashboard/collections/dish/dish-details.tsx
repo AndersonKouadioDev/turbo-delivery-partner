@@ -16,8 +16,6 @@ export function DishDetails({ dish: initialDish }: { dish: DishComplet }) {
 
     const handleUpdate = (field: keyof DishComplet, value: any) => {
         setDish((prev) => ({ ...prev, [field]: value }));
-        // Here you would typically call an API to update the dish
-        console.log(`Updated ${field}:`, value);
     };
 
     return (
@@ -38,9 +36,9 @@ export function DishDetails({ dish: initialDish }: { dish: DishComplet }) {
                             <p className="mt-4 text-gray-600">{dish.platM.description}</p>
                         </div>
                         <div className="space-y-6">
-                            <AccompanimentsSection accompaniments={dish.accompagnementM} onUpdate={(value) => handleUpdate('accompagnementM', value)} />
+                            <AccompanimentsSection dish={initialDish} accompaniments={dish.accompagnementM} onUpdate={(value) => handleUpdate('accompagnementM', value)} />
                             <OptionsSection options={dish.optionPlatM} onUpdate={(value) => handleUpdate('optionPlatM', value)} />
-                            <DrinksSection drinks={dish.boissonPlatMs} onUpdate={(value) => handleUpdate('boissonPlatMs', value)} />
+                            <DrinksSection dish={initialDish} drinks={dish.boissonPlatMs} onUpdate={(value) => handleUpdate('boissonPlatMs', value)} />
                             <div>
                                 <h3 className="text-xl font-semibold mb-2">Collections</h3>
                                 <div className="flex flex-wrap gap-2">

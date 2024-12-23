@@ -122,18 +122,21 @@ export interface Ingredient {
 }
 
 export interface Accompaniment {
-    label: string;
+    id: string;
+    libelle: string;
     price: number;
     platId?: string;
 }
 
 export interface OptionValue {
+    id: string;
     value: string;
     extraPrice: number;
     optionId?: string;
 }
 
 export interface Option {
+    id: string;
     label: string;
     isRequired: boolean;
     maxSelected: number;
@@ -141,6 +144,7 @@ export interface Option {
 }
 
 export interface Drink {
+    id: string;
     label: string;
     price: number;
     volume: string;

@@ -6,8 +6,8 @@ import { apiClient } from '@/lib/api-client';
 import { ActionResult } from '@/types/index.d';
 import restaurantEndpoints from '@/src/endpoints/restaurants.endpoint';
 
-import { addPictureSchema, createDishSchema, createRestaurantSchema } from '../schemas/restaurants.schema';
-import { FindOneRestaurant, OpeningHour, Restaurant, Collection, User, CollectionWithDishes, Dish, DishComplet } from '@/types/models';
+import { addAccompagnementSchema, addBoissonSchema, addPictureSchema, createDishSchema, createRestaurantSchema, updateAccompagnementSchema, updateBoissonSchema } from '../schemas/restaurants.schema';
+import { FindOneRestaurant, OpeningHour, Restaurant, Collection, User, CollectionWithDishes, Dish, DishComplet, Accompaniment, Drink } from '@/types/models';
 import { unstable_update } from '@/auth';
 
 export async function createRestaurant(prevState: any, formData: FormData): Promise<ActionResult<{ restaurant: Restaurant; createdBy: User }>> {
@@ -246,6 +246,140 @@ export async function addDish(formData: FormData): Promise<ActionResult<Dish | n
         return {
             status: 'success',
             message: 'Plat créé avec succès',
+            data: response.data,
+        };
+    } catch (error: any) {
+        return {
+            status: 'error',
+            message: error.message,
+        };
+    }
+}
+
+export async function addAccompaniment(formData: FormData): Promise<ActionResult<Accompaniment | null>> {
+    const { success, data: formdata } = processFormData(addAccompagnementSchema, formData, {
+        useDynamicValidation: true,
+        transformations: {
+            price: (value) => Number(value),
+        },
+    });
+
+    if (!success) {
+        return {
+            status: 'error',
+            message: 'Données manquantes ou mal formatées',
+        };
+    }
+
+    try {
+        const response = await apiClient.post(restaurantEndpoints.addAccompagnement, formdata);
+        if (response.status !== 200) {
+            throw new Error(response?.data?.message ?? "Erreur lors de l'ajout de l'accompagnement");
+        }
+        return {
+            status: 'success',
+            message: 'Accompagnement ajouté avec succès',
+            data: response.data,
+        };
+    } catch (error: any) {
+        return {
+            status: 'error',
+            message: error.message,
+        };
+    }
+}
+
+export async function updateAccompaniment(id: string, formData: FormData): Promise<ActionResult<Accompaniment | null>> {
+    const { success, data: formdata } = processFormData(updateAccompagnementSchema, formData, {
+        useDynamicValidation: true,
+        transformations: {
+            price: (value) => Number(value),
+        },
+    });
+
+    if (!success) {
+        return {
+            status: 'error',
+            message: 'Données manquantes ou mal formatées',
+        };
+    }
+
+    try {
+        const response = await apiClient.post(restaurantEndpoints.updateAccompagnement(id), formdata);
+        if (response.status !== 200) {
+            throw new Error(response?.data?.message ?? "Erreur lors de la mise à jour de l'accompagnement");
+        }
+        return {
+            status: 'success',
+            message: 'Accompagnement mis à jour avec succès',
+            data: response.data,
+        };
+    } catch (error: any) {
+        return {
+            status: 'error',
+            message: error.message,
+        };
+    }
+}
+
+export async function addBoisson(formData: FormData): Promise<ActionResult<Drink | null>> {
+    const { success, data: formdata } = processFormData(addBoissonSchema, formData, {
+        useDynamicValidation: true,
+        transformations: {
+            price: (value) => Number(value),
+            volume: (value) => Number(value),
+        },
+    });
+
+    if (!success) {
+        return {
+            status: 'error',
+            message: 'Données manquantes ou mal formatées',
+        };
+    }
+
+    try {
+        const response = await apiClient.post(restaurantEndpoints.addBoisson, formdata);
+        if (response.status !== 200) {
+            throw new Error(response?.data?.message ?? "Erreur lors de l'ajout de la boisson");
+        }
+        return {
+            status: 'success',
+            message: 'Boisson ajoutée avec succès',
+            data: response.data,
+        };
+    } catch (error: any) {
+        return {
+            status: 'error',
+            message: error.message,
+        };
+    }
+}
+
+export async function updateBoisson(id: string, formData: FormData): Promise<ActionResult<Drink | null>> {
+    const { success, data: formdata } = processFormData(updateBoissonSchema, formData, {
+        useDynamicValidation: true,
+        transformations: {
+            price: (value) => Number(value),
+            volume: (value) => Number(value),
+        },
+    });
+
+    if (!success) {
+        return {
+            status: 'error',
+            message: 'Données manquantes ou mal formatées',
+        };
+    }
+
+    try {
+        const response = await apiClient.post(restaurantEndpoints.updateBoisson(id), formdata);
+        if (response.status !== 200) {
+            throw new Error(response?.data?.message ?? 'Erreur lors de la mise à jour de la boisson');
+        }
+        return {
+            status: 'success',
+            message: 'Boisson mise à jour avec succès',
             data: response.data,
         };
     } catch (error: any) {

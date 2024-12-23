@@ -158,7 +158,7 @@ export function OptionsSection({ options, onUpdate }: OptionsSectionProps) {
             <ConfirmationModal
                 isOpen={deleteIndex !== null}
                 onClose={() => setDeleteIndex(null)}
-                onConfirm={confirmDelete}
+                onConfirm={async () => await confirmDelete()}
                 title="Confirmer la suppression"
                 description={deleteIndex?.value !== undefined ? 'Êtes-vous sûr de vouloir supprimer cette valeur ?' : 'Êtes-vous sûr de vouloir supprimer cette option ?'}
             />

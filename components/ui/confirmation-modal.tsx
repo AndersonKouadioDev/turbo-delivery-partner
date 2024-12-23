@@ -11,7 +11,7 @@ import {
 interface ConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: () => Promise<void>;
   title: string;
   description: string;
 }
@@ -34,7 +34,7 @@ export function ConfirmationModal({
           <Button variant="outline" onClick={onClose}>
             Annuler
           </Button>
-          <Button variant="destructive" onClick={onConfirm}>
+          <Button variant="destructive" onClick={async () => await onConfirm()}>
             Confirmer
           </Button>
         </DialogFooter>
