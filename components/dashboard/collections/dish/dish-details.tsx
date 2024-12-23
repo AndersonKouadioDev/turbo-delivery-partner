@@ -37,7 +37,7 @@ export function DishDetails({ dish: initialDish }: { dish: DishComplet }) {
                         <div className="space-y-6">
                             <AccompanimentsSection dish={initialDish} accompaniments={dish.accompagnementM} onUpdate={(value) => handleUpdate('accompagnementM', value)} />
                             <OptionsSection dish={initialDish} options={dish.optionPlatM} onUpdate={(value) => handleUpdate('optionPlatM', value)} />
-                            <DrinksSection dish={initialDish} drinks={dish.boissonPlatMs} onUpdate={(value) => handleUpdate('boissonPlatMs', value)} />
+                            {/* <DrinksSection dish={initialDish} drinks={dish.boissonPlatMs} onUpdate={(value) => handleUpdate('boissonPlatMs', value)} /> */}
                             <div>
                                 <h3 className="text-xl font-semibold mb-2">Collections</h3>
                                 <div className="flex flex-wrap gap-2">
