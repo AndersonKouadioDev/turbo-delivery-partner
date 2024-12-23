@@ -130,17 +130,17 @@ export interface Accompaniment {
 
 export interface OptionValue {
     id: string;
-    value: string;
-    extraPrice: number;
+    valeur: string;
+    prixSup: number;
     optionId?: string;
 }
 
 export interface Option {
     id: string;
-    label: string;
+    libelle: string;
     isRequired: boolean;
     maxSelected: number;
-    values: OptionValue[];
+    optionValeurs: OptionValue[];
 }
 
 export interface Drink {

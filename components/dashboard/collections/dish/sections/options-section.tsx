@@ -5,24 +5,17 @@ import { Separator } from '@/components/ui/separator';
 import { Trash2, Plus } from 'lucide-react';
 import { ConfirmationModal } from '@/components/ui/confirmation-modal';
 import { Button } from '@nextui-org/react';
-interface OptionValue {
-    value: string;
-    extraPrice: number;
-}
-
-interface Option {
-    label: string;
-    isRequired: boolean;
-    maxSelected: number;
-    values: OptionValue[];
-}
+import { DishComplet, Option, OptionValue } from '@/types/models';
+import { toast } from 'react-toastify';
+import { addOption, addOptionValue, updateOption, updateOptionValue } from '@/src/actions/restaurant.actions';
 
 interface OptionsSectionProps {
+    dish: DishComplet;
     options: Option[];
     onUpdate: (options: Option[]) => void;
 }
 
-export function OptionsSection({ options, onUpdate }: OptionsSectionProps) {
+export function OptionsSection({ dish, options, onUpdate }: OptionsSectionProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedOptions, setEditedOptions] = useState(options);
     const [deleteIndex, setDeleteIndex] = useState<{ option: number; value?: number } | null>(null);
@@ -37,7 +30,7 @@ export function OptionsSection({ options, onUpdate }: OptionsSectionProps) {
             i === optionIndex
                 ? {
                       ...option,
-                      values: option.values.map((v, j) => (j === valueIndex ? { ...v, [field]: field === 'extraPrice' ? parseFloat(value) : value } : v)),
+                      optionValeurs: option.optionValeurs.map((v, j) => (j === valueIndex ? { ...v, [field]: field === 'prixSup' ? parseFloat(value) : value } : v)),
                   }
                 : option,
         );
@@ -45,11 +38,11 @@ export function OptionsSection({ options, onUpdate }: OptionsSectionProps) {
     };
 
     const handleAddOption = () => {
-        setEditedOptions([...editedOptions, { label: '', isRequired: false, maxSelected: 1, values: [] }]);
+        setEditedOptions([...editedOptions, { id: '', libelle: '', isRequired: false, maxSelected: 1, optionValeurs: [] }]);
     };
 
     const handleAddValue = (optionIndex: number) => {
-        const updated = editedOptions.map((option, i) => (i === optionIndex ? { ...option, values: [...option.values, { value: '', extraPrice: 0 }] } : option));
+        const updated = editedOptions.map((option, i) => (i === optionIndex ? { ...option, optionValeurs: [...option.optionValeurs, { valeur: '', prixSup: 0, id: '' }] } : option));
         setEditedOptions(updated);
     };
 
@@ -61,7 +54,7 @@ export function OptionsSection({ options, onUpdate }: OptionsSectionProps) {
         if (deleteIndex !== null) {
             let updated;
             if (deleteIndex.value !== undefined) {
-                updated = editedOptions.map((option, i) => (i === deleteIndex.option ? { ...option, values: option.values.filter((_, j) => j !== deleteIndex.value) } : option));
+                updated = editedOptions.map((option, i) => (i === deleteIndex.option ? { ...option, optionValeurs: option.optionValeurs.filter((_, j) => j !== deleteIndex.value) } : option));
             } else {
                 updated = editedOptions.filter((_, i) => i !== deleteIndex.option);
             }
@@ -69,10 +62,87 @@ export function OptionsSection({ options, onUpdate }: OptionsSectionProps) {
             setDeleteIndex(null);
         }
     };
+    const handleSave = async () => {
+        try {
+            // 1. Ajouter les nouvelles options
+            for (const option of editedOptions) {
+                if (!option.id) {
+                    console.log(option);
+                    // Nouvelle option
+                    const formData = new FormData();
+                    formData.append('libelle', option.libelle);
+                    formData.append('isRequired', option.isRequired.toString());
+                    formData.append('maxSeleteted', option.maxSelected.toString());
+                    formData.append('platId', dish.platM.id);
 
-    const handleSave = () => {
-        onUpdate(editedOptions);
-        setIsEditing(false);
+                    const response = await addOption(formData);
+                    if (response.status === 'success') {
+                        // Ajouter les valeurs pour cette option
+                        for (const value of option.optionValeurs) {
+                            const formData = new FormData();
+                            formData.append('valeur', value.valeur);
+                            formData.append('prixSup', value.prixSup.toString());
+                            formData.append('optionId', response.data?.id ?? '');
+
+                            await addOptionValue(formData);
+                        }
+                        toast.success(`Option "${option.libelle}" ajoutée avec succès`);
+                    } else {
+                        toast.error(`Erreur lors de l'ajout de l'option ${option.libelle}`);
+                    }
+                } else {
+                    // Option existante - Mettre à jour si nécessaire
+                    const originalOption = options.find((o) => o.id === option.id);
+                    if (originalOption && (originalOption.libelle !== option.libelle || originalOption.isRequired !== option.isRequired || originalOption.maxSelected !== option.maxSelected)) {
+                        const formData = new FormData();
+                        formData.append('libelle', option.libelle);
+                        formData.append('isRequired', option.isRequired.toString());
+                        formData.append('maxSeleteted', option.maxSelected.toString());
+                        formData.append('platId', dish.platM.id);
+                        formData.append('optionId', option.id);
+                        // const response = await updateOption(formData);
+                        // if (response.status !== 'success') {
+                        //     toast.error(`Erreur lors de la mise à jour de l'option ${option.libelle}`);
+                        // }
+                    }
+
+                    // Gérer les valeurs de l'option
+                    for (const value of option.optionValeurs) {
+                        if (!value.id) {
+                            // Nouvelle valeur
+                            const formData = new FormData();
+                            formData.append('valeur', value.valeur);
+                            formData.append('prixSup', value.prixSup.toString());
+                            formData.append('optionId', option.id ?? '');
+                            const response = await addOptionValue(formData);
+                            if (response.status !== 'success') {
+                                toast.error(`Erreur lors de l'ajout de la valeur ${value.valeur}`);
+                            }
+                        } else {
+                            // Valeur existante - Mettre à jour si nécessaire
+                            const originalValue = originalOption?.optionValeurs.find((v) => v.id === value.id);
+                            if (originalValue && (originalValue.valeur !== value.valeur || originalValue.prixSup !== value.prixSup)) {
+                                const formData = new FormData();
+                                formData.append('valeur', value.valeur);
+                                formData.append('prixSup', value.prixSup.toString());
+                                formData.append('optionId', option.id ?? '');
+                                // const response = await updateOptionValue(formData);
+                                // if (response.status !== 'success') {
+                                //     toast.error(`Erreur lors de la mise à jour de la valeur ${value.valeur}`);
+                                // }
+                            }
+                        }
+                    }
+                }
+            }
+
+            onUpdate(editedOptions);
+            setIsEditing(false);
+            toast.success('Options mises à jour avec succès');
+        } catch (error) {
+            toast.error('Une erreur est survenue lors de la sauvegarde');
+            console.error(error);
+        }
     };
 
     return (
@@ -88,7 +158,7 @@ export function OptionsSection({ options, onUpdate }: OptionsSectionProps) {
                     {editedOptions.map((option, optionIndex) => (
                         <div key={optionIndex} className="border p-4 rounded-md">
                             <div className="flex items-center gap-2 mb-2">
-                                <Input value={option.label} onChange={(e) => handleEdit(optionIndex, 'label', e.target.value)} placeholder="Libellé de l'option" />
+                                <Input value={option.libelle} onChange={(e) => handleEdit(optionIndex, 'libelle', e.target.value)} placeholder="Libellé de l'option" />
                                 <Input
                                     type="number"
                                     value={option.maxSelected}
@@ -96,7 +166,7 @@ export function OptionsSection({ options, onUpdate }: OptionsSectionProps) {
                                     placeholder="Max sélectionné"
                                     className="w-32"
                                 />
-                                <Checkbox checked={option.isRequired} onChange={(checked) => handleEdit(optionIndex, 'isRequired', checked)}>
+                                <Checkbox checked={option.isRequired} onValueChange={(checked) => handleEdit(optionIndex, 'isRequired', checked)}>
                                     <span className="text-sm">Requis</span>
                                 </Checkbox>
                                 <Button variant="ghost" isIconOnly size="sm" onClick={() => handleDelete(optionIndex)}>
@@ -104,21 +174,22 @@ export function OptionsSection({ options, onUpdate }: OptionsSectionProps) {
                                 </Button>
                             </div>
                             <div className="ml-4 space-y-2">
-                                {option.values.map((value, valueIndex) => (
-                                    <div key={valueIndex} className="flex items-center gap-2">
-                                        <Input value={value.value} onChange={(e) => handleEditValue(optionIndex, valueIndex, 'value', e.target.value)} placeholder="Valeur" />
-                                        <Input
-                                            type="number"
-                                            value={value.extraPrice}
-                                            onChange={(e) => handleEditValue(optionIndex, valueIndex, 'extraPrice', e.target.value)}
-                                            placeholder="Prix supplémentaire"
-                                            className="w-32"
-                                        />
-                                        <Button variant="ghost" isIconOnly size="sm" onClick={() => handleDelete(optionIndex, valueIndex)}>
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                ))}
+                                {option?.optionValeurs &&
+                                    option?.optionValeurs?.map((value, valueIndex) => (
+                                        <div key={valueIndex} className="flex items-center gap-2">
+                                            <Input value={value.valeur} onChange={(e) => handleEditValue(optionIndex, valueIndex, 'valeur', e.target.value)} placeholder="Valeur" />
+                                            <Input
+                                                type="number"
+                                                value={value.prixSup}
+                                                onChange={(e) => handleEditValue(optionIndex, valueIndex, 'prixSup', e.target.value)}
+                                                placeholder="Prix supplémentaire"
+                                                className="w-32"
+                                            />
+                                            <Button variant="ghost" isIconOnly size="sm" onClick={() => handleDelete(optionIndex, valueIndex)}>
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    ))}
                                 <Button variant="bordered" size="sm" onClick={() => handleAddValue(optionIndex)}>
                                     <Plus className="h-4 w-4 mr-2" /> Ajouter une valeur
                                 </Button>
@@ -138,17 +209,18 @@ export function OptionsSection({ options, onUpdate }: OptionsSectionProps) {
                 <div className="space-y-4">
                     {options.map((option, index) => (
                         <div key={index} className="mb-2">
-                            <h4 className="font-semibold">{option.label}</h4>
+                            <h4 className="font-semibold">{option.libelle}</h4>
                             <p className="text-sm text-gray-600">
                                 {option.isRequired ? 'Requis' : 'Optionnel'} - Max: {option.maxSelected}
                             </p>
                             <ul className="list-disc pl-5">
-                                {option.values.map((value, vIndex) => (
-                                    <li key={vIndex}>
-                                        {value.value}
-                                        {value.extraPrice > 0 && ` (+${value.extraPrice.toFixed(2)} €)`}
-                                    </li>
-                                ))}
+                                {option?.optionValeurs &&
+                                    option?.optionValeurs?.map((value, vIndex) => (
+                                        <li key={vIndex}>
+                                            {value.valeur}
+                                            {value.prixSup > 0 && ` (+${value.prixSup.toFixed(2)} XOF)`}
+                                        </li>
+                                    ))}
                             </ul>
                         </div>
                     ))}

@@ -9,7 +9,7 @@ import { addAccompaniment, updateAccompaniment } from '@/src/actions/restaurant.
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 interface Accompaniment {
-    id: string;
+    id?: string;
     libelle: string;
     price: number;
 }
@@ -92,7 +92,7 @@ export function AccompanimentsSection({ dish, accompaniments, onUpdate }: Accomp
                 formData.append('libelle', modified.edited.libelle);
                 formData.append('price', modified.edited.price.toString());
 
-                const response = await updateAccompaniment(modified.id, formData);
+                const response = await updateAccompaniment(modified.id ?? '', formData);
                 if (response.status !== 'success') {
                     throw new Error(`Erreur lors de la mise à jour : ${response.message}`);
                 }

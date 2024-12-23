@@ -74,7 +74,7 @@ export const addPlatOptionSchema = z.object({
     libelle: z.string(),
     isRequired: z.boolean(),
     maxSeleteted: z.number(),
-    platId: z.string().uuid(),
+    platId: z.string(),
 });
 export type _addPlatOptionSchema = z.infer<typeof addPlatOptionSchema>;
 

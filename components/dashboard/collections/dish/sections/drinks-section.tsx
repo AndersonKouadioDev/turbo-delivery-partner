@@ -9,7 +9,7 @@ import { addBoisson, updateBoisson } from '@/src/actions/restaurant.actions';
 import { toast } from 'react-toastify';
 import { DishComplet } from '@/types/models';
 interface Drink {
-  id: string;
+  id?: string;
   label: string;
   price: number;
   volume: string;
@@ -98,7 +98,7 @@ export function DrinksSection({ dish, drinks, onUpdate }: DrinksSectionProps) {
             formData.append('price', modified.edited.price.toString());
             formData.append('volume', modified.edited.volume);
 
-            const response = await updateBoisson(modified.id, formData);
+            const response = await updateBoisson(modified.id ?? '', formData);
             if (response.status !== 'success') {
                 throw new Error(`Erreur lors de la mise à jour : ${response.message}`);
             }
@@ -162,7 +162,7 @@ export function DrinksSection({ dish, drinks, onUpdate }: DrinksSectionProps) {
           {drinks.map((drink, index) => (
             <div key={index} className="flex justify-between">
               <span>{drink.label} ({drink.volume})</span>
-              <span>{drink.price.toFixed(2)} €</span>
+              <span>{drink.price.toFixed(2)} XOF</span>
             </div>
           ))}
         </div>

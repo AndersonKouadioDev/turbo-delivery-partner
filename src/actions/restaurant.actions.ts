@@ -6,8 +6,18 @@ import { apiClient } from '@/lib/api-client';
 import { ActionResult } from '@/types/index.d';
 import restaurantEndpoints from '@/src/endpoints/restaurants.endpoint';
 
-import { addAccompagnementSchema, addBoissonSchema, addPictureSchema, createDishSchema, createRestaurantSchema, updateAccompagnementSchema, updateBoissonSchema } from '../schemas/restaurants.schema';
-import { FindOneRestaurant, OpeningHour, Restaurant, Collection, User, CollectionWithDishes, Dish, DishComplet, Accompaniment, Drink } from '@/types/models';
+import {
+    addAccompagnementSchema,
+    addBoissonSchema,
+    addPictureSchema,
+    addPlatOptionSchema,
+    addPlatOptionValueSchema,
+    createDishSchema,
+    createRestaurantSchema,
+    updateAccompagnementSchema,
+    updateBoissonSchema,
+} from '../schemas/restaurants.schema';
+import { FindOneRestaurant, OpeningHour, Restaurant, Collection, User, CollectionWithDishes, Dish, DishComplet, Accompaniment, Drink, Option, OptionValue } from '@/types/models';
 import { unstable_update } from '@/auth';
 
 export async function createRestaurant(prevState: any, formData: FormData): Promise<ActionResult<{ restaurant: Restaurant; createdBy: User }>> {
@@ -380,6 +390,140 @@ export async function updateBoisson(id: string, formData: FormData): Promise<Act
         return {
             status: 'success',
             message: 'Boisson mise à jour avec succès',
+            data: response.data,
+        };
+    } catch (error: any) {
+        return {
+            status: 'error',
+            message: error.message,
+        };
+    }
+}
+
+export async function addOption(formData: FormData): Promise<ActionResult<Option | null>> {
+    const { success, data: formdata } = processFormData(addPlatOptionSchema, formData, {
+        useDynamicValidation: true,
+        transformations: {
+            maxSeleteted: (value) => Number(value),
+            isRequired: (value) => Boolean(value),
+        },
+    });
+
+    if (!success) {
+        return {
+            status: 'error',
+            message: 'Données manquantes ou mal formatées',
+        };
+    }
+  
+    try {
+        const response = await apiClient.post(restaurantEndpoints.addPlatOption, formdata);
+        if (response.status !== 200) {
+            throw new Error(response?.data?.message ?? "Erreur lors de l'ajout de l'option");
+        }
+        return {
+            status: 'success',
+            message: 'Option ajoutée avec succès',
+            data: response.data,
+        };
+    } catch (error: any) {
+        return {
+            status: 'error',
+            message: error.message,
+        };
+    }
+}
+
+export async function addOptionValue(formData: FormData): Promise<ActionResult<OptionValue | null>> {
+    const { success, data: formdata } = processFormData(addPlatOptionValueSchema, formData, {
+        useDynamicValidation: true,
+        transformations: {
+            prixSup: (value) => Number(value),
+        },
+    });
+
+    if (!success) {
+        return {
+            status: 'error',
+            message: 'Données manquantes ou mal formatées',
+        };
+    }
+
+    try {
+        const response = await apiClient.post(restaurantEndpoints.addPlatOptionValue, formdata);
+        if (response.status !== 200) {
+            throw new Error(response?.data?.message ?? "Erreur lors de l'ajout de la valeur de l'option");
+        }
+        return {
+            status: 'success',
+            message: "Valeur de l'option ajoutée avec succès",
+            data: response.data,
+        };
+    } catch (error: any) {
+        return {
+            status: 'error',
+            message: error.message,
+        };
+    }
+}
+
+export async function updateOption(formData: FormData): Promise<ActionResult<Option | null>> {
+    const { success, data: formdata } = processFormData(addPlatOptionSchema, formData, {
+        useDynamicValidation: true,
+        transformations: {
+            maxSeleteted: (value) => Number(value),
+            isRequired: (value) => Boolean(value),
+        },
+    });
+
+    if (!success) {
+        return {
+            status: 'error',
+            message: 'Données manquantes ou mal formatées',
+        };
+    }
+
+    try {
+        const response = await apiClient.post(restaurantEndpoints.addPlatOption, formdata);
+        if (response.status !== 200) {
+            throw new Error(response?.data?.message ?? "Erreur lors de la mise à jour de l'option");
+        }
+        return {
+            status: 'success',
+            message: 'Option mise à jour avec succès',
+            data: response.data,
+        };
+    } catch (error: any) {
+        return {
+            status: 'error',
+            message: error.message,
+        };
+    }
+}
+
+export async function updateOptionValue(formData: FormData): Promise<ActionResult<OptionValue | null>> {
+    const { success, data: formdata } = processFormData(addPlatOptionValueSchema, formData, {
+        useDynamicValidation: true,
+        transformations: {
+            prixSup: (value) => Number(value),
+        },
+    });
+
+    if (!success) {
+        return {
+            status: 'error',
+            message: 'Données manquantes ou mal formatées',
+        };
+    }
+
+    try {
+        const response = await apiClient.post(restaurantEndpoints.addPlatOptionValue, formdata);
+        if (response.status !== 200) {
+            throw new Error(response?.data?.message ?? "Erreur lors de la mise à jour de la valeur de l'option");
+        }
+        return {
+            status: 'success',
+            message: "Valeur de l'option mise à jour avec succès",
             data: response.data,
         };
     } catch (error: any) {
