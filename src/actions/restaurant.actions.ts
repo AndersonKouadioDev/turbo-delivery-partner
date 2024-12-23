@@ -6,8 +6,8 @@ import { apiClient } from '@/lib/api-client';
 import { ActionResult } from '@/types/index.d';
 import restaurantEndpoints from '@/src/endpoints/restaurants.endpoint';
 
-import { addPictureSchema, createRestaurantSchema } from '../schemas/restaurants.schema';
-import { FindOneRestaurant, Horaire, Restaurant, User } from '@/types/models';
+import { addPictureSchema, createDishSchema, createRestaurantSchema } from '../schemas/restaurants.schema';
+import { FindOneRestaurant, OpeningHour, Restaurant, Collection, User, CollectionWithDishes, Dish, DishComplet } from '@/types/models';
 import { unstable_update } from '@/auth';
 
 export async function createRestaurant(prevState: any, formData: FormData): Promise<ActionResult<{ restaurant: Restaurant; createdBy: User }>> {
@@ -25,9 +25,10 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
     );
 
     if (!success) {
-        prevState.status = 'error';
-        prevState.message = 'Données manquantes ou mal formatées';
-        return prevState;
+        return {
+            status: 'error',
+            message: 'Données manquantes ou mal formatées',
+        };
     }
 
     // Create a new FormData object to ensure we're sending multipart/form-data
@@ -41,13 +42,16 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
         });
 
         if (response.status !== 200) {
-            prevState.status = 'error';
-            prevState.message = response?.data?.message ?? 'Erreur lors de la création du restaurant';
-            return prevState;
+            return {
+                status: 'error',
+                message: response?.data?.message ?? 'Erreur lors de la création du restaurant',
+            };
         }
-        prevState.status = 'success';
-        prevState.message = 'Restaurant créé avec succès';
-        prevState.data = response.data;
+        return {
+            status: 'success',
+            message: 'Restaurant créé avec succès',
+            data: response.data,
+        };
 
         await unstable_update({
             user: {
@@ -55,11 +59,11 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
             },
         });
     } catch (error) {
-        prevState.status = 'error';
-        prevState.message = 'Erreur lors de la création du restaurant';
-        return prevState;
+        return {
+            status: 'error',
+            message: 'Erreur lors de la création du restaurant',
+        };
     }
-    return prevState;
 }
 
 export async function findOneRestaurant(): Promise<FindOneRestaurant | null> {
@@ -72,7 +76,7 @@ export async function findOneRestaurant(): Promise<FindOneRestaurant | null> {
     }
 }
 
-export async function addHoraire(formData: FormData): Promise<ActionResult<Horaire[]>> {
+export async function addHoraire(formData: FormData): Promise<ActionResult<OpeningHour[]>> {
     const { success, data: formdata } = processFormData(createRestaurantSchema, formData, {
         useDynamicValidation: true,
     });
@@ -95,7 +99,7 @@ export async function addHoraire(formData: FormData): Promise<ActionResult<Horai
         }
         return {
             status: 'success',
-            message: 'Horaire ajouté avec succès',
+            message: 'OpeningHour ajouté avec succès',
             data: response.data,
         };
     } catch (error) {
@@ -106,7 +110,7 @@ export async function addHoraire(formData: FormData): Promise<ActionResult<Horai
     }
 }
 
-export async function getHoraires(): Promise<Horaire[] | null> {
+export async function getHoraires(): Promise<OpeningHour[] | null> {
     try {
         const response = await apiClient.get(restaurantEndpoints.getHoraires);
 
@@ -125,9 +129,10 @@ export async function addPicture(prevState: any, formData: FormData): Promise<Ac
     });
 
     if (!success) {
-        prevState.status = 'error';
-        prevState.message = 'Données manquantes ou mal formatées';
-        return prevState;
+        return {
+            status: 'error',
+            message: 'Données manquantes ou mal formatées',
+        };
     }
 
     // Create a new FormData object to ensure we're sending multipart/form-data
@@ -145,14 +150,108 @@ export async function addPicture(prevState: any, formData: FormData): Promise<Ac
             throw new Error("Erreur lors de l'ajout des images");
         }
 
-        prevState.status = 'success';
-        prevState.message = 'Images ajoutées avec succès';
-        prevState.data = response.data;
-
-        return prevState;
+        return {
+            status: 'success',
+            message: 'Images ajoutées avec succès',
+            data: response.data,
+        };
     } catch (error) {
-        prevState.status = 'error';
-        prevState.message = "Erreur lors de l'ajout des images";
-        return prevState;
+        return {
+            status: 'error',
+            message: "Erreur lors de l'ajout des images",
+        };
+    }
+}
+
+export async function getCollections(): Promise<Collection[]> {
+    try {
+        const response = await apiClient.get(restaurantEndpoints.getCollection);
+        if (response.status !== 200) {
+            return [];
+        }
+        return response.data;
+    } catch (error) {
+        return [];
+    }
+}
+
+export async function getDishesGroupByCollection(): Promise<CollectionWithDishes[]> {
+    try {
+        const response = await apiClient.get(restaurantEndpoints.getDishesGroupByCollection);
+        if (response.status !== 200) {
+            return [];
+        }
+        const data =
+            response.data && response.data?.length > 0
+                ? response.data.map((item: CollectionWithDishes) => ({
+                      collectionModel: item.collectionModel,
+                      totalPlat: item.totalPlat,
+                  }))
+                : [];
+        return data;
+    } catch (error) {
+        return [];
+    }
+}
+
+export async function getDishesByCollection(id: string): Promise<Dish[]> {
+    try {
+        const response = await apiClient.get(restaurantEndpoints.getDishesByCollection(id));
+        if (response.status !== 200) {
+            return [];
+        }
+        return response.data;
+    } catch (error) {
+        return [];
+    }
+}
+
+export async function getDishComplet(id: string): Promise<DishComplet | null> {
+    try {
+        const response = await apiClient.get(restaurantEndpoints.getDishComplet(id));
+        if (response.status !== 200) {
+            return null;
+        }
+        return response.data;
+    } catch (error) {
+        return null;
+    }
+}
+
+export async function addDish(formData: FormData): Promise<ActionResult<Dish | null>> {
+    const { success, data: formdata } = processFormData(createDishSchema, formData, {
+        useDynamicValidation: true,
+    });
+
+    if (!success) {
+        return {
+            status: 'error',
+            message: 'Données manquantes ou mal formatées',
+        };
+    }
+
+    // Create a new FormData object to ensure we're sending multipart/form-data
+    const sendFormData = createFormData(formdata);
+
+    try {
+        const response = await apiClient.post(restaurantEndpoints.addDish, sendFormData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(response?.data?.message ?? 'Erreur lors de la création du plat');
+        }
+        return {
+            status: 'success',
+            message: 'Plat créé avec succès',
+            data: response.data,
+        };
+    } catch (error: any) {
+        return {
+            status: 'error',
+            message: error.message,
+        };
     }
 }

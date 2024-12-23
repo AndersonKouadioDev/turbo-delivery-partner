@@ -7,22 +7,22 @@ export const categories = [
       "https://img.freepik.com/photos-gratuite/vue-dessus-fast-food-mix-batonnets-mozzarella-club-sandwich-hamburger-pizza-aux-champignons-pizza-cesar-salade-crevettes-frites-ketchup-mayo-sauces-au-fromage-table_141793-3998.jpg?t=st=1729529376~exp=1729532976~hmac=167a44da6de0712683861095215e9e8eb6f614e7ea8faf64ce6b4a85609a121d&w=1800",
   },
   {
-    id: "deserts",
+    id: "desserts",
     name: "Déserts",
     dishes: 10,
     image:
       "https://img.freepik.com/photos-gratuite/mini-shortcake-aux-fraises-mignon-rose_53876-106073.jpg?uid=R54521588&ga=GA1.1.1908964846.1724333514&semt=ais_hybrid",
   },
   {
-    id: "pizza",
+    id: "pizzas",
     name: "Pizza",
     dishes: 0,
     image:
       "https://img.freepik.com/photos-gratuite/pizza-pizza-remplie-tomates-salami-olives_140725-1200.jpg?t=st=1729103619~exp=1729107219~hmac=057a62dcaf953a937193b628b6cca266da6a684fd17fa251b24acbc39a8afc89&w=1380",
   },
   {
-    id: "burger",
-    name: "Burger",
+    id: "burgers",
+    name: "Burgers",
     dishes: 10,
     image:
       "https://img.freepik.com/photos-gratuite/vue-avant-delicieux-hamburger-viande-du-fromage-salade-fond-sombre_140725-89597.jpg?uid=R54521588&ga=GA1.1.1908964846.1724333514&semt=ais_hybrid",

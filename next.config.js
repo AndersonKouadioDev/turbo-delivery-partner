@@ -8,6 +8,10 @@ const nextConfig = {
     images: {
         remotePatterns: [
             {
+                protocol: 'https',
+                hostname: 'img.freepik.com',
+            },
+            {
                 protocol: process.env.NEXT_PUBLIC_BACKEND_PROTOCOL,
                 hostname: 'erp.turbodeliveryapp.com',
             },

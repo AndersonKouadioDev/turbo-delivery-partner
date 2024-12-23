@@ -51,8 +51,11 @@ export interface Restaurant {
     dateService: string;
     documentUrl: string;
     cni: string;
+    longitude: number | null;
+    latitude: number | null;
+    idLocation: string | null;
     pictures: Picture[];
-    openingHours: Horaire[];
+    openingHours: OpeningHour[];
 }
 export interface Picture {
     id: string;
@@ -61,9 +64,9 @@ export interface Picture {
     dateCreation: string;
     dateEdition: string;
     pictureUrl: string;
-  }
-  
-export interface Horaire {
+}
+
+export interface OpeningHour {
     id: string;
     status: number;
     deleted: boolean;
@@ -97,19 +100,77 @@ export interface DeliveryMan {
     matricule: string;
 }
 
-export interface TypePlat {
+export interface Collection {
     id: string;
     status: number;
     deleted: boolean;
     dateCreation: string;
     dateEdition: string;
     libelle: string;
-    description?: string; // Champ optionnel
-    picture?: string | null; // Champ optionnel
-    pictureUrl?: string | null; // Champ optionnel
+    description: string;
+    picture: string;
+    pictureUrl: string;
 }
 
 export interface FindOneRestaurant {
     typecuisine: string[];
     restaurant: Restaurant;
+}
+export interface Ingredient {
+    name: string;
+    quantity?: string;
+}
+
+export interface Accompaniment {
+    label: string;
+    price: number;
+    platId?: string;
+}
+
+export interface OptionValue {
+    value: string;
+    extraPrice: number;
+    optionId?: string;
+}
+
+export interface Option {
+    label: string;
+    isRequired: boolean;
+    maxSelected: number;
+    values: OptionValue[];
+}
+
+export interface Drink {
+    label: string;
+    price: number;
+    volume: string;
+    platId?: string;
+}
+
+export interface Dish {
+    id: string;
+    status: number;
+    deleted: boolean;
+    dateCreation: string;
+    dateEdition: string;
+    libelle: string;
+    description: string;
+    disponible: boolean;
+    cookTime: string;
+    price: number;
+    imageUrl: string;
+    restaurant: Restaurant;
+    collection: Collection;
+}
+
+export interface CollectionWithDishes {
+    collectionModel: Collection;
+    totalPlat: number;
+}
+
+export interface DishComplet {
+    platM: Dish;
+    accompagnementM: Accompaniment[];
+    optionPlatM: Option[];
+    boissonPlatMs: Drink[];
 }

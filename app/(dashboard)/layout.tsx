@@ -17,11 +17,12 @@ interface DashboardLayoutProps {
 export default async function DashboardLayout({ children }: DashboardLayoutProps) {
     const session = await auth();
 
-    console.log(session);
-
+    
     const data = await findOneRestaurant();
     const restaurant = data?.restaurant;
-    console.log(restaurant);
+    
+    console.log(session);
+    // console.log(restaurant);
 
     const navItems = [
         {
@@ -59,9 +60,9 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
 
     return (
         <div className="grid relative mx-auto w-full max-w-screen-2xl h-screen md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-            <div className="hidden border-r bg-muted/40 md:block">
+            <div className="hidden border-r dark:border-muted bg-muted/40 md:block">
                 <div className="flex h-full max-h-screen flex-col gap-2">
-                    <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+                    <div className="flex h-14 items-center border-b dark:border-muted px-4 lg:h-[60px] lg:px-6">
                         <Link href="/" className="flex items-center gap-2 font-semibold">
                             <Logo />
                             <span className="">Turbo Delivery</span>
@@ -75,7 +76,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
                 </div>
             </div>
             <div className="flex flex-col">
-                <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+                <header className="flex h-14 items-center gap-4 border-b dark:border-muted bg-muted/40 px-4 lg:h-[60px] lg:px-6">
                     <Sheet>
                         <SheetTrigger asChild>
                             <Button variant="bordered" startContent={<Menu className="h-5 w-5" />} className="shrink-0 md:hidden" isIconOnly={true} />

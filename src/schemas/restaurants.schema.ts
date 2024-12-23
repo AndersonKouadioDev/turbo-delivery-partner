@@ -138,3 +138,18 @@ export const addPictureSchema = z.object({
 });
 
 export type _addPictureSchema = z.infer<typeof addPictureSchema>;
+
+export const createDishSchema = z.object({
+    libelle: z.string().min(1, 'Le titre est requis'),
+    description: z.string().min(10, 'La description doit faire au moins 10 caractères'),
+    price: z.string(),
+    collectionId: z.string().uuid(),
+    imageUrl: z
+        .instanceof(File)
+        .refine((file) => file.size > 0, 'Le logo est requis')
+        .refine((file) => file.size <= 2 * 1024 * 1024, 'La taille du logo ne doit pas dépasser 2 Mo')
+        .refine((file) => ['image/jpeg', 'image/png'].includes(file.type), 'Format de logo non supporté (JPEG, PNG, GIF uniquement)'),
+    cookTime: z.string().min(1, 'Le temps de cuisson est requis'),
+});
+
+export type _createDishSchema = z.infer<typeof createDishSchema>;

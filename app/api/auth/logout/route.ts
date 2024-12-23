@@ -4,7 +4,7 @@ import { signOut } from '@/auth';
 
 export async function POST() {
     const cookieStore = cookies();
-    console.log('cookieStore', cookieStore);
+    
     // Supprime les cookies de session
     cookieStore.delete('authjs.csrf-token');
     cookieStore.delete('authjs.session-token');

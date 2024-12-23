@@ -17,8 +17,12 @@ export async function middleware(request: NextRequest) {
         const data = await findOneRestaurant();
         const restaurant = data?.restaurant;
 
+        if (!restaurant && session?.user.restaurant && !pathname.startsWith('/auth')) {
+            return NextResponse.redirect(new URL(`/auth`, request.url));
+        }
+
         //   S'il n'a pas de restaurant
-        if (!restaurant && !pathname.startsWith('/create-restaurant')) {
+        if (!restaurant && !session?.user.restaurant && !pathname.startsWith('/create-restaurant')) {
             return NextResponse.redirect(new URL(`/create-restaurant`, request.url));
         }
         if (restaurant && restaurant.openingHours.length == 0 && !pathname.startsWith('/horaires')) {
