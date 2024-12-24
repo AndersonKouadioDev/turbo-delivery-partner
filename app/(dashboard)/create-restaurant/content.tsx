@@ -12,10 +12,10 @@ import { FormControls, StepIndicator } from '@/components/ui/form-ui/form';
 import { cn } from '@/lib/utils';
 import { InformationRestauForm } from '@/components/dashboard/create_restaurant/informations-restau-form';
 import { AddressRestauForm } from '@/components/dashboard/create_restaurant/address-restau-form';
-import { _createRestaurantSchema, createRestaurantSchema } from '@/src/schemas/restaurants.schema';
 import { DocumentRestauForm } from '@/components/dashboard/create_restaurant/document-restau-form';
 import { createRestaurant } from '@/src/actions/restaurant.actions';
 import { toast } from 'react-toastify';
+import { _createRestaurantSchema, createRestaurantSchema } from '@/src/schemas/restaurants.schema';
 
 const steps: string[] = ["Informations sur l'établissement", "Adresse de l'établissement", "Documents de l'établissement"];
 
@@ -49,6 +49,7 @@ export default function CreateRestaurantContent() {
         formState: { errors },
         trigger,
         control,
+        setValue,
     } = useForm<_createRestaurantSchema>({
         resolver: zodResolver(createRestaurantSchema),
         defaultValues: {
@@ -87,7 +88,7 @@ export default function CreateRestaurantContent() {
             case 0:
                 return ['nomEtablissement', 'description', 'commune'];
             case 1:
-                return ['email', 'telephone', 'localisation', 'codePostal'];
+                return ['email', 'telephone', 'codePostal', 'localisation', 'idLocation', 'longitude', 'latitude'];
             case 2:
                 return ['docUrl', 'cniUrl', 'logoUrl', 'dateService'];
             default:
@@ -114,7 +115,7 @@ export default function CreateRestaurantContent() {
                                                 <InformationRestauForm control={control} errors={errors} />
                                             </div>
                                             <div className={cn(currentStep === 1 ? 'block' : 'hidden')}>
-                                                <AddressRestauForm control={control} errors={errors} />
+                                                <AddressRestauForm control={control} errors={errors} setValue={setValue} />
                                             </div>
                                             <div className={cn(currentStep === 2 ? 'block' : 'hidden')}>
                                                 <DocumentRestauForm control={control} errors={errors} />

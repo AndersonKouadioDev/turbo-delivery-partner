@@ -1,16 +1,18 @@
-import { Control, Controller, FieldErrors } from 'react-hook-form';
+import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form';
 import { Input } from '@nextui-org/react';
 import { InputPhone } from '@/components/ui/form-ui/input-phone';
 import 'react-phone-number-input/style.css';
 
 import { _createRestaurantSchema } from '@/src/schemas/restaurants.schema';
+import SearchAddressAutocomplete from './search-address-autocomplete';
 
 interface FormStepProps {
     errors: FieldErrors<_createRestaurantSchema>;
     control: Control<_createRestaurantSchema>;
+    setValue: UseFormSetValue<_createRestaurantSchema>;
 }
 
-export const AddressRestauForm: React.FC<FormStepProps> = ({ errors, control }) => {
+export const AddressRestauForm: React.FC<FormStepProps> = ({ errors, control, setValue }) => {
     return (
         <div className="">
             <div className="grid gap-y-4">
@@ -31,6 +33,7 @@ export const AddressRestauForm: React.FC<FormStepProps> = ({ errors, control }) 
                             placeholder="Entrez l'email de l'établissement"
                             type="email"
                             value={field.value ?? ''}
+                            variant="bordered"
                         />
                     )}
                 />
@@ -52,25 +55,7 @@ export const AddressRestauForm: React.FC<FormStepProps> = ({ errors, control }) 
                             }}
                             type="text"
                             value={field.value ?? ''}
-                        />
-                    )}
-                />
-                <Controller
-                    control={control}
-                    name="localisation"
-                    render={({ field }) => (
-                        <Input
-                            {...field}
-                            isRequired
-                            aria-invalid={errors.localisation ? 'true' : 'false'}
-                            aria-label="localisation input"
-                            errorMessage={errors.localisation?.message ?? ''}
-                            isInvalid={!!errors.localisation}
-                            label="Localisation"
-                            labelPlacement="outside"
-                            name="localisation"
-                            placeholder="Entrez la localisation"
-                            value={field.value ?? ''}
+                            variant="bordered"
                         />
                     )}
                 />
@@ -90,9 +75,11 @@ export const AddressRestauForm: React.FC<FormStepProps> = ({ errors, control }) 
                             name="codePostal"
                             placeholder="Entrez le code postal"
                             value={field.value ?? ''}
+                            variant="bordered"
                         />
                     )}
                 />
+                <SearchAddressAutocomplete errors={errors} control={control} setValue={setValue} />
             </div>
         </div>
     );
