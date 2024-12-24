@@ -111,9 +111,10 @@ export default function SearchAddressAutocomplete({ errors, control, setValue }:
                         labelPlacement="outside"
                         name="idLocation"
                         placeholder="ID de la localisation"
-                        type="hidden"
+                        type="text"
                         variant="bordered"
                         isReadOnly
+                        className="hidden"
                     />
                 )}
             />
@@ -132,9 +133,10 @@ export default function SearchAddressAutocomplete({ errors, control, setValue }:
                         labelPlacement="outside"
                         name="longitude"
                         placeholder="Longitude"
-                        type="hidden"
+                        type="text"
                         variant="bordered"
                         isReadOnly
+                        className="hidden"
                     />
                 )}
             />
@@ -153,9 +155,10 @@ export default function SearchAddressAutocomplete({ errors, control, setValue }:
                         labelPlacement="outside"
                         name="latitude"
                         placeholder="Latitude"
-                        type="hidden"
+                        type="text"
                         variant="bordered"
                         isReadOnly
+                        className="hidden"
                     />
                 )}
             />
