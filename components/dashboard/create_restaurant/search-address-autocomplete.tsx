@@ -13,7 +13,6 @@ interface FormStepProps {
     control: Control<_createRestaurantSchema>;
     setValue: UseFormSetValue<_createRestaurantSchema>;
 }
-
 export default function SearchAddressAutocomplete({ errors, control, setValue }: FormStepProps) {
     const [input, setInput] = useState('');
     const [suggestions, setSuggestions] = useState<PlaceAutocompleteResult[]>([]);
