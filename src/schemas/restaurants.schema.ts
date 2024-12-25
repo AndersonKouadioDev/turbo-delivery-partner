@@ -11,20 +11,20 @@ export const createRestaurantSchema = z.object({
     docUrl: z
         .instanceof(File)
         .refine((file) => file.size > 0, 'Le document est requis')
-        .refine((file) => file.size <= 5 * 1024 * 1024, 'La taille du document ne doit pas dépasser 5 Mo')
+        .refine((file) => file.size <= 10 * 1024 * 1024, 'La taille du document ne doit pas dépasser 5 Mo')
         .refine((file) => ['application/pdf'].includes(file.type), 'Format de fichier non supporté (PDF, JPEG, PNG uniquement)'),
     cniUrl: z
         .instanceof(File)
         .refine((file) => file.size > 0, "La carte d'identité est requise")
-        .refine((file) => file.size <= 5 * 1024 * 1024, 'La taille du document ne doit pas dépasser 5 Mo')
+        .refine((file) => file.size <= 10 * 1024 * 1024, 'La taille du document ne doit pas dépasser 5 Mo')
         .refine((file) => ['application/pdf'].includes(file.type), 'Format de fichier non supporté (PDF, JPEG, PNG uniquement)'),
     dateService: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format de date invalide (YYYY-MM-DD)'),
     description: z.string().min(1, 'La description est requise'),
     logoUrl: z
         .instanceof(File)
         .refine((file) => file.size > 0, 'Le logo est requis')
-        .refine((file) => file.size <= 2 * 1024 * 1024, 'La taille du logo ne doit pas dépasser 2 Mo')
-        .refine((file) => ['image/jpeg', 'image/png'].includes(file.type), 'Format de logo non supporté (JPEG, PNG, GIF uniquement)'),
+        .refine((file) => file.size <= 10 * 1024 * 1024, 'La taille du logo ne doit pas dépasser 2 Mo')
+        .refine((file) => ['image/jpg', 'image/jpeg', 'image/png'].includes(file.type), 'Format de logo non supporté (JPEG, PNG, GIF uniquement)'),
     telephone: z.string(),
     codePostal: z.string().optional(),
     email: z.string().email('Adresse e-mail invalide'),
@@ -137,8 +137,8 @@ export const addPictureSchema = z.object({
             z
                 .instanceof(File)
                 .refine((file) => file.size > 0, 'Le logo est requis')
-                .refine((file) => file.size <= 2 * 1024 * 1024, 'La taille du logo ne doit pas dépasser 2 Mo')
-                .refine((file) => ['image/jpeg', 'image/png'].includes(file.type), 'Format de logo non supporté (JPEG, PNG, GIF uniquement)'),
+                .refine((file) => file.size <= 10 * 1024 * 1024, 'La taille du logo ne doit pas dépasser 2 Mo')
+                .refine((file) => ['image/jpg', 'image/jpeg', 'image/png'].includes(file.type), 'Format de logo non supporté (JPEG, PNG, GIF uniquement)'),
         )
         .nonempty(),
 });
@@ -153,8 +153,8 @@ export const createDishSchema = z.object({
     imageUrl: z
         .instanceof(File)
         .refine((file) => file.size > 0, 'Le logo est requis')
-        .refine((file) => file.size <= 2 * 1024 * 1024, 'La taille du logo ne doit pas dépasser 2 Mo')
-        .refine((file) => ['image/jpeg', 'image/png'].includes(file.type), 'Format de logo non supporté (JPEG, PNG, GIF uniquement)'),
+        .refine((file) => file.size <= 10 * 1024 * 1024, 'La taille du logo ne doit pas dépasser 2 Mo')
+        .refine((file) => ['image/jpg', 'image/jpeg', 'image/png'].includes(file.type), 'Format de logo non supporté (JPEG, PNG, GIF uniquement)'),
     cookTime: z.string().min(1, 'Le temps de cuisson est requis'),
 });
 

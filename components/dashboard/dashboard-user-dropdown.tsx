@@ -7,8 +7,11 @@ import { Restaurant } from '@/types/models';
 import { title } from '../primitives';
 import { Avatar } from '@nextui-org/react';
 import createUrlFile from '@/utils/createUrlFile';
+import { User } from 'next-auth';
+import { useRouter } from 'next/navigation';
 
-export const DashboardUserDropdown = ({ restaurant }: { restaurant: Restaurant | null }) => {
+export const DashboardUserDropdown = ({ restaurant, user }: { restaurant: Restaurant | null | undefined; user: User }) => {
+    const router = useRouter();
     return (
         <div className="flex items-center gap-2">
             <span className={title({ size: 'h4', class: 'uppercase' })}>{restaurant?.nomEtablissement ?? ''}</span>
@@ -21,10 +24,10 @@ export const DashboardUserDropdown = ({ restaurant }: { restaurant: Restaurant |
                     </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuLabel>Utilisateur : {user?.name}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
-                    <DropdownMenuItem>Support</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push('/settings')}>Paramètre</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push('/settings/help')}>Support</DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                         onClick={async () => {

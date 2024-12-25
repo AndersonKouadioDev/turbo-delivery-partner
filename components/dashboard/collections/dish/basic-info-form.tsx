@@ -57,7 +57,7 @@ export function BasicInfoForm({ control, errors }: BasicInfoFormProps) {
                             {...field}
                             ref={fileInputRef}
                             type="file"
-                            accept=".jpg,.png"
+                            accept=".jpg,.jpeg,.png"
                             onChange={(e) => onChange(e.target.files?.[0])}
                             required
                             className="sr-only"

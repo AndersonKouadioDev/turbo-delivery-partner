@@ -90,7 +90,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
                         <ThemeSwitch />
                     </div>
 
-                    {restaurant && <DashboardUserDropdown restaurant={restaurant} />}
+                    {session && session?.user && <DashboardUserDropdown restaurant={restaurant} user={session?.user} />}
                 </header>
                 <main className="relative  p-2 lg:p-4 w-full bg-muted overflow-y-auto h-full max-h-[calc(100vh-60px)]">{children}</main>
             </div>
