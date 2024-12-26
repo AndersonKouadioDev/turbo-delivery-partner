@@ -34,7 +34,7 @@ export const RestaurantForm = ({ restaurant }: { restaurant: Restaurant }) => {
     } = useForm<any>({
         // resolver: zodResolver(),
         defaultValues: {
-            name: restaurant?.nomEtablissement,
+            nomEtablissement: restaurant?.nomEtablissement,
         },
     });
 
@@ -58,16 +58,16 @@ export const RestaurantForm = ({ restaurant }: { restaurant: Restaurant }) => {
                     <div className="">
                         <Controller
                             control={control}
-                            name="name"
+                            name="nomEtablissement"
                             render={({ field }) => (
                                 <Input
                                     {...field}
                                     isRequired
-                                    aria-invalid={errors.name ? 'true' : 'false'}
-                                    aria-label="name input"
-                                    // errorMessage={errors.name?.message ?? ''}
-                                    // isInvalid={!!errors.name}
-                                    name="name"
+                                    aria-invalid={errors.nomEtablissement ? 'true' : 'false'}
+                                    aria-label="nomEtablissement input"
+                                    // errorMessage={errors.nomEtablissement?.message ?? ''}
+                                    // isInvalid={!!errors.nomEtablissement}
+                                    name="nomEtablissement"
                                     placeholder="Entrez le nom du restaurant"
                                     radius="sm"
                                     type="text"
