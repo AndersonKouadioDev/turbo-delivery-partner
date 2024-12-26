@@ -7,8 +7,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { body, title } from '@/components/primitives';
 import { SubmitButton } from '@/components/ui/form-ui/submit-button';
+import { Restaurant } from '@/types/models';
 
-export const RestaurantName = ({ name, id }: { name: string; id: string }) => {
+export const RestaurantForm = ({ restaurant }: { restaurant: Restaurant }) => {
     const router = useRouter();
 
     const [, formAction] = useFormState(
@@ -33,7 +34,7 @@ export const RestaurantName = ({ name, id }: { name: string; id: string }) => {
     } = useForm<any>({
         // resolver: zodResolver(),
         defaultValues: {
-            name: name,
+            name: restaurant?.nomEtablissement,
         },
     });
 
