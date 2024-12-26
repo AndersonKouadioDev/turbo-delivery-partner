@@ -9,6 +9,7 @@ import { ChevronRight, HandPlatter } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Content({ data }: { data: CollectionWithDishes[] }) {
+    console.log(data)
     return (
         <div className="w-full h-full pb-10 flex flex-1 flex-col gap-4 lg:gap-6">
             <div className="flex items-center justify-between">
@@ -18,25 +19,33 @@ export default function Content({ data }: { data: CollectionWithDishes[] }) {
                 </Button>
             </div>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {data && data.length > 0 && data.map((collection) => (
-                    <Card key={collection.collectionModel.id} className="overflow-hidden">
-                        <CardHeader className="flex justify-between gap-2">
-                            <Image src={createUrlFile(collection.collectionModel.pictureUrl, 'erp')} alt={collection.collectionModel.libelle} width={100} height={100} className="object-cover" />
-                            <div className="flex flex-col justify-center items-center ">
-                                <HandPlatter className="h-8 w-8 mr-2 text-pretty text-primary" />
-                                <span className="text-sm text-gray-500">{collection.totalPlat} plats</span>
-                            </div>
-                        </CardHeader>
+                {data &&
+                    data.length > 0 &&
+                    data.map((collection) => (
+                        <Card key={collection.collectionModel.id} className="overflow-hidden">
+                            <CardHeader className="flex justify-between gap-2">
+                                <Image
+                                    src={createUrlFile(collection.collectionModel?.pictureUrl ?? '', 'erp')}
+                                    alt={collection.collectionModel?.libelle}
+                                    width={100}
+                                    height={100}
+                                    className="object-cover"
+                                />
+                                <div className="flex flex-col justify-center items-center ">
+                                    <HandPlatter className="h-8 w-8 mr-2 text-pretty text-primary" />
+                                    <span className="text-sm text-gray-500">{collection.totalPlat} plats</span>
+                                </div>
+                            </CardHeader>
 
-                        <CardBody className="p-4"></CardBody>
-                        <CardFooter className="p-4 pt-0 flex justify-between items-center">
-                            <h2 className="text-xl font-semibold">{collection.collectionModel.libelle}</h2>
-                            <Button as={Link} href={`/collections/${collection.collectionModel.id}`} variant="bordered" size="sm" endContent={<ChevronRight className="h-5 w-5 text-primary" />}>
-                                <span>Voir la collection</span>
-                            </Button>
-                        </CardFooter>
-                    </Card>
-                ))}
+                            <CardBody className="p-4"></CardBody>
+                            <CardFooter className="p-4 pt-0 flex justify-between items-center">
+                                <h2 className="text-xl font-semibold">{collection.collectionModel.libelle}</h2>
+                                <Button as={Link} href={`/collections/${collection.collectionModel.id}`} variant="bordered" size="sm" endContent={<ChevronRight className="h-5 w-5 text-primary" />}>
+                                    <span>Voir la collection</span>
+                                </Button>
+                            </CardFooter>
+                        </Card>
+                    ))}
             </div>
         </div>
     );
