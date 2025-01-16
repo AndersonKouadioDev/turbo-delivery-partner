@@ -13,13 +13,13 @@ const destinataireCourseExterneSchema = z.object({
 });
 
 // Enum pour les modes de paiement
-const modePaiementEnum = z.enum(["Espèce", "Mobile Money", "Carte bancaire"]);
+const modePaiementEnum = z.enum(["ESPECE", "WAVE"]);
 
 // Schéma pour une commande individuelle
 const commandeCourseExterneSchema = z.object({
     libelle: z.string().min(1, "Le libellé est requis"),
     numero: z.string().min(1, "Le numéro de commande est requis"),
-    dateHeure: z.string(),
+   
     destinataire: destinataireCourseExterneSchema,
     lieuRecuperation: localisationCourseExterneSchema,
     lieuLivraison: localisationCourseExterneSchema,
@@ -46,7 +46,6 @@ export const locationSchema = z.object({
 export const commandeSchema = z.object({
     libelle: z.string().min(1, 'Le libellé est requis'),
     numero: z.string().min(1, 'Le numéro est requis'),
-    dateHeure: z.string(),
     destinataire: z.object({
         nomComplet: z.string().min(1, 'Le nom est requis'),
         contact: z.string().min(1, 'Le contact est requis'),
@@ -69,7 +68,6 @@ export type CommandeItem = z.infer<typeof commandeSchema>;
 export const defaultCommande: CommandeItem = {
     libelle: '',
     numero: '',
-    dateHeure: new Date().toISOString(),
     destinataire: {
         nomComplet: '',
         contact: '',
@@ -84,7 +82,7 @@ export const defaultCommande: CommandeItem = {
         longitude: 0,
         latitude: 0,
     },
-    modePaiement: 'Espèce',
+    modePaiement: 'ESPECE',
     prix: 0,
     livraisonPaye: false,
 };

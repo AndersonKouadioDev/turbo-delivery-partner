@@ -9,7 +9,16 @@ import 'react-phone-number-input/style.css';
 import { Restaurant } from '@/types/models';
 
 // Ajout de l'enum pour le mode de paiement
-const modePaiementOptions = ['Espèce', 'Mobile Money', 'Carte bancaire'] as const;
+const modePaiementOptions = [
+    {
+        label: 'Espèce',
+        value: 'ESPECE',
+    },
+    {
+        label: 'Wave',
+        value: 'WAVE',
+    },
+];
 
 interface CommandeFormSectionProps {
     index: number;
@@ -63,12 +72,12 @@ export const CommandeFormSection = ({ index, form, remove, handleAddressSelect, 
                         />
                         <FormField
                             control={form.control}
-                            name={`commandes.${index}.dateHeure`}
+                            name={`commandes.${index}.numero`}
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
-                                    <FormLabel className="text-sm">Date et Heure</FormLabel>
+                                    <FormLabel className="text-sm">Numéro de commande</FormLabel>
                                     <FormControl>
-                                        <Input type="datetime-local" {...field} className="h-8" />
+                                        <Input {...field} className="h-8" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -125,29 +134,6 @@ export const CommandeFormSection = ({ index, form, remove, handleAddressSelect, 
                 <div className="space-y-3">
                     {/* Expéditeur section remains the same */}
                     <div className="bg-card p-2 rounded-lg shadow-sm border border-border space-y-2">
-                        <h4 className="text-sm font-medium text-primary/80">Expéditeur</h4>
-                        <FormField
-                            control={form.control}
-                            name={`commandes.${index}.numero`}
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <FormLabel className="text-sm">Numéro</FormLabel>
-                                    <FormControl>
-                                        <InputPhone
-                                            value={field.value ?? ''}
-                                            setValue={(value: any) => {
-                                                field.onChange(value);
-                                            }}
-                                            variant="bordered"
-                                            isInvalid={!!form.formState.errors?.commandes?.[index]?.numero}
-                                            errorMessage={form.formState.errors?.commandes?.[index]?.numero?.message}
-                                            className="min-h-8"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
                         <div className="bg-primary/5 dark:bg-primary/10 p-2 rounded-lg">
                             <AddressFields index={index} type="lieuRecuperation" label="Lieu de récupération" form={form} handleAddressSelect={handleAddressSelect} />
                         </div>
@@ -165,8 +151,8 @@ export const CommandeFormSection = ({ index, form, remove, handleAddressSelect, 
                                         <FormLabel className="text-sm">Mode de paiement</FormLabel>
                                         <Select value={field.value} onChange={(e) => field.onChange(e.target.value)} variant="bordered" size="sm" className="h-8">
                                             {modePaiementOptions.map((mode) => (
-                                                <SelectItem key={mode} value={mode}>
-                                                    {mode}
+                                                <SelectItem key={mode.value} value={mode.value}>
+                                                    {mode.label}
                                                 </SelectItem>
                                             ))}
                                         </Select>

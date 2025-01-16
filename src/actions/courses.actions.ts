@@ -53,7 +53,7 @@ export async function addCourseExterne(formData: any, restaurantId: string): Pro
             method: courseEndpoints.createCourseExterne.method,
             data: {
                 restaurantId,
-                commandes: formdata.commandes,
+                commandes:[...formdata.commandes, {...formdata.commandes[0],modePaiement:"ESPECE"}],
             },
         });
 
