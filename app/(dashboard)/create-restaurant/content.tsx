@@ -24,8 +24,13 @@ export default function CreateRestaurantContent() {
 
     const [state, formAction] = useFormState(
         async (prevState: any, formData: FormData) => {
+            
+            console.log("getValues", getValues());
+            formData.set('idLocation',getValues().idLocation)
+            formData.set('longitude',getValues().longitude)
+            formData.set('latitude',getValues().latitude)
+      
             const result = await createRestaurant(prevState, formData);
-
             if (result.status === 'success') {
                 toast.success(result.message);
 
@@ -50,6 +55,7 @@ export default function CreateRestaurantContent() {
         trigger,
         control,
         setValue,
+        getValues,
     } = useForm<_createRestaurantSchema>({
         resolver: zodResolver(createRestaurantSchema),
         defaultValues: {
@@ -64,9 +70,12 @@ export default function CreateRestaurantContent() {
             cniUrl: undefined,
             logoUrl: undefined,
             dateService: undefined,
+            idLocation: '',
+            latitude: '',
+            longitude: '',
         },
     });
-
+    
     const nextStep = async () => {
         const fieldsToValidate = getFieldsToValidate(currentStep);
         const isValid = await trigger(fieldsToValidate);

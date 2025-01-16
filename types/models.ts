@@ -178,3 +178,38 @@ export interface DishComplet {
     optionPlatM: Option[];
     boissonPlatMs: Drink[];
 }
+
+export interface LocationCourseExterne {
+    longitude: number;
+    latitude: number;
+    address: string;
+}
+
+export interface DestinataireCourseExterne {
+    nomComplet: string;
+    contact: string;
+}
+
+export interface CommandeCourseExterne {
+    id: string;
+    libelle: string;
+    numero: string;
+    dateHeure: string;
+    destinataire: DestinataireCourseExterne;
+    lieuRecuperation: LocationCourseExterne;
+    lieuLivraison: LocationCourseExterne;
+    modePaiement: 'Espèce';
+    statut: string;
+    fraisLivraison: number;
+    prix: number;
+    livraisonPaye: boolean;
+}
+export interface CourseExterne {
+    id: string;
+    code: string;
+    statut: string;
+    dateHeureDebut: string;
+    dateHeureFin: string;
+    total: number;
+    commandes: CommandeCourseExterne[];
+}

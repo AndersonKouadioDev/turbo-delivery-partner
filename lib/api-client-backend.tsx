@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosHeaders, AxiosRequestConfig } from 'axios';
 import { auth } from '@/auth';
 
-class ApiClient {
+class ApiClientBackend {
     private axiosInstance: AxiosInstance;
 
     constructor(baseUrl: string) {
@@ -54,42 +54,22 @@ class ApiClient {
         return headers;
     }
 
-    async get(endpoint: string, config?: AxiosRequestConfig) {
-        return this.axiosInstance.get(endpoint, config);
-    }
-
-    async post(endpoint: string, data: any, config?: AxiosRequestConfig) {
-        return this.axiosInstance.post(endpoint, data, config);
-    }
-
-    async put(endpoint: string, data: any, config?: AxiosRequestConfig) {
-        return this.axiosInstance.put(endpoint, data, config);
-    }
-
-    async patch(endpoint: string, data: any, config?: AxiosRequestConfig) {
-        return this.axiosInstance.patch(endpoint, data, config);
-    }
-
-    async delete(endpoint: string, config?: AxiosRequestConfig) {
-        return this.axiosInstance.delete(endpoint, config);
-    }
-
-    async request({ endpoint, method, data, config }: { endpoint: string; method: string; data: any; config?: AxiosRequestConfig }) {
+    async request({ endpoint, method, data, config }: { endpoint: string; method: string; data?: any; config?: AxiosRequestConfig }) {
         if (method.trim().toLowerCase() == 'post') {
-            return this.post(endpoint.trim(), data, config);
+            return this.axiosInstance.post(endpoint.trim(), data, config);
         }
         if (method.trim().toLowerCase() == 'put') {
-            return this.put(endpoint.trim(), data, config);
+            return this.axiosInstance.put(endpoint.trim(), data, config);
         }
         if (method.trim().toLowerCase() == 'patch') {
-            return this.patch(endpoint.trim(), data, config);
+            return this.axiosInstance.patch(endpoint.trim(), data, config);
         }
         if (method.trim().toLowerCase() == 'delete') {
-            return this.delete(endpoint.trim(), config);
+            return this.axiosInstance.delete(endpoint.trim(), config);
         }
 
-        return this.get(endpoint.trim(), config);
+        return this.axiosInstance.get(endpoint.trim(), config);
     }
 }
 
-export const apiClient = new ApiClient(process.env.NEXT_PUBLIC_API_RESTO_URL || '');
+export const apiClientBackend = new ApiClientBackend(process.env.NEXT_PUBLIC_API_BACKEND_URL || '');

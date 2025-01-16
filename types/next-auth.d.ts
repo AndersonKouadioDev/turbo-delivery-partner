@@ -10,6 +10,7 @@ declare module 'next-auth' {
             token: string;
             role: string;
             restaurant: string;
+            restauranID: string;
         };
     }
 
@@ -21,6 +22,7 @@ declare module 'next-auth' {
         token: string;
         role: string;
         restaurant: string;
+        restauranID: string;
     }
 }
 
@@ -33,5 +35,6 @@ declare module 'next-auth/jwt' {
         token: string;
         role: string;
         restaurant: string;
+        restauranID: string;
     }
 }

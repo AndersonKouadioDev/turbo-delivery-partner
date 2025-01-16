@@ -5,7 +5,7 @@ export const createRestaurantSchema = z.object({
     nomEtablissement: z.string().min(1, "Le nom de l'établissement est requis"),
     commune: z.string().min(1, 'La commune est requise'),
     localisation: z.string().min(1, 'La localisation est requise'),
-    idLocation: z.string().min(1, 'La localisation est requise'),
+    idLocation: z.string(),
     longitude: z.string(),
     latitude: z.string(),
     docUrl: z

@@ -73,7 +73,6 @@ export function DrinksSection({ dish, drinks, onUpdate }: DrinksSectionProps) {
                     : null;
             })
             .filter(Boolean);
-        console.log({ modifiedDrinks, newDrinks });
 
         // Ajouter les nouveaux accompagnements
         for (const newDrink of newDrinks) {

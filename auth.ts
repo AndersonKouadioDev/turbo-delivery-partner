@@ -30,6 +30,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
                         email: data?.user?.email,
                         token: data?.token,
                         restaurant: data?.user?.restaurant?.nomEtablissement ?? null,
+                        restauranID: data?.user?.restaurant?.id ?? null,
                         role: data?.user?.role?.libelle ?? null,
                     } as User;
                 }
@@ -66,6 +67,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
                     token: user.token as string,
                     role: user.role as string,
                     restaurant: user.restaurant as string,
+                    restauranID: user.restauranID as string,
                 };
             }
 
@@ -82,6 +84,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
             session.user.image = token.image as string;
             session.user.role = token.role as string;
             session.user.restaurant = token.restaurant as string;
+            session.user.restauranID = token.restauranID as string;
 
             return session;
         },

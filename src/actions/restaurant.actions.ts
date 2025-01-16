@@ -33,6 +33,7 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
         },
         prevState,
     );
+ 
 
     if (!success) {
         return {
@@ -40,10 +41,8 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
             message: 'Données manquantes ou mal formatées',
         };
     }
-
-    const _formdata = { ...formdata, longitude: Number(formdata.longitude), latitude: Number(formdata.latitude) };
     // Create a new FormData object to ensure we're sending multipart/form-data
-    const sendFormData = createFormData(_formdata);
+    const sendFormData = createFormData(formdata);
 
     try {
         const response = await apiClient.post(restaurantEndpoints.create, sendFormData, {
@@ -51,7 +50,7 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
                 'Content-Type': 'multipart/form-data',
             },
         });
-        console.log(response);
+        
         if (response.status !== 200) {
             return {
                 status: 'error',
@@ -62,6 +61,7 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
         await unstable_update({
             user: {
                 restaurant: response?.data?.restaurant?.nomEtablissement!,
+                restauranID:response?.data?.restaurant?.id!,
             },
         });
 

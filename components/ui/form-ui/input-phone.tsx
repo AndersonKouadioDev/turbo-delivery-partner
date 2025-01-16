@@ -18,7 +18,7 @@ const InputPhone = forwardRef<React.ElementRef<typeof PhoneInput>, InputPhonePro
         if (value) {
             const formattedValue = formatPhoneNumberIntl(value);
 
-            setValue(formattedValue.replace('+', ''));
+            setValue(formattedValue);
         }
     };
 
@@ -34,9 +34,8 @@ const InputPhone = forwardRef<React.ElementRef<typeof PhoneInput>, InputPhonePro
             international
             aria-label="phone_number input"
             className={cn('disabled:cursor-not-allowed', className)}
-            countryCallingCodeEditable={false}
+            countryCallingCodeEditable={true}
             errorMessage={!isContactValid ? 'Numéro incorrete' : ''}
-            initialValueFormat="national"
             inputComponent={InputNextUI}
             placeholder="Entrer votre numéro de téléphone"
             defaultCountry="CI"

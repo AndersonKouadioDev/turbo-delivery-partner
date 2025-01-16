@@ -16,7 +16,6 @@ export async function middleware(request: NextRequest) {
     } else {
         const data = await findOneRestaurant();
         const restaurant = data?.restaurant;
-
         if (!restaurant && session?.user.restaurant && !pathname.startsWith('/auth')) {
             return NextResponse.redirect(new URL(`/auth`, request.url));
         }

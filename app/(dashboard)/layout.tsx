@@ -9,6 +9,7 @@ import { Logo } from '@/components/icons';
 import ThemeSwitch from '@/components/layouts/themeSwitch';
 import { auth } from '@/auth';
 import { findOneRestaurant } from '@/src/actions/restaurant.actions';
+import { TbTruckDelivery } from 'react-icons/tb';
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -17,10 +18,9 @@ interface DashboardLayoutProps {
 export default async function DashboardLayout({ children }: DashboardLayoutProps) {
     const session = await auth();
 
-    
     const data = await findOneRestaurant();
     const restaurant = data?.restaurant;
-    
+
     console.log(session);
     // console.log(restaurant);
 
@@ -39,7 +39,12 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
             href: '/collections',
             icon: <Pizza className="h-5 w-5" />,
             label: 'Collections',
-            badge: 6,
+            // badge: 6,
+        },
+        {
+            href: '/delivery',
+            icon: <TbTruckDelivery className="h-5 w-5" />,
+            label: 'Mes Courses',
         },
         {
             href: '/orders',

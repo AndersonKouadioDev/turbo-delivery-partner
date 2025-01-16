@@ -33,7 +33,6 @@ interface ExtractFormDataOptions {
  *   excludeFields: ['age'],
  *   includeFields: ['name', 'hobbies', 'city']
  * });
- * console.log(data);
  * // Résultat :
  * // {
  * //   name: 'Alice',
@@ -42,25 +41,46 @@ interface ExtractFormDataOptions {
  * // }
  * // Note : 'age' est exclu, 'nom' est transformé en 'name', et 'ville' en 'city'
  */
-export function extractFormData(formData: FormData, options: ExtractFormDataOptions = {}): Record<string, unknown> {
+export function extractFormData(data: FormData | Record<string, unknown>, options: ExtractFormDataOptions = {}): Record<string, unknown> {
     const { keyTransforms = {}, excludeFields = [], includeFields } = options;
     const result: Record<string, unknown> = {};
 
-    formData.forEach((value, key) => {
-        // Vérifier si le champ doit être inclus ou exclu
-        if (excludeFields.includes(key) || (includeFields && !includeFields.includes(key))) {
-            return;
-        }
+    // Fonction helper pour déterminer si une clé doit être traitée
+    const shouldProcessKey = (key: string): boolean => {
+        if (excludeFields.includes(key)) return false;
+        if (includeFields && !includeFields.includes(key)) return false;
+        return true;
+    };
 
-        const transformedKey = keyTransforms[key] || key;
+    // Fonction helper pour transformer la clé
+    const transformKey = (key: string): string => {
+        return keyTransforms[key] || key;
+    };
 
-        if (formData.getAll(key).length > 1) {
-            // Si plusieurs valeurs pour la même clé, on les stocke dans un tableau
-            result[transformedKey] = formData.getAll(key);
-        } else {
+    if (data instanceof FormData) {
+        // Traitement pour FormData
+        const processedKeys = new Set<string>();
+
+        data.forEach((value, key) => {
+            if (!shouldProcessKey(key)) return;
+
+            const transformedKey = transformKey(key);
+
+            if (!processedKeys.has(key)) {
+                const allValues = data.getAll(key);
+                result[transformedKey] = allValues.length > 1 ? allValues : allValues[0];
+                processedKeys.add(key);
+            }
+        });
+    } else {
+        // Traitement pour objet JavaScript
+        Object.entries(data).forEach(([key, value]) => {
+            if (!shouldProcessKey(key)) return;
+
+            const transformedKey = transformKey(key);
             result[transformedKey] = value;
-        }
-    });
+        });
+    }
 
     return result;
 }
@@ -78,7 +98,6 @@ export function extractFormData(formData: FormData, options: ExtractFormDataOpti
  * });
  * const result = schema.safeParse({ nom: 'Alice', age: 16, email: 'alice@example' });
  * const errors = extractZodErrors(result);
- * console.log(errors);
  * // Résultat :
  * // {
  * //   'age': 'Number must be greater than or equal to 18',
@@ -98,6 +117,19 @@ export const extractZodErrors = (validationResult: z.SafeParseReturnType<any, an
 
     return errors;
 };
+export const extractZodErrorsinArray = (validationResult: z.SafeParseReturnType<any, any>): string[] => {
+    if (validationResult.success) return [];
+
+    const errors: string[] = [];
+
+    validationResult.error.issues.forEach((issue) => {
+        const path = issue.path.join('.');
+
+        errors.push(`${path} : ${issue.message}`);
+    });
+
+    return errors;
+};
 
 /**
  * Crée un schéma Zod dynamique basé sur un schéma de base et des données.
@@ -112,7 +144,6 @@ export const extractZodErrors = (validationResult: z.SafeParseReturnType<any, an
  * });
  * const data = { nom: 'Alice', age: 30, hobby: 'lecture', ville: 'Paris' };
  * const dynamicSchema = createDynamicSchema(baseSchema, data);
- * console.log(dynamicSchema.shape);
  * // Résultat :
  * // {
  * //   nom: z.string(),
@@ -150,8 +181,6 @@ export function createDynamicSchema<T extends z.ZodRawShape>(baseSchema: z.ZodOb
  * });
  * const data = { nom: 'Alice', age: 30, hobby: 'lecture' };
  * const result = validateWithDynamicSchema(baseSchema, data);
- * console.log(result.success); // true
- * console.log(result.data);
  * // Résultat :
  * // {
  * //   nom: 'Alice',
@@ -183,7 +212,6 @@ export function validateWithDynamicSchema<T extends z.ZodRawShape>(
  *   score: (value) => parseFloat(value)
  * };
  * const transformedData = transformFormData(data, transformations);
- * console.log(transformedData);
  * // Résultat :
  * // {
  * //   age: 30,
@@ -214,7 +242,6 @@ export function transformFormData(data: Record<string, unknown>, transformations
  * const error = { code: ErrorDefaultCode.auth };
  * const prevState = { status: 'idle', message: '', code: null };
  * const updatedState = handleError(error, prevState, 'Une erreur inconnue est survenue');
- * console.log(updatedState);
  * // Résultat :
  * // {
  * //   status: 'error',
@@ -243,15 +270,10 @@ export function handleError(error: any, prevState: any, defaultMessage: string):
 
     return prevState;
 }
-
 export function createFormData(formData: Record<string, unknown>): FormData {
     const sendFormData = new FormData();
     for (const [key, value] of Object.entries(formData)) {
-        if (Array.isArray(value)) {
-            value.forEach((file: File) => {
-                sendFormData.append(key, file);
-            });
-        } else if (value instanceof File) {
+        if (value instanceof File) {
             sendFormData.append(key, value, value.name);
         } else {
             sendFormData.append(key, value as string);
@@ -297,7 +319,6 @@ interface ProcessFormDataOptions<T extends z.ZodRawShape> extends ExtractFormDat
  *   keyTransforms: { nom: 'name' }
  * });
  *
- * console.log(result);
  * // Résultat :
  * // {
  * //   success: true,
@@ -311,13 +332,14 @@ interface ProcessFormDataOptions<T extends z.ZodRawShape> extends ExtractFormDat
  */
 export function processFormData<T extends z.ZodRawShape>(
     schema: z.ZodObject<T>,
-    formData: FormData,
+    formData: FormData | Record<string, unknown>,
     options: ProcessFormDataOptions<T> = {},
     prevState?: any,
 ): {
     success: boolean;
     data: z.infer<z.ZodObject<T>>;
     errors?: Record<string, string>;
+    errorsInArray?: string[];
 } {
     const { useDynamicValidation = true, transformations = {}, ...extractOptions } = options;
 
@@ -333,6 +355,7 @@ export function processFormData<T extends z.ZodRawShape>(
     if (validationResult.success) {
         if (prevState) {
             prevState.errors = {};
+            prevState.errorsInArray = [];
             prevState.message = '';
             prevState.status = 'success';
             prevState.code = undefined;
@@ -345,6 +368,7 @@ export function processFormData<T extends z.ZodRawShape>(
     } else {
         if (prevState) {
             prevState.errors = extractZodErrors(validationResult);
+            prevState.errorsInArray = extractZodErrorsinArray(validationResult);
             prevState.message = 'Informations invalides';
             prevState.status = 'error';
             prevState.code = ErrorDefaultCode.exception;
@@ -354,6 +378,7 @@ export function processFormData<T extends z.ZodRawShape>(
             success: false,
             data: transformedData as z.infer<z.ZodObject<T>>,
             errors: extractZodErrors(validationResult),
+            errorsInArray: extractZodErrorsinArray(validationResult),
         };
     }
 }

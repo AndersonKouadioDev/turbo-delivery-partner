@@ -9,7 +9,6 @@ import { ChevronRight, HandPlatter } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Content({ data }: { data: CollectionWithDishes[] }) {
-    console.log(data)
     return (
         <div className="w-full h-full pb-10 flex flex-1 flex-col gap-4 lg:gap-6">
             <div className="flex items-center justify-between">
