@@ -57,7 +57,7 @@ export async function addCourseExterne(formData: any, restaurantId: string): Pro
             },
         });
 
-        if (response.status !== 200) {
+        if (response.status !== 201) {
             console.log(response)
             return {
                 status: 'error',
