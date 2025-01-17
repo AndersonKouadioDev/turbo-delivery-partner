@@ -9,7 +9,6 @@ export default async function DeliveryPage() {
 
     const data = await getAllCourseExterne(session?.user?.restauranID ?? '');
 
-
     return (
         <Suspense fallback={<Loading />}>
             <Content data={data} />

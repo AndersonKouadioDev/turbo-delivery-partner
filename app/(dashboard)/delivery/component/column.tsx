@@ -7,19 +7,19 @@ import { CourseExterne } from '@/types/models'
 
 export const columns: ColumnDef<CourseExterne>[] = [
   {
-    accessorKey: 'code',
+    accessorKey: 'id',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Code
+          ID
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
-    cell: ({ row }) => <div>{row.getValue('code') || 'N/A'}</div>,
+    cell: ({ row }) => <div>{row.getValue('id') || 'N/A'}</div>,
   },
   {
     accessorKey: 'statut',
