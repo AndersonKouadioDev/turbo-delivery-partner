@@ -33,7 +33,6 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
         },
         prevState,
     );
- 
 
     if (!success) {
         return {
@@ -50,7 +49,7 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
                 'Content-Type': 'multipart/form-data',
             },
         });
-        
+
         if (response.status !== 200) {
             return {
                 status: 'error',
@@ -61,7 +60,7 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
         await unstable_update({
             user: {
                 restaurant: response?.data?.restaurant?.nomEtablissement!,
-                restauranID:response?.data?.restaurant?.id!,
+                restauranID: response?.data?.restaurant?.id!,
             },
         });
 
@@ -151,28 +150,32 @@ export async function addPicture(prevState: any, formData: FormData): Promise<Ac
 
     const sendFormData = createFormData(formdata);
 
-    try {
-        const response = await apiClient.post(restaurantEndpoints.uploadPicture, sendFormData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
+    // try {
+    const response = await apiClient.post(restaurantEndpoints.uploadPicture, sendFormData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
 
-        if (response.status !== 200) {
-            throw new Error("Erreur lors de l'ajout des images");
-        }
-
-        return {
-            status: 'success',
-            message: 'Images ajoutées avec succès',
-            data: response.data,
-        };
-    } catch (error) {
+    if (response.status !== 200) {
+        console.log(response);
         return {
             status: 'error',
             message: "Erreur lors de l'ajout des images",
         };
     }
+
+    return {
+        status: 'success',
+        message: 'Images ajoutées avec succès',
+        data: response.data,
+    };
+    // } catch (error) {
+    //     return {
+    //         status: 'error',
+    //         message: "Erreur lors de l'ajout des images",
+    //     };
+    // }
 }
 
 export async function getCollections(): Promise<Collection[]> {

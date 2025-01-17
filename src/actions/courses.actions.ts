@@ -46,19 +46,17 @@ export async function addCourseExterne(formData: any, restaurantId: string): Pro
             message: 'Données manquantes ou mal formatées',
         };
     }
-
-    // try {
+    try {
         const response = await apiClientBackend.request({
             endpoint: courseEndpoints.createCourseExterne.endpoint,
             method: courseEndpoints.createCourseExterne.method,
             data: {
                 restaurantId,
-                commandes:[...formdata.commandes, {...formdata.commandes[0],modePaiement:"ESPECE"}],
+                commandes:formdata.commandes,
             },
         });
 
         if (response.status !== 201) {
-            console.log(response)
             return {
                 status: 'error',
                 message: 'Erreur lors de la création de la course',
@@ -68,12 +66,12 @@ export async function addCourseExterne(formData: any, restaurantId: string): Pro
             status: 'success',
             message: 'Course crée avec succès',
         };
-    // } catch (error) {
-    //     return {
-    //         status: 'error',
-    //         message: "Erreur lors de l'ajout de l'horaire",
-    //     };
-    // }
+    } catch (error) {
+        return {
+            status: 'error',
+            message: "Erreur lors de l'ajout de l'horaire",
+        };
+    }
 }
 
 export async function getAllCourseExterne(idRestaurant: string): Promise<CourseExterne[]> {
@@ -144,3 +142,4 @@ export async function createCourseExterne(formData: FormData): Promise<ActionRes
         };
     }
 }
+  
