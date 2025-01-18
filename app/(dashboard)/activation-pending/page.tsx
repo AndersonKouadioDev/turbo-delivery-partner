@@ -3,8 +3,22 @@
 import { ArrowLeft, RefreshCcw } from 'lucide-react';
 import { Button } from '@nextui-org/react';
 import Link from 'next/link';
-
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 export default function ActivationPending() {
+    const router = useRouter();
+    useEffect(() => {
+        const interval = setInterval(
+            () => {
+                router.push("/");
+            },
+            1 * 60 * 1000,
+        ); // 2 minutes en millisecondes
+
+        // Nettoyage lors du démontage du composant
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <div className="min-h-screen bg-white p-6">
             {/* Header */}
@@ -31,7 +45,7 @@ export default function ActivationPending() {
                 </div>
 
                 {/* Details Button */}
-                <Button as={Link} href="/activation-pending/detail" variant="light" className="w-full max-w-md mt-auto text-gray-600">
+                <Button as={Link} href="/activation-pending/detail" color="primary" className="w-full max-w-md mt-aut">
                     Voir les détails de ta demande
                 </Button>
             </div>

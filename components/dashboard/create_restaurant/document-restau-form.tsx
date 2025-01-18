@@ -21,7 +21,7 @@ export const DocumentRestauForm: React.FC<FormStepProps> = ({ errors, control })
                     render={({ field: { onChange, value, ...field } }) => (
                         <div className="grid w-full max-w-sm items-center gap-1.5">
                             <Label htmlFor="logoUrl">Logo de l&apos;établissement</Label>
-                            <Input {...field} type="file" accept=".jpg,.jpeg,.png" onChange={(e) => onChange(e.target.files?.[0])} required />
+                            <Input {...field} type="file" accept=".jpg,.png,.jpeg" onChange={(e) => onChange(e.target.files?.[0])} required />
                         </div>
                     )}
                 />

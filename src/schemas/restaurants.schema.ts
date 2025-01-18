@@ -138,7 +138,7 @@ export const addPictureSchema = z.object({
                 .instanceof(File)
                 .refine((file) => file.size > 0, 'Le logo est requis')
                 .refine((file) => file.size <= 10 * 1024 * 1024, 'La taille du logo ne doit pas dépasser 2 Mo')
-                .refine((file) => ['image/jpg', 'image/jpeg', 'image/png'].includes(file.type), 'Format de logo non supporté (JPEG, PNG, GIF uniquement)'),
+                .refine((file) => ['image/jpg','image/jpeg','image/png'].includes(file.type), 'Format de logo non supporté (JPEG, PNG, GIF uniquement)'),
         )
         .nonempty(),
 });

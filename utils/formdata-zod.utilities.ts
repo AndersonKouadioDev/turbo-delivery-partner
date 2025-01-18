@@ -272,13 +272,71 @@ export function handleError(error: any, prevState: any, defaultMessage: string):
 }
 export function createFormData(formData: Record<string, unknown>): FormData {
     const sendFormData = new FormData();
-    for (const [key, value] of Object.entries(formData)) {
+
+    function appendFormData(key: string, value: unknown) {
+        // Cas null ou undefined
+        if (value === null || value === undefined) {
+            sendFormData.append(key, '');
+            return;
+        }
+
+        // Cas File
         if (value instanceof File) {
             sendFormData.append(key, value, value.name);
-        } else {
-            sendFormData.append(key, value as string);
+            return;
         }
+
+        // Cas Blob
+        if (value instanceof Blob) {
+            sendFormData.append(key, value);
+            return;
+        }
+
+        // Cas Date
+        if (value instanceof Date) {
+            sendFormData.append(key, value.toISOString());
+            return;
+        }
+
+        // Cas tableau
+        if (Array.isArray(value)) {
+            value.forEach((item, index) => {
+                // Pour les tableaux imbriqués ou objets dans les tableaux
+                if (Array.isArray(item) || isObject(item)) {
+                    appendFormData(`${key}[${index}]`, item);
+                } else {
+                    appendFormData(`${key}`, item);
+                }
+            });
+            return;
+        }
+
+        // Cas objet (excluant les types spéciaux déjà traités)
+        if (isObject(value)) {
+            Object.entries(value).forEach(([propertyKey, propertyValue]) => {
+                appendFormData(`${key}[${propertyKey}]`, propertyValue);
+            });
+            return;
+        }
+
+        // Cas des types primitifs (string, number, boolean)
+        sendFormData.append(key, String(value));
     }
+
+    // Fonction utilitaire pour vérifier si une valeur est un objet
+    function isObject(value: unknown): value is Record<string, unknown> {
+        return typeof value === 'object' 
+            && value !== null 
+            && !(value instanceof File) 
+            && !(value instanceof Blob) 
+            && !(value instanceof Date) 
+            && !Array.isArray(value);
+    }
+
+    // Traitement de chaque entrée du formData initial
+    Object.entries(formData).forEach(([key, value]) => {
+        appendFormData(key, value);
+    });
 
     return sendFormData;
 }

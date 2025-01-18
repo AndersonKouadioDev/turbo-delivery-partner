@@ -135,7 +135,11 @@ export async function getHoraires(): Promise<OpeningHour[] | null> {
 }
 
 export async function addPicture(prevState: any, formData: FormData): Promise<ActionResult<any>> {
-    const { success, data: formdata } = processFormData(addPictureSchema, formData, {
+    const {
+        success,
+        data: formdata,
+        errors,
+    } = processFormData(addPictureSchema, formData, {
         useDynamicValidation: true,
     });
 
@@ -150,32 +154,31 @@ export async function addPicture(prevState: any, formData: FormData): Promise<Ac
 
     const sendFormData = createFormData(formdata);
 
-    // try {
-    const response = await apiClient.post(restaurantEndpoints.uploadPicture, sendFormData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    });
+    try {
+        const response = await apiClient.post(restaurantEndpoints.uploadPicture, sendFormData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
 
-    if (response.status !== 200) {
-        console.log(response);
+        if (response.status !== 200) {
+            return {
+                status: 'error',
+                message: "Erreur lors de l'ajout des images",
+            };
+        }
+
+        return {
+            status: 'success',
+            message: 'Images ajoutées avec succès',
+            data: response.data,
+        };
+    } catch (error) {
         return {
             status: 'error',
             message: "Erreur lors de l'ajout des images",
         };
     }
-
-    return {
-        status: 'success',
-        message: 'Images ajoutées avec succès',
-        data: response.data,
-    };
-    // } catch (error) {
-    //     return {
-    //         status: 'error',
-    //         message: "Erreur lors de l'ajout des images",
-    //     };
-    // }
 }
 
 export async function getCollections(): Promise<Collection[]> {

@@ -5,8 +5,9 @@ import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button, Card, CardBody, CardHeader } from '@nextui-org/react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Restaurant } from '@/types/models';
+import { Picture, Restaurant } from '@/types/models';
 import createUrlFile from '@/utils/createUrlFile';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 interface ActivationDetailsProps {
     restaurant: Restaurant;
@@ -67,6 +68,7 @@ export default function Content({ restaurant }: ActivationDetailsProps) {
                         <p>
                             <strong>Description:</strong> {restaurant.description}
                         </p>
+                        <div className="flex justify-center mt-10">{restaurant?.pictures && restaurant?.pictures?.length > 0 && <RestaurantImages images={restaurant.pictures} />}</div>
                     </CardBody>
                 </Card>
 
@@ -138,5 +140,24 @@ export default function Content({ restaurant }: ActivationDetailsProps) {
                 </Card>
             </div>
         </div>
+    );
+}
+
+
+function RestaurantImages({ images }: { images: Picture[] }) {
+    return (
+        <Carousel className="w-8/12"  opts={{
+            align: "center",
+          }}>
+            <CarouselContent className='ml-4'>
+                {images.map((picture) => (
+                    <CarouselItem key={picture?.id} className="md:basis-1/2 lg:basis-1/3 h-60 relative p-4">
+                        <Image alt={`Image ${picture?.id}`} fill className="object-cover p-4" src={createUrlFile(picture.pictureUrl ?? '', 'restaurant')} />
+                    </CarouselItem>
+                ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+        </Carousel>
     );
 }

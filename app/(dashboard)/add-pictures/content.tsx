@@ -135,8 +135,9 @@ export default function FileUploadForm() {
                         <input
                           {...field}
                           type="file"
-                          accept=".jpg,.jpeg,.png"
+                          accept=".jpg,.png,.jpeg"
                           multiple
+                          min={5}
                           max={5}
                           className="hidden"
                           id="file-upload"
