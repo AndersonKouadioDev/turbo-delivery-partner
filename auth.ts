@@ -19,7 +19,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
                     body: JSON.stringify({ username: credentials.username, password: credentials.password }),
                     headers: { 'Content-Type': 'application/json' },
                 });
-
+                
                 if (res.ok) {
                     const data = await res.json();
 

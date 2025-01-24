@@ -2,7 +2,7 @@
 
 import { apiClientBackend } from '@/lib/api-client-backend';
 import { ActionResult } from '@/types';
-import { CourseExterne, OpeningHour } from '@/types/models';
+import { CourseExterne, OpeningHour, PaginatedResponse } from '@/types/models';
 import { processFormData } from '@/utils/formdata-zod.utilities';
 import { createRestaurantSchema } from '../schemas/restaurants.schema';
 import { apiClient } from '@/lib/api-client';
@@ -18,7 +18,7 @@ const courseEndpoints = {
     terminerCourseExterne: { endpoint: `${BASE_URL}/terminer`, method: 'PUT' },
     annulerCourseExterne: { endpoint: `${BASE_URL}/annuler`, method: 'PUT' },
     getPaginationCourseExterne: {
-        endpoint: (idRestaurant: string) => `${BASE_URL}/${idRestaurant}/pagination`,
+        endpoint: (idRestaurant: string, params?: { [key: string]: string }) => `${BASE_URL}/${idRestaurant}/pagination?${new URLSearchParams(params).toString()}`,
         method: 'GET',
     },
     getAllCourseExterne: {
@@ -52,7 +52,7 @@ export async function addCourseExterne(formData: any, restaurantId: string): Pro
             method: courseEndpoints.createCourseExterne.method,
             data: {
                 restaurantId,
-                commandes:formdata.commandes,
+                commandes: formdata.commandes,
             },
         });
 
@@ -88,7 +88,7 @@ export async function getAllCourseExterne(idRestaurant: string): Promise<CourseE
     }
 }
 
-export async function getPaginationCourseExterne(idRestaurant: string): Promise<any | null> {
+export async function getPaginationCourseExterne(idRestaurant: string, page: number = 0, size: number = 10): Promise<PaginatedResponse<CourseExterne> | null> {
     try {
         const response = await apiClientBackend.request({
             endpoint: courseEndpoints.getPaginationCourseExterne.endpoint(idRestaurant),
@@ -116,30 +116,47 @@ export async function getCourseExterne(idCourse: string): Promise<CourseExterne 
     }
 }
 
-export async function createCourseExterne(formData: FormData): Promise<ActionResult<CourseExterne[]>> {
-    const { success, data: formdata } = processFormData(createRestaurantSchema, formData, {
-        useDynamicValidation: true,
-    });
-
-    if (!success) {
-        return {
-            status: 'error',
-            message: 'Données manquantes ou mal formatées',
-        };
-    }
-
+export async function terminerCourseExterne(courseId: string): Promise<ActionResult<CourseExterne>> {
     try {
-        const response = await apiClient.post(restaurantsEndpoint.addHoraire, formdata);
+        const response = await apiClientBackend.request({
+            endpoint: courseEndpoints.terminerCourseExterne.endpoint,
+            method: courseEndpoints.terminerCourseExterne.method,
+            data: {
+                courseId,
+            },
+        });
         return {
             status: 'success',
-            message: 'Horaire ajouté avec succès',
+            message: 'Course Terminée',
             data: response.data,
         };
     } catch (error) {
         return {
             status: 'error',
-            message: "Erreur lors de l'ajout de l'horaire",
+            message: "Erreur lors du traitement",
         };
     }
 }
-  
+
+export async function cancelCourseExterne(courseId: string,restaurantId:string): Promise<ActionResult<CourseExterne>> {
+    try {
+        const response = await apiClientBackend.request({
+            endpoint: courseEndpoints.terminerCourseExterne.endpoint,
+            method: courseEndpoints.terminerCourseExterne.method,
+            data: {
+                restaurantId,
+                courseId,
+            },
+        });
+        return {
+            status: 'success',
+            message: 'Course Annulée',
+            data: response.data,
+        };
+    } catch (error) {
+        return {
+            status: 'error',
+            message: "Erreur lors du traitement",
+        };
+    }
+}

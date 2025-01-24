@@ -40,3 +40,10 @@ export interface DaySchedule {
 }
 
 export type WeekSchedule = Record<DayOfWeek, DaySchedule>;
+
+
+export interface MarkerData {
+    start: google.maps.LatLngLiteral;
+    end: google.maps.LatLngLiteral;
+    color: string;
+}

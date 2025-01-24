@@ -40,12 +40,6 @@ export const columns: ColumnDef<CourseExterne>[] = [
   {
     accessorKey: 'dateHeureDebut',
     header: 'Date de début',
-    cell: ({ row }) => {
-      const dateString = row.getValue('dateHeureDebut') as string
-      if (!dateString) return 'N/A'
-      const date = new Date(dateString)
-      return date.toLocaleString('fr-FR')
-    },
   },
   {
     accessorKey: 'total',
@@ -54,7 +48,7 @@ export const columns: ColumnDef<CourseExterne>[] = [
       const amount = parseFloat(row.getValue('total') as string) || 0
       const formatted = new Intl.NumberFormat('fr-FR', {
         style: 'currency',
-        currency: 'EUR',
+        currency: 'XOF',
       }).format(amount)
       return <div className="font-medium">{formatted}</div>
     },

@@ -63,27 +63,3 @@ export const AllCommandeSchema = z.object({
 
 export type FormValues = z.infer<typeof AllCommandeSchema>;
 export type CommandeItem = z.infer<typeof commandeSchema>;
-
-
-export const defaultCommande: CommandeItem = {
-    libelle: '',
-    numero: '',
-    destinataire: {
-        nomComplet: '',
-        contact: '',
-    },
-    lieuRecuperation: {
-        address: '',
-        longitude: 0,
-        latitude: 0,
-    },
-    lieuLivraison: {
-        address: '',
-        longitude: 0,
-        latitude: 0,
-    },
-    modePaiement: 'ESPECE',
-    prix: 0,
-    livraisonPaye: false,
-};
-
