@@ -57,7 +57,10 @@ const DeliveryValidate = ({ restaurant, delivery, open, setOpen }: { restaurant:
                                         <button type="button" className="btn btn-outline-danger" onClick={() => setOpen(false)}>
                                             Annuler
                                         </button>
-                                        <Button aria-disabled={pending} className="btn btn-primary ltr:ml-4 rtl:mr-4" color="primary" disabled={pending} isLoading={pending} onClick={handleSubmit}>
+                                        <Button aria-disabled={pending} className="btn btn-primary ltr:ml-4 rtl:mr-4" color="primary" disabled={pending} isLoading={pending} onClick={()=>{
+                                            handleSubmit()
+                                            setPending(true)
+                                        }}>
                                             Continuer
                                         </Button>
                                     </div>
