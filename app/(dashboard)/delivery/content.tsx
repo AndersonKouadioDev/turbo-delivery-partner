@@ -228,13 +228,19 @@ export default function Content({ restaurant, initialData }: Props) {
                                             <div className="mt-4 space-y-4">
                                                 {delivery.commandes.map((commande, index) => (
                                                     <Card key={commande.id} className="w-full">
+                                                        <CardHeader className="flex justify-between">
+                                                            <div className="flex items-center gap-4">
+                                                                <Chip size="sm" variant="flat">
+                                                                    {commande.statut ?? 'EN_ATTENTE'}
+                                                                </Chip>
+                                                                <span className="text-default-500 font-bold">Commande #{index + 1}</span>
+                                                            </div>
+                                                            <div className="flex gap-2">
+                                                                <span className="text-default-500 font-bold">{commande.numero}</span>
+                                                            </div>
+                                                        </CardHeader>
                                                         <CardBody>
                                                             <div className="space-y-3">
-                                                                <div className="flex justify-between">
-                                                                    <h4 className="font-medium">Commande #{index + 1}</h4>
-                                                                    <span className="text-default-500 font-bold">{commande.numero}</span>
-                                                                </div>
-
                                                                 <div className="flex items-start gap-2">
                                                                     <User className="text-default-500 mt-1" />
                                                                     <div>

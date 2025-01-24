@@ -24,14 +24,16 @@ const DeliveryTools = ({ restaurant, delivery }: { restaurant: Restaurant; deliv
                 <DropdownMenu aria-label="Static Actions">
                     <DropdownSection showDivider title="Actions">
                         {delivery.statut === STATUSES.EN_ATTENTE ? (
-                            <>
-                                <DropdownItem startContent={<X />} color="danger" key="edit" onClick={() => setOpenCancel(true)}>
-                                    Annuler
-                                </DropdownItem>
-                                <DropdownItem startContent={<Check />} color="success" key="edit" onClick={() => setOpenValider(true)}>
-                                    Valider
-                                </DropdownItem>
-                            </>
+                            <DropdownItem startContent={<X />} color="danger" key="edit" onClick={() => setOpenCancel(true)}>
+                                Annuler
+                            </DropdownItem>
+                        ) : (
+                            <></>
+                        )}
+                        {delivery.statut === STATUSES.EN_COURS ? (
+                            <DropdownItem startContent={<Check />} color="success" key="edit" onClick={() => setOpenValider(true)}>
+                                Terminer
+                            </DropdownItem>
                         ) : (
                             <></>
                         )}
