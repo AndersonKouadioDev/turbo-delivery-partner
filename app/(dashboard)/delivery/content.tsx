@@ -2,21 +2,20 @@
 import { title } from '@/components/primitives';
 import { CourseExterne, PaginatedResponse, Restaurant } from '@/types/models';
 import { Clock, MapPin, User, Package, CreditCard, Store, ChevronDown, ChevronUp, Search } from 'lucide-react';
-import { Button, Card, CardBody, CardHeader, Input, Chip, Divider, Pagination, Skeleton } from '@nextui-org/react';
+import { Button, Card, CardBody, CardHeader, Input, Chip, Divider, Pagination, Skeleton, Select, SelectItem } from '@nextui-org/react';
 import { IconPlus } from '@tabler/icons-react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { SORT_OPTIONS } from '@/data';
-import { MarkerData } from '@/types';
 import DeliveryTools from './component/deliveryTools';
 
 type SortOption = (typeof SORT_OPTIONS)[keyof typeof SORT_OPTIONS];
 
 const getStatusColor = (statut: string) => {
     switch (statut.toUpperCase()) {
-        case 'TERMINER':
-            return 'warning';
         case 'VALIDER':
+            return 'warning';
+        case 'TERMINER':
             return 'success';
         case 'ANNULER':
             return 'danger';
@@ -29,9 +28,9 @@ const getStatusColor = (statut: string) => {
 
 const getStatusBorderClass = (statut: string) => {
     switch (statut.toUpperCase()) {
-        case 'TERMINER':
-            return 'border-2 border-warning';
         case 'VALIDER':
+            return 'border-2 border-warning';
+        case 'TERMINER':
             return 'border-2 border-success';
         case 'ANNULER':
             return 'border-2 border-danger';
@@ -144,7 +143,7 @@ export default function Content({ restaurant, initialData }: Props) {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-4">
-                <Input
+                {/* <Input
                     startContent={<Search className="text-gray-500 w-4 h-4" />}
                     label="Rechercher par code"
                     variant="bordered"
@@ -152,14 +151,15 @@ export default function Content({ restaurant, initialData }: Props) {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="max-w-sm"
                     size="sm"
-                />
+                /> */}
                 {/* <div className="flex items-center flex-1 gap-4">
                     <Select label="Filtrer par statut" variant="bordered" selectedKeys={[statusFilter]} onChange={(e) => setStatusFilter(e.target.value)}>
                         <SelectItem key="all">Tous les statuts</SelectItem>
-                        <SelectItem key={'EN_ATTENTE'}>EN_ATTENTE</SelectItem>
-                        <SelectItem key={'EN_COURS'}>EN_COURS</SelectItem>
-                        <SelectItem key={'TERMINE'}>TERMINE</SelectItem>
-                        <SelectItem key={'ANNULE'}>ANNULE</SelectItem>
+                        <SelectItem key={'EN_ATTENTE'}>En Attentes</SelectItem>
+                        <SelectItem key={'VALIDER'}>Validées</SelectItem>
+                        <SelectItem key={'EN_COURS'}>En Cours</SelectItem>
+                        <SelectItem key={'TERMINER'}>Terminées</SelectItem>
+                        <SelectItem key={'ANNULER'}>Annulées</SelectItem>
                     </Select>
 
                     <Select label="Trier par" variant="bordered" selectedKeys={[sortBy]} onChange={(e) => setSortBy(e.target.value as SortOption)}>

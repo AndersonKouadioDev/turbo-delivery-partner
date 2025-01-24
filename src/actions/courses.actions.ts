@@ -125,12 +125,14 @@ export async function terminerCourseExterne(courseId: string): Promise<ActionRes
                 courseId,
             },
         });
+        console.log({response:response})
         return {
             status: 'success',
             message: 'Course Terminée',
             data: response.data,
         };
-    } catch (error) {
+    } catch (error:any) {
+        console.log({error})
         return {
             status: 'error',
             message: "Erreur lors du traitement",
@@ -141,13 +143,14 @@ export async function terminerCourseExterne(courseId: string): Promise<ActionRes
 export async function cancelCourseExterne(courseId: string,restaurantId:string): Promise<ActionResult<CourseExterne>> {
     try {
         const response = await apiClientBackend.request({
-            endpoint: courseEndpoints.terminerCourseExterne.endpoint,
-            method: courseEndpoints.terminerCourseExterne.method,
+            endpoint: courseEndpoints.annulerCourseExterne.endpoint,
+            method: courseEndpoints.annulerCourseExterne.method,
             data: {
                 restaurantId,
                 courseId,
             },
         });
+        console.log(response)
         return {
             status: 'success',
             message: 'Course Annulée',
