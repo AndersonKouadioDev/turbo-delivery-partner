@@ -54,21 +54,23 @@ class ApiClientBackend {
         return headers;
     }
 
-    async request({ endpoint, method, data, config }: { endpoint: string; method: string; data?: any; config?: AxiosRequestConfig }) {
+    async request({ endpoint, method, data, params, config }: { endpoint: string; method: string; data?: any; params?: Record<string, string>; config?: AxiosRequestConfig }) {
+        const queryString = new URLSearchParams(params).toString();
+
         if (method.trim().toLowerCase() == 'post') {
-            return this.axiosInstance.post(endpoint.trim(), data, config);
+            return this.axiosInstance.post(`${endpoint.trim()}?${queryString}`, data, config);
         }
         if (method.trim().toLowerCase() == 'put') {
-            return this.axiosInstance.put(endpoint.trim(), data, config);
+            return this.axiosInstance.put(`${endpoint.trim()}?${queryString}`, data, config);
         }
         if (method.trim().toLowerCase() == 'patch') {
-            return this.axiosInstance.patch(endpoint.trim(), data, config);
+            return this.axiosInstance.patch(`${endpoint.trim()}?${queryString}`, data, config);
         }
         if (method.trim().toLowerCase() == 'delete') {
-            return this.axiosInstance.delete(endpoint.trim(), config);
+            return this.axiosInstance.delete(`${endpoint.trim()}?${queryString}`, config);
         }
 
-        return this.axiosInstance.get(endpoint.trim(), config);
+        return this.axiosInstance.get(`${endpoint.trim()}?${queryString}`, config);
     }
 }
 

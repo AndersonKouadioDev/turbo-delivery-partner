@@ -137,7 +137,6 @@ export default function FileUploadForm() {
                           type="file"
                           accept=".jpg,.png,.jpeg"
                           multiple
-                          min={5}
                           max={5}
                           className="hidden"
                           id="file-upload"

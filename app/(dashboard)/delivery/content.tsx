@@ -4,10 +4,13 @@ import { CourseExterne, PaginatedResponse, Restaurant } from '@/types/models';
 import { Clock, MapPin, User, Package, CreditCard, Store, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { Button, Card, CardBody, CardHeader, Input, Chip, Divider, Pagination, Skeleton, Select, SelectItem } from '@nextui-org/react';
 import { IconPlus } from '@tabler/icons-react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { SORT_OPTIONS } from '@/data';
 import DeliveryTools from './component/deliveryTools';
+import { getPaginationCourseExterne } from '@/src/actions/courses.actions';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { courses_statuses_filters } from '@/data';
 
 type SortOption = (typeof SORT_OPTIONS)[keyof typeof SORT_OPTIONS];
 
@@ -20,6 +23,23 @@ const getStatusColor = (statut: string) => {
         case 'ANNULER':
             return 'danger';
         case 'EN_ATTENTE':
+            return 'secondary';
+        default:
+            return 'default';
+    }
+};
+
+const getCommandeStatusColor = (statut: string) => {
+    switch (statut.toUpperCase()) {
+        case 'EN_ATTENTE_VERSEMENT':
+            return 'warning';
+        case 'TERMINER':
+            return 'success';
+        case 'ANNULER':
+            return 'danger';
+        case 'RECUPERER':
+            return 'secondary';
+        case 'EN_COURS_LIVRAISON':
             return 'secondary';
         default:
             return 'default';
@@ -53,32 +73,34 @@ export default function Content({ restaurant, initialData }: Props) {
     const [sortBy, setSortBy] = useState<SortOption>(SORT_OPTIONS.DATE_DESC);
     const [expandedDelivery, setExpandedDelivery] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize] = useState(10);
+    const [pageSize] = useState(5);
     const [data, setData] = useState<PaginatedResponse<CourseExterne> | null>(initialData);
+    const [dataFilter, setDataFilter] = useState<CourseExterne[]>(data?.content ?? []);
     const [isLoading, setIsLoading] = useState(!initialData);
 
-    // Fonction pour construire l'URL avec tous les paramètres
-    const buildFetchUrl = () => {
-        const params = new URLSearchParams({
-            page: (currentPage - 1).toString(),
-            size: pageSize.toString(),
-            // sort: sortBy,
-        });
+    const handleFilter = (status: string, _data?: PaginatedResponse<CourseExterne> | null) => {
+        setIsLoading(true);
+        setStatusFilter(status);
 
-        if (searchTerm) params.append('search', searchTerm);
-        if (statusFilter !== 'all') params.append('status', statusFilter);
-
-        return `/api/restaurant/course-externe/${restaurant.id}/pagination?${params.toString()}`;
+        if (status == 'all') {
+            setDataFilter(data?.content ?? []);
+        } else {
+            const dd = typeof _data == 'undefined' ? data : _data;
+            const dataFilter = dd?.content.filter((d) => d.statut.toUpperCase() == status) ?? [];
+            setDataFilter(dataFilter);
+        }
+        setIsLoading(false);
     };
 
     // Fonction de récupération des données
-    const fetchData = async () => {
+    const fetchData = async (page: number) => {
+        setCurrentPage(page);
         setIsLoading(true);
         try {
-            const response = await fetch(buildFetchUrl());
-            if (!response.ok) throw new Error('Network response was not ok');
-            const newData: PaginatedResponse<CourseExterne> = await response.json();
+            const newData = await getPaginationCourseExterne(restaurant.id ?? '', page - 1, pageSize);
             setData(newData);
+            setDataFilter(newData?.content ?? []);
+            setStatusFilter('all');
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -86,46 +108,10 @@ export default function Content({ restaurant, initialData }: Props) {
         }
     };
 
-    // Effect pour le debouncing de la recherche
-    useEffect(() => {
-        const debounceTimer = setTimeout(() => {
-            setCurrentPage(1); // Reset page when filters change
-            fetchData();
-        }, 300);
-
-        return () => clearTimeout(debounceTimer);
-    }, [currentPage, searchTerm, statusFilter, sortBy, restaurant.id]);
-
     // Handlers
-    const handleAccept = async (deliveryId: string) => {
-        try {
-            const response = await fetch(`/api/delivery/${deliveryId}/accept`, {
-                method: 'PUT',
-            });
-            if (response.ok) {
-                fetchData(); // Refresh data after accepting
-            }
-        } catch (error) {
-            console.error('Error accepting delivery:', error);
-        }
-    };
-
-    const handleReject = async (deliveryId: string) => {
-        try {
-            const response = await fetch(`/api/delivery/${deliveryId}/reject`, {
-                method: 'PUT',
-            });
-            if (response.ok) {
-                fetchData(); // Refresh data after rejecting
-            }
-        } catch (error) {
-            console.error('Error rejecting delivery:', error);
-        }
-    };
 
     const handleReset = () => {
         setSearchTerm('');
-        setStatusFilter('all');
         setSortBy(SORT_OPTIONS.DATE_DESC);
         setCurrentPage(1);
     };
@@ -143,6 +129,22 @@ export default function Content({ restaurant, initialData }: Props) {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-4">
+                <ScrollArea className="w-full whitespace-nowrap pb-2">
+                    {courses_statuses_filters.map((category) => (
+                        <Button
+                            key={category.id}
+                            className="flex-shrink-0 mx-2"
+                            variant={statusFilter === category.id ? 'solid' : 'flat'}
+                            color={statusFilter === category.id ? 'primary' : 'default'}
+                            onPress={() => handleFilter(category.id)}
+                            size="sm"
+                        >
+                            {category.name}
+                        </Button>
+                    ))}
+                    <ScrollBar orientation="horizontal" className="h-0" />
+                </ScrollArea>
+
                 {/* <Input
                     startContent={<Search className="text-gray-500 w-4 h-4" />}
                     label="Rechercher par code"
@@ -184,7 +186,7 @@ export default function Content({ restaurant, initialData }: Props) {
             ) : data?.content.length ? (
                 <>
                     <div className="grid grid-cols-1 gap-6">
-                        {data.content.map((delivery) => (
+                        {dataFilter.map((delivery) => (
                             <Card key={delivery.id} className={`w-full ${getStatusBorderClass(delivery.statut)}`}>
                                 <CardHeader className="flex justify-between">
                                     <div className="flex items-center gap-4">
@@ -230,7 +232,7 @@ export default function Content({ restaurant, initialData }: Props) {
                                                     <Card key={commande.id} className="w-full">
                                                         <CardHeader className="flex justify-between">
                                                             <div className="flex items-center gap-4">
-                                                                <Chip size="sm" variant="flat">
+                                                                <Chip size="sm" variant="flat" color={getCommandeStatusColor(commande.statut)}>
                                                                     {commande.statut ?? 'EN_ATTENTE'}
                                                                 </Chip>
                                                                 <span className="text-default-500 font-bold">Commande #{index + 1}</span>
@@ -296,8 +298,9 @@ export default function Content({ restaurant, initialData }: Props) {
                         ))}
                     </div>
 
-                    <div className="flex justify-center mt-8">
-                        <Pagination total={data.totalPages} page={currentPage} onChange={setCurrentPage} showControls color="primary" variant="bordered" isDisabled={isLoading} />
+                    <div className="flex h-fit z-10 justify-center mt-8 fixed bottom-4">
+                        <div className="bg-gray-200 absolute inset-0 w-full h-full blur-sm opacity-50"></div>
+                        <Pagination total={data?.totalPages ?? 1} page={currentPage} onChange={fetchData} showControls color="primary" variant="bordered" isDisabled={isLoading} />
                     </div>
                 </>
             ) : (

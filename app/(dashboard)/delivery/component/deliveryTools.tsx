@@ -4,7 +4,7 @@ import { CourseExterne, Restaurant } from '@/types/models';
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem, Button } from '@nextui-org/react';
 import { useState } from 'react';
 import { IconDotsVertical } from '@tabler/icons-react';
-import { STATUSES } from '@/data';
+import { COURSES_STATUSES } from '@/data';
 import { Check, X } from 'lucide-react';
 import DeliveryValidate from './delivery-validate';
 import DeliveryCancel from './delivery-cancel';
@@ -23,14 +23,14 @@ const DeliveryTools = ({ restaurant, delivery }: { restaurant: Restaurant; deliv
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Static Actions">
                     <DropdownSection showDivider title="Actions">
-                        {delivery.statut === STATUSES.EN_ATTENTE ? (
+                        {delivery.statut === COURSES_STATUSES.EN_ATTENTE ? (
                             <DropdownItem startContent={<X />} color="danger" key="edit" onClick={() => setOpenCancel(true)}>
                                 Annuler
                             </DropdownItem>
                         ) : (
                             <></>
                         )}
-                        {delivery.statut === STATUSES.EN_COURS ? (
+                        {delivery.statut === COURSES_STATUSES.EN_COURS ? (
                             <DropdownItem startContent={<Check />} color="success" key="edit" onClick={() => setOpenValider(true)}>
                                 Terminer
                             </DropdownItem>
