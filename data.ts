@@ -72,17 +72,17 @@ export const orders = [
             {
                 name: 'Poulet crispy',
                 image: 'https://img.freepik.com/photos-gratuite/poulet-frit-frites-sol-ciment-noir_1150-28542.jpg?t=st=1729107189~exp=1729110789~hmac=7a7b180de6c829ceaf745cea21cb5df1111125c4633f533858156065826effad&w=1800',
-                price: '5 000 FCFA',
+                price: '5 000 XOF',
             },
             {
                 name: 'Chicken Burger',
                 image: 'https://img.freepik.com/photos-gratuite/vue-avant-delicieux-hamburger-viande-du-fromage-salade-fond-sombre_140725-89597.jpg?uid=R54521588&ga=GA1.1.1908964846.1724333514&semt=ais_hybrid',
-                price: '5 000 FCFA',
+                price: '5 000 XOF',
             },
         ],
         status: 'En cours',
         count: 2,
-        price: '10 000 FCFA',
+        price: '10 000 XOF',
         date: '2024-01-01',
     },
     {
@@ -93,12 +93,12 @@ export const orders = [
             {
                 name: 'Poulet crispy',
                 image: 'https://img.freepik.com/photos-gratuite/poulet-frit-frites-sol-ciment-noir_1150-28542.jpg?t=st=1729107189~exp=1729110789~hmac=7a7b180de6c829ceaf745cea21cb5df1111125c4633f533858156065826effad&w=1800',
-                price: '5 000 FCFA',
+                price: '5 000 XOF',
             },
         ],
         status: 'Livré',
         count: 1,
-        price: '5 000 FCFA',
+        price: '5 000 XOF',
         date: '2024-01-01',
     },
     {
@@ -109,17 +109,17 @@ export const orders = [
             {
                 name: 'Déserts',
                 image: 'https://img.freepik.com/photos-gratuite/mini-shortcake-aux-fraises-mignon-rose_53876-106073.jpg?uid=R54521588&ga=GA1.1.1908964846.1724333514&semt=ais_hybrid',
-                price: '3 000 FCFA',
+                price: '3 000 XOF',
             },
             {
                 name: 'Poulet crispy',
                 image: 'https://img.freepik.com/photos-gratuite/poulet-frit-frites-sol-ciment-noir_1150-28542.jpg?t=st=1729107189~exp=1729110789~hmac=7a7b180de6c829ceaf745cea21cb5df1111125c4633f533858156065826effad&w=1800',
-                price: '5 000 FCFA',
+                price: '5 000 XOF',
             },
         ],
         status: 'Livré',
         count: 2,
-        price: '10 000 FCFA',
+        price: '10 000 XOF',
         date: '2024-01-01',
     },
 ];

@@ -223,7 +223,7 @@ export default function Content({ restaurant, initialData }: Props) {
                                                     {delivery.nombreCommande} commande{delivery.nombreCommande > 1 ? 's' : ''}
                                                 </span>
                                             </div>
-                                            <span className="text-large font-semibold">{delivery.total.toFixed(2)} FCFA</span>
+                                            <span className="text-large font-semibold">{delivery.total.toFixed(2)} XOF</span>
                                         </div>
 
                                         {expandedDelivery === delivery.id && (
@@ -263,7 +263,7 @@ export default function Content({ restaurant, initialData }: Props) {
                                                                         <CreditCard className="text-default-500" />
                                                                         <span className="text-default-600">{commande.modePaiement}</span>
                                                                     </div>
-                                                                    <span className="font-semibold">{commande.prix.toFixed(2)} FCFA</span>
+                                                                    <span className="font-semibold">{commande.prix.toFixed(2)} XOF</span>
                                                                 </div>
                                                             </div>
                                                         </CardBody>

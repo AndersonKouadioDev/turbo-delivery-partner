@@ -57,7 +57,7 @@ export default function Content() {
                   </div>
                   <div className="flex flex-col gap-2">
                     <span className="text-sm">Montant actuel</span>
-                    <div className="text-4xl font-bold">7 805 000 F CFA</div>
+                    <div className="text-4xl font-bold">7 805 000 XOF</div>
                   </div>
                 </div>
               </CardBody>
@@ -67,8 +67,8 @@ export default function Content() {
               {[
                 { title: "Menus au total", value: "35", percentage: 72 },
                 { title: "Total des commandes", value: "135", percentage: 93 },
-                { title: "Dépenses totales", value: "4 457 798", unit: "FCFA" },
-                { title: "Frais de service", value: "1 857 798", unit: "FCFA" },
+                { title: "Dépenses totales", value: "4 457 798", unit: "XOF" },
+                { title: "Frais de service", value: "1 857 798", unit: "XOF" },
               ].map((item, index) => (
                 <Card key={index}>
                   <CardBody className="p-4">
