@@ -15,7 +15,7 @@ import { courses_statuses_filters } from '@/data';
 type SortOption = (typeof SORT_OPTIONS)[keyof typeof SORT_OPTIONS];
 
 const getStatusColor = (statut: string) => {
-    switch (statut.toUpperCase()) {
+    switch (statut?.toUpperCase()) {
         case 'VALIDER':
             return 'warning';
         case 'TERMINER':
@@ -30,7 +30,7 @@ const getStatusColor = (statut: string) => {
 };
 
 const getCommandeStatusColor = (statut: string) => {
-    switch (statut.toUpperCase()) {
+    switch (statut?.toUpperCase()) {
         case 'EN_ATTENTE_VERSEMENT':
             return 'warning';
         case 'TERMINER':
@@ -86,7 +86,7 @@ export default function Content({ restaurant, initialData }: Props) {
             setDataFilter(data?.content ?? []);
         } else {
             const dd = typeof _data == 'undefined' ? data : _data;
-            const dataFilter = dd?.content.filter((d) => d.statut.toUpperCase() == status) ?? [];
+            const dataFilter = dd?.content.filter((d) => d.statut?.toUpperCase() == status) ?? [];
             setDataFilter(dataFilter);
         }
         setIsLoading(false);

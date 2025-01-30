@@ -59,9 +59,9 @@ const LocaleSwitch = () => {
                                     as="button"
                                     className="transition-transform w-5 h-5 object-cover"
                                     color="primary"
-                                    name={item.code.toUpperCase()}
+                                    name={item.code?.toUpperCase()}
                                     size="sm"
-                                    src={`/assets/images/flags/${item.code.toUpperCase()}.svg`}
+                                    src={`/assets/images/flags/${item.code?.toUpperCase()}.svg`}
                                 />
                             }
                         >
