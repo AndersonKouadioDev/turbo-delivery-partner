@@ -117,15 +117,16 @@ export const extractZodErrors = (validationResult: z.SafeParseReturnType<any, an
 
     return errors;
 };
-export const extractZodErrorsinArray = (validationResult: z.SafeParseReturnType<any, any>): string[] => {
+
+export const extractZodErrorsInArray = (validationResult: z.SafeParseReturnType<any, any>): { key: string; message: string }[] => {
     if (validationResult.success) return [];
 
-    const errors: string[] = [];
+    const errors: { key: string; message: string }[] = [];
 
     validationResult.error.issues.forEach((issue) => {
         const path = issue.path.join('.');
 
-        errors.push(`${path} : ${issue.message}`);
+        errors.push({ key: path, message: issue.message });
     });
 
     return errors;
@@ -325,12 +326,7 @@ export function createFormData(formData: Record<string, unknown>): FormData {
 
     // Fonction utilitaire pour vérifier si une valeur est un objet
     function isObject(value: unknown): value is Record<string, unknown> {
-        return typeof value === 'object' 
-            && value !== null 
-            && !(value instanceof File) 
-            && !(value instanceof Blob) 
-            && !(value instanceof Date) 
-            && !Array.isArray(value);
+        return typeof value === 'object' && value !== null && !(value instanceof File) && !(value instanceof Blob) && !(value instanceof Date) && !Array.isArray(value);
     }
 
     // Traitement de chaque entrée du formData initial
@@ -397,7 +393,7 @@ export function processFormData<T extends z.ZodRawShape>(
     success: boolean;
     data: z.infer<z.ZodObject<T>>;
     errors?: Record<string, string>;
-    errorsInArray?: string[];
+    errorsInArray?: { key: string; message: string }[];
 } {
     const { useDynamicValidation = true, transformations = {}, ...extractOptions } = options;
 
@@ -426,7 +422,7 @@ export function processFormData<T extends z.ZodRawShape>(
     } else {
         if (prevState) {
             prevState.errors = extractZodErrors(validationResult);
-            prevState.errorsInArray = extractZodErrorsinArray(validationResult);
+            prevState.errorsInArray = extractZodErrorsInArray(validationResult);
             prevState.message = 'Informations invalides';
             prevState.status = 'error';
             prevState.code = ErrorDefaultCode.exception;
@@ -436,7 +432,7 @@ export function processFormData<T extends z.ZodRawShape>(
             success: false,
             data: transformedData as z.infer<z.ZodObject<T>>,
             errors: extractZodErrors(validationResult),
-            errorsInArray: extractZodErrorsinArray(validationResult),
+            errorsInArray: extractZodErrorsInArray(validationResult),
         };
     }
 }

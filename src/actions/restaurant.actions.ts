@@ -21,7 +21,11 @@ import { FindOneRestaurant, OpeningHour, Restaurant, Collection, User, Collectio
 import { unstable_update } from '@/auth';
 
 export async function createRestaurant(prevState: any, formData: FormData): Promise<ActionResult<{ restaurant: Restaurant; createdBy: User }>> {
-    const { success, data: formdata } = processFormData(
+    const {
+        success,
+        data: formdata,
+        errorsInArray,
+    } = processFormData(
         createRestaurantSchema,
         formData,
         {
@@ -34,10 +38,10 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
         prevState,
     );
 
-    if (!success) {
+    if (!success && errorsInArray) {
         return {
             status: 'error',
-            message: 'Données manquantes ou mal formatées',
+            message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
     // Create a new FormData object to ensure we're sending multipart/form-data
@@ -49,8 +53,14 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
                 'Content-Type': 'multipart/form-data',
             },
         });
-
-        if (response.status !== 200) {
+        console.log(response);
+        if (response.status == 413) {
+            return {
+                status: 'error',
+                message: 'Fichiers volumineux. Utilisez des fichiers de moins de 5Mo',
+            };
+        }
+        if (!response.status.toString().startsWith('20')) {
             return {
                 status: 'error',
                 message: response?.data?.message ?? 'Erreur lors de la création du restaurant',
@@ -88,14 +98,18 @@ export async function findOneRestaurant(): Promise<FindOneRestaurant | null> {
 }
 
 export async function addHoraire(formData: FormData): Promise<ActionResult<OpeningHour[]>> {
-    const { success, data: formdata } = processFormData(createRestaurantSchema, formData, {
+    const {
+        success,
+        data: formdata,
+        errorsInArray,
+    } = processFormData(createRestaurantSchema, formData, {
         useDynamicValidation: true,
     });
 
-    if (!success) {
+    if (!success && errorsInArray) {
         return {
             status: 'error',
-            message: 'Données manquantes ou mal formatées',
+            message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
 
@@ -138,15 +152,15 @@ export async function addPicture(prevState: any, formData: FormData): Promise<Ac
     const {
         success,
         data: formdata,
-        errors,
+        errorsInArray,
     } = processFormData(addPictureSchema, formData, {
         useDynamicValidation: true,
     });
 
-    if (!success) {
+    if (!success && errorsInArray) {
         return {
             status: 'error',
-            message: 'Données manquantes ou mal formatées',
+            message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
 
@@ -161,10 +175,16 @@ export async function addPicture(prevState: any, formData: FormData): Promise<Ac
             },
         });
 
-        if (response.status !== 200) {
+        if (response.status == 413) {
             return {
                 status: 'error',
-                message: "Erreur lors de l'ajout des images",
+                message: 'Fichiers volumineux. Utilisez des fichiers de moins de 5Mo',
+            };
+        }
+        if (!response.status.toString().startsWith('20')) {
+            return {
+                status: 'error',
+                message: response?.data?.message ?? 'Erreur lors de la création du restaurant',
             };
         }
 
@@ -237,14 +257,18 @@ export async function getDishComplet(id: string): Promise<DishComplet | null> {
 }
 
 export async function addDish(formData: FormData): Promise<ActionResult<Dish | null>> {
-    const { success, data: formdata } = processFormData(createDishSchema, formData, {
+    const {
+        success,
+        data: formdata,
+        errorsInArray,
+    } = processFormData(createDishSchema, formData, {
         useDynamicValidation: true,
     });
 
-    if (!success) {
+    if (!success && errorsInArray) {
         return {
             status: 'error',
-            message: 'Données manquantes ou mal formatées',
+            message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
 
@@ -258,9 +282,20 @@ export async function addDish(formData: FormData): Promise<ActionResult<Dish | n
             },
         });
 
-        if (response.status !== 200) {
-            throw new Error(response?.data?.message ?? 'Erreur lors de la création du plat');
+        if (response.status == 413) {
+            return {
+                status: 'error',
+                message: 'Fichiers volumineux. Utilisez des fichiers de moins de 5Mo',
+            };
         }
+
+        if (!response.status.toString().startsWith('20')) {
+            return {
+                status: 'error',
+                message: response?.data?.message ?? 'Erreur lors de la création du restaurant',
+            };
+        }
+
         return {
             status: 'success',
             message: 'Plat créé avec succès',
@@ -308,17 +343,21 @@ export async function addAccompaniment(formData: FormData): Promise<ActionResult
 }
 
 export async function updateAccompaniment(id: string, formData: FormData): Promise<ActionResult<Accompaniment | null>> {
-    const { success, data: formdata } = processFormData(updateAccompagnementSchema, formData, {
+    const {
+        success,
+        data: formdata,
+        errorsInArray,
+    } = processFormData(updateAccompagnementSchema, formData, {
         useDynamicValidation: true,
         transformations: {
             price: (value) => Number(value),
         },
     });
 
-    if (!success) {
+    if (!success && errorsInArray) {
         return {
             status: 'error',
-            message: 'Données manquantes ou mal formatées',
+            message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
 
@@ -341,7 +380,11 @@ export async function updateAccompaniment(id: string, formData: FormData): Promi
 }
 
 export async function addBoisson(formData: FormData): Promise<ActionResult<Drink | null>> {
-    const { success, data: formdata } = processFormData(addBoissonSchema, formData, {
+    const {
+        success,
+        data: formdata,
+        errorsInArray,
+    } = processFormData(addBoissonSchema, formData, {
         useDynamicValidation: true,
         transformations: {
             price: (value) => Number(value),
@@ -349,10 +392,10 @@ export async function addBoisson(formData: FormData): Promise<ActionResult<Drink
         },
     });
 
-    if (!success) {
+    if (!success && errorsInArray) {
         return {
             status: 'error',
-            message: 'Données manquantes ou mal formatées',
+            message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
 
@@ -375,7 +418,11 @@ export async function addBoisson(formData: FormData): Promise<ActionResult<Drink
 }
 
 export async function updateBoisson(id: string, formData: FormData): Promise<ActionResult<Drink | null>> {
-    const { success, data: formdata } = processFormData(updateBoissonSchema, formData, {
+    const {
+        success,
+        data: formdata,
+        errorsInArray,
+    } = processFormData(updateBoissonSchema, formData, {
         useDynamicValidation: true,
         transformations: {
             price: (value) => Number(value),
@@ -383,10 +430,10 @@ export async function updateBoisson(id: string, formData: FormData): Promise<Act
         },
     });
 
-    if (!success) {
+    if (!success && errorsInArray) {
         return {
             status: 'error',
-            message: 'Données manquantes ou mal formatées',
+            message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
 
@@ -409,7 +456,11 @@ export async function updateBoisson(id: string, formData: FormData): Promise<Act
 }
 
 export async function addOption(formData: FormData): Promise<ActionResult<Option | null>> {
-    const { success, data: formdata } = processFormData(addPlatOptionSchema, formData, {
+    const {
+        success,
+        data: formdata,
+        errorsInArray,
+    } = processFormData(addPlatOptionSchema, formData, {
         useDynamicValidation: true,
         transformations: {
             maxSeleteted: (value) => Number(value),
@@ -417,10 +468,10 @@ export async function addOption(formData: FormData): Promise<ActionResult<Option
         },
     });
 
-    if (!success) {
+    if (!success && errorsInArray) {
         return {
             status: 'error',
-            message: 'Données manquantes ou mal formatées',
+            message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
 
@@ -443,17 +494,21 @@ export async function addOption(formData: FormData): Promise<ActionResult<Option
 }
 
 export async function addOptionValue(formData: FormData): Promise<ActionResult<OptionValue | null>> {
-    const { success, data: formdata } = processFormData(addPlatOptionValueSchema, formData, {
+    const {
+        success,
+        data: formdata,
+        errorsInArray,
+    } = processFormData(addPlatOptionValueSchema, formData, {
         useDynamicValidation: true,
         transformations: {
             prixSup: (value) => Number(value),
         },
     });
 
-    if (!success) {
+    if (!success && errorsInArray) {
         return {
             status: 'error',
-            message: 'Données manquantes ou mal formatées',
+            message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
 
@@ -476,7 +531,11 @@ export async function addOptionValue(formData: FormData): Promise<ActionResult<O
 }
 
 export async function updateOption(formData: FormData): Promise<ActionResult<Option | null>> {
-    const { success, data: formdata } = processFormData(addPlatOptionSchema, formData, {
+    const {
+        success,
+        data: formdata,
+        errorsInArray,
+    } = processFormData(addPlatOptionSchema, formData, {
         useDynamicValidation: true,
         transformations: {
             maxSeleteted: (value) => Number(value),
@@ -484,10 +543,10 @@ export async function updateOption(formData: FormData): Promise<ActionResult<Opt
         },
     });
 
-    if (!success) {
+    if (!success && errorsInArray) {
         return {
             status: 'error',
-            message: 'Données manquantes ou mal formatées',
+            message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
 
@@ -510,17 +569,21 @@ export async function updateOption(formData: FormData): Promise<ActionResult<Opt
 }
 
 export async function updateOptionValue(formData: FormData): Promise<ActionResult<OptionValue | null>> {
-    const { success, data: formdata } = processFormData(addPlatOptionValueSchema, formData, {
+    const {
+        success,
+        data: formdata,
+        errorsInArray,
+    } = processFormData(addPlatOptionValueSchema, formData, {
         useDynamicValidation: true,
         transformations: {
             prixSup: (value) => Number(value),
         },
     });
 
-    if (!success) {
+    if (!success && errorsInArray) {
         return {
             status: 'error',
-            message: 'Données manquantes ou mal formatées',
+            message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
 
