@@ -71,8 +71,9 @@ export default function FileUploadForm() {
     }, []);
 
     const handleFiles = (files: File[]) => {
-        const validFiles = files.filter((file) => file.type.startsWith('image/') && file.size <= 5 * 1024 * 1024).slice(0, 5);
-
+        // const validFiles = files.filter((file) => file.type.startsWith('image/') && file.size <= 5 * 1024 * 1024).slice(0, 5);
+        const validFiles = files;
+        
         validFiles.forEach((file) => {
             const reader = new FileReader();
             reader.onloadend = () => {
