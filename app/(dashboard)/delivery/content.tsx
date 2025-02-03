@@ -235,10 +235,10 @@ export default function Content({ restaurant, initialData }: Props) {
                                                                 <Chip size="sm" variant="flat" color={getCommandeStatusColor(commande.statut)}>
                                                                     {commande.statut ?? 'EN_ATTENTE'}
                                                                 </Chip>
-                                                                <span className="text-default-500 font-bold">Commande #{index + 1}</span>
+                                                                <span className="text-default-500 font-bold">Commande #{commande.numero}</span>
                                                             </div>
                                                             <div className="flex gap-2">
-                                                                <span className="text-default-500 font-bold">{commande.numero}</span>
+                                                                <span className="text-default-500 font-bold">{index + 1}</span>
                                                             </div>
                                                         </CardHeader>
                                                         <CardBody>
