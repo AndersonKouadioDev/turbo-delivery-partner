@@ -215,5 +215,6 @@ module.exports = {
         }),
         require('@tailwindcss/typography'),
         rotateX,
+        require('tailwind-scrollbar'),
     ],
 };

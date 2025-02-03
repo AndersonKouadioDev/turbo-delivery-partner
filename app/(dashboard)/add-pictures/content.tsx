@@ -137,7 +137,7 @@ export default function FileUploadForm() {
                           type="file"
                           accept=".jpg,.png,.jpeg"
                           multiple
-                          max={5}
+                          max={3}
                           className="hidden"
                           id="file-upload"
                           onChange={(e) => {
@@ -154,7 +154,7 @@ export default function FileUploadForm() {
                         </label>
                         <span className="text-muted-foreground"> ou glissez vos images ici</span>
                         <p className="text-sm text-muted-foreground mt-2">
-                          PNG, JPG jusqu&apos;à 5MB (max 5 fichiers)
+                          PNG, JPG jusqu&apos;à 5MB (max 3 fichiers)
                         </p>
                       </div>
 

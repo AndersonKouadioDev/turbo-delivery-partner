@@ -52,7 +52,7 @@ export async function addCourseExterne(formData: any, restaurantId: string): Pro
                 commandes: formdata.commandes,
             },
         });
-
+        
         if (response.status !== 201) {
             return {
                 status: 'error',

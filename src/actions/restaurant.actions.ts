@@ -53,7 +53,6 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
                 'Content-Type': 'multipart/form-data',
             },
         });
-        console.log(response);
         if (response.status == 413) {
             return {
                 status: 'error',
