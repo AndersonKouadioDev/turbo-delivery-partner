@@ -34,7 +34,7 @@ export async function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL('/add-pictures', request.url));
         }
 
-        if (restaurant && restaurant.openingHours.length > 0 && restaurant?.pictures.length > 0 && (restaurant.status < 2 || restaurant.status == 2) && !pathname.startsWith('/activation-pending')) {
+        if (restaurant && restaurant.openingHours.length > 0 && restaurant?.pictures.length > 0 && (restaurant.status <= 2 ) && !pathname.startsWith('/activation-pending')) {
             return NextResponse.redirect(new URL('/activation-pending', request.url));
         }
     }

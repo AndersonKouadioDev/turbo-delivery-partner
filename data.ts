@@ -317,11 +317,11 @@ export const courses_statuses_filters = [
         name: 'En cours',
     },
     {
-        id: 'TERMINE',
+        id: 'TERMINER',
         name: 'Terminées',
     },
     {
-        id: 'ANNULE',
+        id: 'ANNULER',
         name: 'Annulées',
     },
 ];
@@ -329,8 +329,8 @@ export const courses_statuses_filters = [
 export const COURSES_STATUSES = {
     EN_ATTENTE: 'EN_ATTENTE',
     EN_COURS: 'EN_COURS',
-    TERMINE: 'TERMINE',
-    ANNULE: 'ANNULE',
+    TERMINE: 'TERMINER',
+    ANNULE: 'ANNULER',
     VALIDER: 'VALIDER',
 };
 
