@@ -35,7 +35,7 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
                 telephone: (value) => TrimPhoneNumber(value as string),
             },
         },
-        prevState,
+       
     );
 
     if (!success && errorsInArray) {

@@ -20,7 +20,6 @@ export async function loginUser(prevState: any, formData: FormData): Promise<Act
         {
             useDynamicValidation: true,
         },
-        prevState,
     );
 
     if (!success) {
@@ -56,7 +55,6 @@ export async function registerStepFirst(prevState: any, formData: FormData): Pro
         {
             useDynamicValidation: true,
         },
-        prevState,
     );
 
     if (!success) {
@@ -99,7 +97,6 @@ export async function registerStepSecond(prevState: any, formData: FormData): Pr
         {
             useDynamicValidation: true,
         },
-        prevState,
     );
 
     if (!success) {
@@ -132,7 +129,6 @@ export async function registerFinalStep(prevState: any, formData: FormData): Pro
             },
             excludeFields: ['telephoneCountry'],
         },
-        prevState,
     );
 
     const hasCookie = cookies().has('email_otp');
@@ -173,7 +169,6 @@ export async function changePassword(prevState: any, formData: FormData): Promis
             useDynamicValidation: true,
             keyTransforms: { password: 'newPassword' },
         },
-        prevState,
     );
 
     if (!success) {
@@ -216,7 +211,6 @@ export async function forgetPassword(prevState: any, formData: FormData): Promis
         {
             useDynamicValidation: true,
         },
-        prevState,
     );
 
     if (!success) {
@@ -255,7 +249,6 @@ export async function newPassword(prevState: any, formData: FormData): Promise<A
             useDynamicValidation: true,
             keyTransforms: { password: 'newPassword' },
         },
-        prevState,
     );
 
     if (!success) {
