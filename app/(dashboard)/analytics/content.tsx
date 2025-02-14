@@ -29,7 +29,7 @@ export default function Content({ initialData }: Props) {
             <div className="space-y-4 lg:space-y-0 lg:flex lg:space-x-4">
                 <Card className="lg:w-2/3 h-fit" shadow="sm">
                     <CardHeader>
-                        <Select defaultSelectedKeys={['june-july']} label="Sélectionner une période" variant="bordered" size="sm">
+                        {/* <Select defaultSelectedKeys={['june-july']} label="Sélectionner une période" variant="bordered" size="sm">
                             {[
                                 { key: 'june-july', value: 'Du 30 juin-31 juillet' },
                                 { key: 'july-august', value: 'Du 31 juillet-31 août' },
@@ -40,7 +40,7 @@ export default function Content({ initialData }: Props) {
                             ].map((item) => (
                                 <SelectItem key={item.key}>{item.value}</SelectItem>
                             ))}
-                        </Select>
+                        </Select> */}
                     </CardHeader>
                     <CardBody>
                         <Card className="mb-4 bg-gradient-to-r from-red-600 to-primary text-white">
@@ -56,18 +56,29 @@ export default function Content({ initialData }: Props) {
                                 </div>
                             </CardBody>
                         </Card>
-{/* {(data.nbCommandeTotalTermine+ data.nbCommandeTotalEnAttente)} */}
                         <div className="grid grid-cols-2 gap-4 mb-6">
                             {[
-                                { title: 'Total Montant Commandes Terminées', value: data.nbCommandeTotalTermine, percentage: 72, labelPercentage:"terminées" },
-                                { title: 'Total Montant Commandes En Attente', value: data.nbCommandeTotalEnAttente, percentage: 72, labelPercentage:"terminées" },
-                                { title: 'Dépenses totales', value: '4 457 798', unit: 'XOF' },
-                                { title: 'Frais de service', value: '1 857 798', unit: 'XOF' },
+                                {
+                                    title: 'Total Montant Commandes Terminées',
+                                    value: data.nbCommandeTotalTermine,
+                                    unit: 'XOF',
+                                    percentage: (data.nbCommandeTotalTermine * 100) / (data.nbCommandeTotalTermine + data.nbCommandeTotalEnAttente || 1),
+                                    labelPercentage: 'terminées',
+                                },
+                                {
+                                    title: 'Total Montant Commandes En Attente',
+                                    value: data.nbCommandeTotalEnAttente,
+                                    unit: 'XOF',
+                                    percentage: (data.nbCommandeTotalEnAttente * 100) / (data.nbCommandeTotalTermine + data.nbCommandeTotalEnAttente || 1),
+                                    labelPercentage: 'en attente',
+                                },
+                                { title: 'Total Montant Frais Livraison Terminées', value: data.fraisLivraisonTotalTermine, unit: 'XOF' },
+                                { title: 'Total Montant Frais Livraison En Attente', value: data.fraisLivraisonTotalEnAttente, unit: 'XOF' },
                             ].map((item, index) => (
                                 <Card key={index}>
                                     <CardBody className="p-4">
                                         <div className="flex justify-between items-center mb-2">
-                                            <span className="text-2xl font-bold">{item.value}</span>
+                                            <span className="text-2xl font-bold">{formatNumber(item.value)}</span>
                                             <TbMoneybag className="w-5 h-5 text-red-500" />
                                         </div>
                                         <div className="text-sm text-gray-500">{item.title}</div>
@@ -76,7 +87,11 @@ export default function Content({ initialData }: Props) {
                                                 <div className="bg-red-500 h-full rounded-full" style={{ width: `${item.percentage}%` }}></div>
                                             </div>
                                         )}
-                                        {item.percentage && <div className="text-xs text-gray-500 mt-1">{item.percentage}% vendus</div>}
+                                        {item.labelPercentage && (
+                                            <div className="text-xs text-gray-500 mt-1">
+                                                {item.percentage}% {item.labelPercentage}
+                                            </div>
+                                        )}
                                         {item.unit && <div className="text-xs text-gray-500 mt-1">{item.unit}</div>}
                                     </CardBody>
                                 </Card>
