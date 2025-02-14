@@ -29,7 +29,7 @@ export default function Content({ initialData }: Props) {
             <div className="space-y-4 lg:space-y-0 lg:flex lg:space-x-4">
                 <Card className="lg:w-2/3 h-fit" shadow="sm">
                     <CardHeader>
-                        <Select defaultSelectedKeys={['june-july']} label="Sélectionner une période" variant="bordered" size="sm">
+                        {/* <Select defaultSelectedKeys={['june-july']} label="Sélectionner une période" variant="bordered" size="sm">
                             {[
                                 { key: 'june-july', value: 'Du 30 juin-31 juillet' },
                                 { key: 'july-august', value: 'Du 31 juillet-31 août' },
@@ -40,7 +40,7 @@ export default function Content({ initialData }: Props) {
                             ].map((item) => (
                                 <SelectItem key={item.key}>{item.value}</SelectItem>
                             ))}
-                        </Select>
+                        </Select> */}
                     </CardHeader>
                     <CardBody>
                         <Card className="mb-4 bg-gradient-to-r from-red-600 to-primary text-white">
