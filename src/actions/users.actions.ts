@@ -361,12 +361,20 @@ export async function newPassword(prevState: any, formData: FormData): Promise<A
             service: 'restaurant',
         });
     } catch (error: any) {
+        if (error?.response?.data) {
+            if (error?.response?.data?.message) {
+                return {
+                    status: 'error',
+                    message: error?.response?.data?.message ?? 'Erreur lors du changement de mot de passe',
+                };
+            }
+        }
         return {
             status: 'error',
-            message: JSON.stringify(error?.response?.data) ?? error?.response?.data?.message ?? 'Erreur lors du changement de mot de passe',
+            message: 'Erreur lors du changement de mot de passe',
         };
     }
-    
+
     redirect('/auth');
 }
 
