@@ -20,8 +20,8 @@ export default function FileUploadForm() {
     const [dragActive, setDragActive] = useState(false);
 
     const [state, formAction] = useFormState(
-        async (prevState: any, formData: FormData) => {
-            const result = await addPicture(prevState, formData);
+        async (_: any, formData: FormData) => {
+            const result = await addPicture(formData);
             if (result.status === 'success') {
                 toast.success(result.message);
                 window.location.href = '/';

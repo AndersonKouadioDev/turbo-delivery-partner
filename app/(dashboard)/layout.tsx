@@ -92,7 +92,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
                     </Sheet>
                     <div className="w-full flex-1 flex items-center justify-end">
                         {/* <DashboardSearchBar /> */}
-                        <ThemeSwitch />
+                        {/* <ThemeSwitch /> */}
                     </div>
 
                     {session && session?.user && <DashboardUserDropdown restaurant={restaurant} user={session?.user} />}
