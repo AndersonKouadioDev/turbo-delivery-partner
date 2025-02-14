@@ -366,16 +366,7 @@ export async function newPassword(prevState: any, formData: FormData): Promise<A
             message: JSON.stringify(error?.response?.data) ?? error?.response?.data?.message ?? 'Erreur lors du changement de mot de passe',
         };
     }
-console.log(data)
-    // Récupérer le token à partir de l'URL dans le champ "link"
-    const link = data?.link; // Récupérer l'URL
-    const urlParams = new URL(link); // Créer un objet URL
-    const token = urlParams.searchParams.get('token'); // Extraire le token
-
-    if (token) {
-        redirect(`/auth/recover-password?step=2&token=${token}`);
-    }
-
+    
     redirect('/auth');
 }
 
