@@ -363,7 +363,7 @@ export async function newPassword(prevState: any, formData: FormData): Promise<A
     } catch (error: any) {
         return {
             status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur lors du changement de mot de passe',
+            message: JSON.stringify(error?.response?.data) ?? error?.response?.data?.message ?? 'Erreur lors du changement de mot de passe',
         };
     }
 console.log(data)
