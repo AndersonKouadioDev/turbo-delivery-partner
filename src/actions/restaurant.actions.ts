@@ -98,7 +98,7 @@ export async function createRestaurant(formData: FormData): Promise<ActionResult
             endpoint: restaurantEndpoints.create.endpoint,
             method: restaurantEndpoints.create.method,
             data: sendFormData,
-            service:"erp",
+            service: 'restaurant',
             config: {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -119,6 +119,7 @@ export async function createRestaurant(formData: FormData): Promise<ActionResult
             data: data,
         };
     } catch (error: any) {
+       
         if (error?.response?.status == 413) {
             return {
                 status: 'error',
@@ -128,7 +129,7 @@ export async function createRestaurant(formData: FormData): Promise<ActionResult
 
         return {
             status: 'error',
-            message: 'Erreur lors de la création du restaurant',
+            message: JSON.stringify(error?.response?.data) ?? error?.response?.data?.message ?? 'Erreur lors de la création du restaurant',
         };
     }
 }
@@ -138,7 +139,7 @@ export async function findOneRestaurant(): Promise<FindOneRestaurant | null> {
         const data = await apiClientHttp.request<FindOneRestaurant>({
             endpoint: restaurantEndpoints.info.endpoint,
             method: restaurantEndpoints.info.method,
-            service:"erp",
+            service: 'restaurant',
         });
         return data;
     } catch (error) {
@@ -166,7 +167,7 @@ export async function addHoraire(formData: FormData): Promise<ActionResult<Openi
         const data = await apiClientHttp.request<OpeningHour[]>({
             endpoint: restaurantEndpoints.addHoraire.endpoint,
             method: restaurantEndpoints.addHoraire.method,
-            service:"erp",
+            service: 'restaurant',
             data: formdata,
         });
 
@@ -188,7 +189,7 @@ export async function getHoraires(): Promise<OpeningHour[] | null> {
         const data = await apiClientHttp.request<OpeningHour[]>({
             endpoint: restaurantEndpoints.getHoraires.endpoint,
             method: restaurantEndpoints.getHoraires.method,
-            service:"erp",
+            service: 'restaurant',
         });
         return data;
     } catch (error) {
@@ -221,7 +222,7 @@ export async function addPicture(formData: FormData): Promise<ActionResult<any>>
             endpoint: restaurantEndpoints.uploadPicture.endpoint,
             method: restaurantEndpoints.uploadPicture.method,
             data: sendFormData,
-            service:"erp",
+            service: 'restaurant',
             config: {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -252,7 +253,7 @@ export async function getCollections(): Promise<Collection[]> {
         const data = await apiClientHttp.request<Collection[]>({
             endpoint: restaurantEndpoints.getCollection.endpoint,
             method: restaurantEndpoints.getCollection.method,
-            service:"erp",
+            service: 'restaurant',
         });
 
         return data;
@@ -266,7 +267,7 @@ export async function getDishesGroupByCollection(): Promise<CollectionWithDishes
         const data = await apiClientHttp.request<CollectionWithDishes[]>({
             endpoint: restaurantEndpoints.getDishesGroupByCollection.endpoint,
             method: restaurantEndpoints.getDishesGroupByCollection.method,
-            service:"erp",
+            service: 'restaurant',
         });
         const newData =
             data && data?.length > 0
@@ -286,7 +287,7 @@ export async function getDishesByCollection(collectionID: string): Promise<Dish[
         const data = await apiClientHttp.request<Dish[]>({
             endpoint: restaurantEndpoints.getDishesByCollection.endpoint(collectionID),
             method: restaurantEndpoints.getDishesByCollection.method,
-            service:"erp",
+            service: 'restaurant',
         });
 
         return data;
@@ -300,7 +301,7 @@ export async function getDishComplet(dishID: string): Promise<DishComplet | null
         const data = await apiClientHttp.request<DishComplet>({
             endpoint: restaurantEndpoints.getDishComplet.endpoint(dishID),
             method: restaurantEndpoints.getDishComplet.method,
-            service:"erp",
+            service: 'restaurant',
         });
 
         return data;
@@ -332,7 +333,7 @@ export async function addDish(formData: FormData): Promise<ActionResult<Dish | n
         const data = await apiClientHttp.request<Dish>({
             endpoint: restaurantEndpoints.addDish.endpoint,
             method: restaurantEndpoints.addDish.method,
-            service:"erp",
+            service: 'restaurant',
             data: sendFormData,
             config: {
                 headers: {
@@ -383,7 +384,7 @@ export async function addAccompaniment(formData: FormData): Promise<ActionResult
         const data = await apiClientHttp.request<Accompaniment>({
             endpoint: restaurantEndpoints.addAccompagnement.endpoint,
             method: restaurantEndpoints.addAccompagnement.method,
-            service:"erp",
+            service: 'restaurant',
             data: formdata,
         });
 
@@ -423,7 +424,7 @@ export async function updateAccompaniment(id: string, formData: FormData): Promi
         const data = await apiClientHttp.request<Accompaniment>({
             endpoint: restaurantEndpoints.updateAccompagnement.endpoint(id),
             method: restaurantEndpoints.updateAccompagnement.method,
-            service:"erp",
+            service: 'restaurant',
             data: formdata,
         });
 
@@ -465,7 +466,7 @@ export async function addBoisson(formData: FormData): Promise<ActionResult<Drink
             endpoint: restaurantEndpoints.addBoisson.endpoint,
             method: restaurantEndpoints.addBoisson.method,
             data: formdata,
-            service:"erp",
+            service: 'restaurant',
         });
 
         return {
@@ -505,7 +506,7 @@ export async function updateBoisson(id: string, formData: FormData): Promise<Act
             endpoint: restaurantEndpoints.updateBoisson.endpoint(id),
             method: restaurantEndpoints.updateBoisson.method,
             data: formdata,
-            service:"erp",
+            service: 'restaurant',
         });
 
         return {
@@ -545,7 +546,7 @@ export async function addOption(formData: FormData): Promise<ActionResult<Option
             endpoint: restaurantEndpoints.addPlatOption.endpoint,
             method: restaurantEndpoints.addPlatOption.method,
             data: formdata,
-            service:"erp",
+            service: 'restaurant',
         });
 
         return {
@@ -584,7 +585,7 @@ export async function addOptionValue(formData: FormData): Promise<ActionResult<O
             endpoint: restaurantEndpoints.addPlatOptionValue.endpoint,
             method: restaurantEndpoints.addPlatOptionValue.method,
             data: formdata,
-            service:"erp",
+            service: 'restaurant',
         });
 
         return {
@@ -624,7 +625,7 @@ export async function updateOption(formData: FormData): Promise<ActionResult<Opt
             endpoint: restaurantEndpoints.addPlatOption.endpoint,
             method: restaurantEndpoints.addPlatOption.method,
             data: formdata,
-            service:"erp",
+            service: 'restaurant',
         });
 
         return {
@@ -663,7 +664,7 @@ export async function updateOptionValue(formData: FormData): Promise<ActionResul
             endpoint: restaurantEndpoints.addPlatOptionValue.endpoint,
             method: restaurantEndpoints.addPlatOptionValue.method,
             data: formdata,
-            service:"erp",
+            service: 'restaurant',
         });
 
         return {

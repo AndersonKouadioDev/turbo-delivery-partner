@@ -30,12 +30,16 @@ export const register3Schema = z.object({
 export type _register3Schema = z.infer<typeof register3Schema>;
 
 // Change Password
-export const changePasswordSchema = z.object({
-    username: z.string(),
-    oldPassword: z.string(),
-    newPassword: z.string(),
-    confirm_password : z.string()
-});
+const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+export const changePasswordSchema = z
+    .object({
+        username: z.string(),
+        oldPassword: z.string(),
+        newPassword: z.string().regex(passwordRegex, 'Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, un symbole et un chiffre.'),
+        confirm_password: z.string(),
+    });
+
 export type _changePasswordSchema = z.infer<typeof changePasswordSchema>;
 
 // New Password

@@ -91,16 +91,16 @@ export async function registerStepFirst(prevState: any, formData: FormData): Pro
             endpoint: usersEndpoints.register1.endpoint,
             method: usersEndpoints.register1.method,
             data: formdata,
-            service:"erp",
+            service: 'restaurant',
         });
-        cookies().set('email_otp', formdata.email);
-        redirect('/auth/signin?step=2');
     } catch (error: any) {
         return {
             status: 'error',
             message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'inscription étape 1",
         };
     }
+    cookies().set('email_otp', formdata.email);
+    redirect('/auth/signin?step=2');
 }
 export async function resendEmail(): Promise<void> {
     // Processing
@@ -114,7 +114,7 @@ export async function resendEmail(): Promise<void> {
                 endpoint: usersEndpoints.register1.endpoint,
                 method: usersEndpoints.register1.method,
                 data: { email },
-                service:"erp",
+                service: 'restaurant',
             });
         } catch (error: any) {
             // return {
@@ -151,16 +151,15 @@ export async function registerStepSecond(prevState: any, formData: FormData): Pr
             endpoint: usersEndpoints.register2.endpoint,
             method: usersEndpoints.register2.method,
             data: formdata,
-            service:"erp",
+            service: 'restaurant',
         });
-
-        redirect('/auth/signin?step=3');
     } catch (error: any) {
         return {
             status: 'error',
             message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'envoi du code de validation",
         };
     }
+    redirect('/auth/signin?step=3');
 }
 
 export async function registerFinalStep(prevState: any, formData: FormData): Promise<ActionResult<any>> {
@@ -203,7 +202,7 @@ export async function registerFinalStep(prevState: any, formData: FormData): Pro
             endpoint: usersEndpoints.register3.endpoint,
             method: usersEndpoints.register3.method,
             data: { ...formdata, email },
-            service:"erp",
+            service: 'restaurant',
         });
         return {
             status: 'success',
@@ -259,7 +258,7 @@ export async function changePassword(prevState: any, formData: FormData): Promis
                 oldPassword: formdata.oldPassword,
                 username: formdata.username,
             },
-            service:"erp",
+            service: 'restaurant',
         });
         return {
             status: 'success',
@@ -294,34 +293,33 @@ export async function forgetPassword(prevState: any, formData: FormData): Promis
             message: errorsInArray![0].message ?? 'Mot de passe mal formaté',
         };
     }
-
+    let data;
     try {
-        const data = await apiClientHttp.request({
+        data = await apiClientHttp.request({
             endpoint: usersEndpoints.forgetPassword.endpoint,
             method: usersEndpoints.forgetPassword.method,
             data: formdata,
-            service:"erp",
+            service: 'restaurant',
         });
-
-        // Récupérer le token à partir de l'URL dans le champ "link"
-        const link = data?.link; // Récupérer l'URL
-        const urlParams = new URL(link); // Créer un objet URL
-        const token = urlParams.searchParams.get('token'); // Extraire le token
-
-        if (token) {
-            redirect(`/auth/recover-password?step=2&token=${token}`);
-        }
-
-        return {
-            status: 'success',
-            message: 'Email envoyé avec succès',
-        };
     } catch (error: any) {
         return {
             status: 'error',
             message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur lors du changement de mot de passe',
         };
     }
+    // Récupérer le token à partir de l'URL dans le champ "link"
+    const link = data?.link; // Récupérer l'URL
+    const urlParams = new URL(link); // Créer un objet URL
+    const token = urlParams.searchParams.get('token'); // Extraire le token
+
+    if (token) {
+        redirect(`/auth/recover-password?step=2&token=${token}`);
+    }
+
+    return {
+        status: 'success',
+        message: 'Email envoyé avec succès',
+    };
 }
 
 export async function newPassword(prevState: any, formData: FormData): Promise<ActionResult<any>> {
@@ -351,34 +349,34 @@ export async function newPassword(prevState: any, formData: FormData): Promise<A
             message: 'Mot de passe et la confirmation ne sont pas identique',
         };
     }
-
+    let data;
     try {
-        const data = await apiClientHttp.request({
+        data = await apiClientHttp.request({
             endpoint: usersEndpoints.newPassword.endpoint,
             method: usersEndpoints.newPassword.method,
             data: {
                 token: formdata.token,
                 newPassword: formdata.newPassword,
             },
-            service:"erp",
+            service: 'restaurant',
         });
-
-        // Récupérer le token à partir de l'URL dans le champ "link"
-        const link = data?.link; // Récupérer l'URL
-        const urlParams = new URL(link); // Créer un objet URL
-        const token = urlParams.searchParams.get('token'); // Extraire le token
-
-        if (token) {
-            redirect(`/auth/recover-password?step=2&token=${token}`);
-        }
-
-        redirect('/auth');
     } catch (error: any) {
         return {
             status: 'error',
             message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur lors du changement de mot de passe',
         };
     }
+console.log(data)
+    // Récupérer le token à partir de l'URL dans le champ "link"
+    const link = data?.link; // Récupérer l'URL
+    const urlParams = new URL(link); // Créer un objet URL
+    const token = urlParams.searchParams.get('token'); // Extraire le token
+
+    if (token) {
+        redirect(`/auth/recover-password?step=2&token=${token}`);
+    }
+
+    redirect('/auth');
 }
 
 export async function signOut(): Promise<void> {

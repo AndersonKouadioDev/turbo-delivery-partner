@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft, RefreshCcw } from 'lucide-react';
+import { RefreshCcw } from 'lucide-react';
 import { Button } from '@nextui-org/react';
 import Link from 'next/link';
 import { useEffect } from 'react';
@@ -8,12 +8,9 @@ import { useRouter } from 'next/navigation';
 export default function ActivationPending() {
     const router = useRouter();
     useEffect(() => {
-        const interval = setInterval(
-            () => {
-                router.push("/");
-            },
-            1 * 60 * 1000,
-        ); // 2 minutes en millisecondes
+        const interval = setInterval(() => {
+            router.push('/');
+        }, 30 * 1000); // 2 minutes en millisecondes
 
         // Nettoyage lors du démontage du composant
         return () => clearInterval(interval);
