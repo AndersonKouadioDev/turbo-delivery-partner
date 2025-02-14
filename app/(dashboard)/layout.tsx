@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Bell, Home, Menu, Gauge, Settings, Pizza, MessageSquare, ShoppingBag } from 'lucide-react';
+import { Bell, Home, Menu, Gauge, Settings, Pizza, MessageSquare, ShoppingBag, TicketCheck } from 'lucide-react';
 
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DashboardNavItems } from '@/components/dashboard/dashboard-nav-items';
@@ -43,8 +43,13 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
         },
         {
             href: '/delivery',
-            icon: <TbTruckDelivery className="h-5 w-5" />,
+            icon: <TicketCheck className="h-5 w-5" />,
             label: 'Mes Courses',
+        },
+        {
+            href: '/file-attente',
+            icon: <TbTruckDelivery className="h-5 w-5" />,
+            label: 'Flotte de livreur',
         },
         {
             href: '/orders',

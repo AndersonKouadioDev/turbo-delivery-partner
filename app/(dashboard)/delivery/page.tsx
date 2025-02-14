@@ -13,8 +13,6 @@ export default async function DeliveryPage() {
     }
 
     const data2 = await getPaginationCourseExterne(restaurant.id ?? '', 0, 5);
-
-    console.log(data2)
     
     return (
         <Suspense fallback={<Loading />}>
