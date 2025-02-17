@@ -81,12 +81,7 @@ export async function createRestaurant(formData: FormData): Promise<ActionResult
         transformations: {
             telephone: (value) => TrimPhoneNumber(value as string),
         },
-<<<<<<< HEAD
-       
-    );
-=======
     });
->>>>>>> origin/main
 
     if (!success && errorsInArray) {
         return {
