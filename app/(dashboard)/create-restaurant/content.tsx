@@ -23,14 +23,14 @@ export default function CreateRestaurantContent() {
     const [currentStep, setCurrentStep] = useState<number>(0);
 
     const [state, formAction] = useFormState(
-        async (prevState: any, formData: FormData) => {
+        async (_: any, formData: FormData) => {
             
             console.log("getValues", getValues());
             formData.set('idLocation',getValues().idLocation)
             formData.set('longitude',getValues().longitude)
             formData.set('latitude',getValues().latitude)
       
-            const result = await createRestaurant(prevState, formData);
+            const result = await createRestaurant(formData);
             if (result.status === 'success') {
                 toast.success(result.message);
 
