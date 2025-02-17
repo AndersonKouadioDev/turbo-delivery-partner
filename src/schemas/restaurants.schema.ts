@@ -138,7 +138,7 @@ export const addPictureSchema = z.object({
                 .instanceof(File)
                 .refine((file) => file.size > 0, 'Le fichier est requis')
                 .refine((file) => file.size <= 10 * 1024 * 1024, 'La taille du fichier ne doit pas dépasser 10 Mo')
-                .refine((file) => ['image/jpg','image/jpeg','image/png'].includes(file.type), 'Format de fichier non supporté (JPEG, PNG, GIF uniquement)'),
+                .refine((file) => ['image/jpg', 'image/jpeg', 'image/png'].includes(file.type), 'Format de fichier non supporté (JPEG, PNG, GIF uniquement)'),
         )
         .nonempty(),
 });
