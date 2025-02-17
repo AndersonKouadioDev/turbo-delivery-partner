@@ -1,5 +1,6 @@
-import defaultEndpoint from '@/src/endpoints/default.endpoint';
 import getFolderAndFileName from './getFolderAndFileName';
+
+const serveFile = (folder: string, file: string) => `/api/serve/file/${folder}/${file}`;
 
 function createUrlFile(path: string, service: 'restaurant' | 'erp' | 'delivery' | 'client') {
     let base_url = '';
@@ -17,7 +18,7 @@ function createUrlFile(path: string, service: 'restaurant' | 'erp' | 'delivery' 
     }
     const { folderName, fileName } = getFolderAndFileName(path);
 
-    const url = base_url + defaultEndpoint.serveFile(folderName, fileName);
+    const url = base_url + serveFile(folderName, fileName);
 
     return url;
 }

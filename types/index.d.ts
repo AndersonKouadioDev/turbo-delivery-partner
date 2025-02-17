@@ -11,18 +11,12 @@ export interface ActionResult<T> {
         [key: string]: string;
     };
     status?: 'idle' | 'loading' | 'success' | 'error';
-    code?: ErrorDefaultCode | number;
+    code?: string | number;
 }
 
 export interface ErrorCode {
-    code: ErrorDefaultCode;
+    code?: string | number;
     message: string;
-}
-
-export enum ErrorDefaultCode {
-    exception = '400',
-    permission = '42501',
-    auth = '401',
 }
 
 export type DayOfWeek = 'LUNDI' | 'MARDI' | 'MERCREDI' | 'JEUDI' | 'VENDREDI' | 'SAMEDI' | 'DIMANCHE';
@@ -40,7 +34,6 @@ export interface DaySchedule {
 }
 
 export type WeekSchedule = Record<DayOfWeek, DaySchedule>;
-
 
 export interface MarkerData {
     start: google.maps.LatLngLiteral;

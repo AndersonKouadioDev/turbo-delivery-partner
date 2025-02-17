@@ -2,9 +2,7 @@
 
 import { createFormData, processFormData } from '@/utils/formdata-zod.utilities';
 import { TrimPhoneNumber } from '@/utils/trim-phone-number';
-import { apiClient } from '@/lib/api-client';
 import { ActionResult } from '@/types/index.d';
-import restaurantEndpoints from '@/src/endpoints/restaurants.endpoint';
 
 import {
     addAccompagnementSchema,
@@ -19,24 +17,71 @@ import {
 } from '../schemas/restaurants.schema';
 import { FindOneRestaurant, OpeningHour, Restaurant, Collection, User, CollectionWithDishes, Dish, DishComplet, Accompaniment, Drink, Option, OptionValue } from '@/types/models';
 import { unstable_update } from '@/auth';
+import { apiClientHttp } from '@/lib/api-client-http';
 
-export async function createRestaurant(prevState: any, formData: FormData): Promise<ActionResult<{ restaurant: Restaurant; createdBy: User }>> {
+// Configuration
+const BASE_URL = '';
+
+const restaurantEndpoints = {
+    create: { endpoint: `/api/V1/turbo/restaurant/create`, method: 'POST' },
+    update: { endpoint: `/api/V1/turbo/restaurant/update`, method: 'POST' },
+    info: { endpoint: `/api/V1/turbo/restaurant/info`, method: 'GET' },
+    getCollection: { endpoint: `/api/turbo/resto/collection/get`, method: 'GET' },
+    getDishesGroupByCollection: { endpoint: `/api/V1/turbo/resto/plat/get/by/collection`, method: 'GET' },
+    getDishesByCollection: {
+        endpoint: (collectionID: string) => `/api/V1/turbo/resto/plat/collection/${collectionID}`,
+        method: 'GET',
+    },
+    getDishComplet: {
+        endpoint: (dishID: string) => `/api/V1/turbo/resto/plat/info/${dishID}`,
+        method: 'GET',
+    },
+    uploadPicture: { endpoint: `/api/V1/turbo/resto/picture/upload`, method: 'POST' },
+    assignTypeCuisine: { endpoint: `/api/V1/turbo/resto/typecuisine/assign`, method: 'POST' },
+    listTypeCuisine: { endpoint: `/api/V1/turbo/resto/type/cuisine/liste`, method: 'GET' },
+    addDish: { endpoint: `/api/V1/turbo/resto/plat/add`, method: 'POST' },
+    listPlatOption: { endpoint: `/api/V1/turbo/resto/type/cuisine/liste`, method: 'GET' },
+    addPlatOption: { endpoint: `/api/V1/turbo/resto/plat/add/option/plat`, method: 'POST' },
+    addPlatOptionValue: { endpoint: `/api/V1/turbo/resto/plat/add/option/value`, method: 'POST' },
+    addAccompagnement: { endpoint: `/api/V1/turbo/resto/accompagnement/create`, method: 'POST' },
+    listAccompagnement: {
+        endpoint: (restauranID: string) => `/api/V1/turbo/resto/accompagnement/list/${restauranID}`,
+        method: 'GET',
+    },
+    infoAccompagnement: {
+        endpoint: (restauranID: string) => `/api/V1/turbo/resto/accompagnement/info/${restauranID}`,
+        method: 'GET',
+    },
+    updateAccompagnement: {
+        endpoint: (accompagnementID: string) => `/api/V1/turbo/resto/accompagnement/update/${accompagnementID}`,
+        method: 'POST',
+    },
+    infoBoisson: {
+        endpoint: (restauranID: string) => `/api/V1/turbo/resto/boisson/get/plat/${restauranID}`,
+        method: 'GET',
+    },
+    updateBoisson: {
+        endpoint: (boissonID: string) => `/api/V1/turbo/resto/boisson/update/${boissonID}`,
+        method: 'POST',
+    },
+    addBoisson: { endpoint: `/api/V1/turbo/resto/boisson/create`, method: 'POST' },
+    listBoisson: { endpoint: `/api/V1/turbo/resto/boisson/get`, method: 'GET' },
+    addHoraire: { endpoint: `/api/V1/turbo/restaurant/add/horaire`, method: 'POST' },
+    getHoraires: { endpoint: `/api/V1/turbo/restaurant/get/hours`, method: 'GET' },
+};
+
+export async function createRestaurant(formData: FormData): Promise<ActionResult<{ restaurant: Restaurant; createdBy: User }>> {
     const {
         success,
         data: formdata,
         errorsInArray,
-    } = processFormData(
-        createRestaurantSchema,
-        formData,
-        {
-            useDynamicValidation: true,
-            excludeFields: ['telephoneCountry'],
-            transformations: {
-                telephone: (value) => TrimPhoneNumber(value as string),
-            },
+    } = processFormData(createRestaurantSchema, formData, {
+        useDynamicValidation: true,
+        excludeFields: ['telephoneCountry'],
+        transformations: {
+            telephone: (value) => TrimPhoneNumber(value as string),
         },
-        prevState,
-    );
+    });
 
     if (!success && errorsInArray) {
         return {
@@ -44,53 +89,59 @@ export async function createRestaurant(prevState: any, formData: FormData): Prom
             message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
-    // Create a new FormData object to ensure we're sending multipart/form-data
-    const sendFormData = createFormData(formdata);
 
     try {
-        const response = await apiClient.post(restaurantEndpoints.create, sendFormData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
+        // Create a new FormData object to ensure we're sending multipart/form-data
+        const sendFormData = createFormData(formdata);
+
+        const data = await apiClientHttp.request<{ restaurant: Restaurant; createdBy: User }>({
+            endpoint: restaurantEndpoints.create.endpoint,
+            method: restaurantEndpoints.create.method,
+            data: sendFormData,
+            service: 'restaurant',
+            config: {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
             },
         });
-        if (response.status == 413) {
-            return {
-                status: 'error',
-                message: 'Fichiers volumineux. Utilisez des fichiers de moins de 5Mo',
-            };
-        }
-        if (!response.status.toString().startsWith('20')) {
-            return {
-                status: 'error',
-                message: response?.data?.message ?? 'Erreur lors de la création du restaurant',
-            };
-        }
 
         await unstable_update({
             user: {
-                restaurant: response?.data?.restaurant?.nomEtablissement!,
-                restauranID: response?.data?.restaurant?.id!,
+                restaurant: data?.restaurant?.nomEtablissement!,
+                restauranID: data?.restaurant?.id!,
             },
         });
 
         return {
             status: 'success',
             message: 'Restaurant créé avec succès',
-            data: response.data,
+            data: data,
         };
-    } catch (error) {
+    } catch (error: any) {
+       
+        if (error?.response?.status == 413) {
+            return {
+                status: 'error',
+                message: 'Fichiers volumineux. Utilisez des fichiers de moins de 5Mo',
+            };
+        }
+
         return {
             status: 'error',
-            message: 'Erreur lors de la création du restaurant',
+            message: JSON.stringify(error?.response?.data) ?? error?.response?.data?.message ?? 'Erreur lors de la création du restaurant',
         };
     }
 }
 
 export async function findOneRestaurant(): Promise<FindOneRestaurant | null> {
-    // Processing
     try {
-        const response = await apiClient.get(restaurantEndpoints.info);
-        return response.data;
+        const data = await apiClientHttp.request<FindOneRestaurant>({
+            endpoint: restaurantEndpoints.info.endpoint,
+            method: restaurantEndpoints.info.method,
+            service: 'restaurant',
+        });
+        return data;
     } catch (error) {
         return null;
     }
@@ -113,41 +164,40 @@ export async function addHoraire(formData: FormData): Promise<ActionResult<Openi
     }
 
     try {
-        const response = await apiClient.post(restaurantEndpoints.addHoraire, formdata);
+        const data = await apiClientHttp.request<OpeningHour[]>({
+            endpoint: restaurantEndpoints.addHoraire.endpoint,
+            method: restaurantEndpoints.addHoraire.method,
+            service: 'restaurant',
+            data: formdata,
+        });
 
-        if (response.status !== 200) {
-            return {
-                status: 'error',
-                message: "Erreur lors de l'ajout de l'horaire",
-            };
-        }
         return {
             status: 'success',
-            message: 'OpeningHour ajouté avec succès',
-            data: response.data,
+            message: 'Horaires ajouté avec succès',
+            data: data,
         };
-    } catch (error) {
+    } catch (error: any) {
         return {
             status: 'error',
-            message: "Erreur lors de l'ajout de l'horaire",
+            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout de l'horaire",
         };
     }
 }
 
 export async function getHoraires(): Promise<OpeningHour[] | null> {
     try {
-        const response = await apiClient.get(restaurantEndpoints.getHoraires);
-
-        if (response.status !== 200) {
-            return null;
-        }
-        return response.data;
+        const data = await apiClientHttp.request<OpeningHour[]>({
+            endpoint: restaurantEndpoints.getHoraires.endpoint,
+            method: restaurantEndpoints.getHoraires.method,
+            service: 'restaurant',
+        });
+        return data;
     } catch (error) {
         return null;
     }
 }
 
-export async function addPicture(prevState: any, formData: FormData): Promise<ActionResult<any>> {
+export async function addPicture(formData: FormData): Promise<ActionResult<any>> {
     const {
         success,
         data: formdata,
@@ -163,50 +213,50 @@ export async function addPicture(prevState: any, formData: FormData): Promise<Ac
         };
     }
 
-    // Create a new FormData object to ensure we're sending multipart/form-data
-
-    const sendFormData = createFormData(formdata);
-
     try {
-        const response = await apiClient.post(restaurantEndpoints.uploadPicture, sendFormData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
+        // Create a new FormData object to ensure we're sending multipart/form-data
+
+        const sendFormData = createFormData(formdata);
+
+        await apiClientHttp.request({
+            endpoint: restaurantEndpoints.uploadPicture.endpoint,
+            method: restaurantEndpoints.uploadPicture.method,
+            data: sendFormData,
+            service: 'restaurant',
+            config: {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
             },
         });
 
-        if (response.status == 413) {
+        return {
+            status: 'success',
+            message: 'Images ajoutées avec succès',
+        };
+    } catch (error: any) {
+        if (error?.response?.status == 413) {
             return {
                 status: 'error',
                 message: 'Fichiers volumineux. Utilisez des fichiers de moins de 5Mo',
             };
         }
-        if (!response.status.toString().startsWith('20')) {
-            return {
-                status: 'error',
-                message: response?.data?.message ?? 'Erreur lors de la création du restaurant',
-            };
-        }
-
-        return {
-            status: 'success',
-            message: 'Images ajoutées avec succès',
-            data: response.data,
-        };
-    } catch (error) {
         return {
             status: 'error',
-            message: "Erreur lors de l'ajout des images",
+            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout des images",
         };
     }
 }
 
 export async function getCollections(): Promise<Collection[]> {
     try {
-        const response = await apiClient.get(restaurantEndpoints.getCollection);
-        if (response.status !== 200) {
-            return [];
-        }
-        return response.data;
+        const data = await apiClientHttp.request<Collection[]>({
+            endpoint: restaurantEndpoints.getCollection.endpoint,
+            method: restaurantEndpoints.getCollection.method,
+            service: 'restaurant',
+        });
+
+        return data;
     } catch (error) {
         return [];
     }
@@ -214,42 +264,47 @@ export async function getCollections(): Promise<Collection[]> {
 
 export async function getDishesGroupByCollection(): Promise<CollectionWithDishes[]> {
     try {
-        const response = await apiClient.get(restaurantEndpoints.getDishesGroupByCollection);
-        if (response.status !== 200) {
-            return [];
-        }
-        const data =
-            response.data && response.data?.length > 0
-                ? response.data.map((item: CollectionWithDishes) => ({
+        const data = await apiClientHttp.request<CollectionWithDishes[]>({
+            endpoint: restaurantEndpoints.getDishesGroupByCollection.endpoint,
+            method: restaurantEndpoints.getDishesGroupByCollection.method,
+            service: 'restaurant',
+        });
+        const newData =
+            data && data?.length > 0
+                ? data.map((item: CollectionWithDishes) => ({
                       collectionModel: item.collectionModel,
                       totalPlat: item.totalPlat,
                   }))
                 : [];
+        return newData;
+    } catch (error) {
+        return [];
+    }
+}
+
+export async function getDishesByCollection(collectionID: string): Promise<Dish[]> {
+    try {
+        const data = await apiClientHttp.request<Dish[]>({
+            endpoint: restaurantEndpoints.getDishesByCollection.endpoint(collectionID),
+            method: restaurantEndpoints.getDishesByCollection.method,
+            service: 'restaurant',
+        });
+
         return data;
     } catch (error) {
         return [];
     }
 }
 
-export async function getDishesByCollection(id: string): Promise<Dish[]> {
+export async function getDishComplet(dishID: string): Promise<DishComplet | null> {
     try {
-        const response = await apiClient.get(restaurantEndpoints.getDishesByCollection(id));
-        if (response.status !== 200) {
-            return [];
-        }
-        return response.data;
-    } catch (error) {
-        return [];
-    }
-}
+        const data = await apiClientHttp.request<DishComplet>({
+            endpoint: restaurantEndpoints.getDishComplet.endpoint(dishID),
+            method: restaurantEndpoints.getDishComplet.method,
+            service: 'restaurant',
+        });
 
-export async function getDishComplet(id: string): Promise<DishComplet | null> {
-    try {
-        const response = await apiClient.get(restaurantEndpoints.getDishComplet(id));
-        if (response.status !== 200) {
-            return null;
-        }
-        return response.data;
+        return data;
     } catch (error) {
         return null;
     }
@@ -275,68 +330,73 @@ export async function addDish(formData: FormData): Promise<ActionResult<Dish | n
     const sendFormData = createFormData(formdata);
 
     try {
-        const response = await apiClient.post(restaurantEndpoints.addDish, sendFormData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
+        const data = await apiClientHttp.request<Dish>({
+            endpoint: restaurantEndpoints.addDish.endpoint,
+            method: restaurantEndpoints.addDish.method,
+            service: 'restaurant',
+            data: sendFormData,
+            config: {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
             },
         });
 
-        if (response.status == 413) {
+        return {
+            status: 'success',
+            message: 'Plat créé avec succès',
+            data: data,
+        };
+    } catch (error: any) {
+        if (error?.response?.status == 413) {
             return {
                 status: 'error',
                 message: 'Fichiers volumineux. Utilisez des fichiers de moins de 5Mo',
             };
         }
-
-        if (!response.status.toString().startsWith('20')) {
-            return {
-                status: 'error',
-                message: response?.data?.message ?? 'Erreur lors de la création du restaurant',
-            };
-        }
-
-        return {
-            status: 'success',
-            message: 'Plat créé avec succès',
-            data: response.data,
-        };
-    } catch (error: any) {
         return {
             status: 'error',
-            message: error.message,
+            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout du plat",
         };
     }
 }
 
 export async function addAccompaniment(formData: FormData): Promise<ActionResult<Accompaniment | null>> {
-    const { success, data: formdata } = processFormData(addAccompagnementSchema, formData, {
+    const {
+        success,
+        data: formdata,
+        errorsInArray,
+    } = processFormData(addAccompagnementSchema, formData, {
         useDynamicValidation: true,
         transformations: {
             price: (value) => Number(value),
         },
     });
 
-    if (!success) {
+    if (!success && errorsInArray) {
         return {
             status: 'error',
-            message: 'Données manquantes ou mal formatées',
+            message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
 
     try {
-        const response = await apiClient.post(restaurantEndpoints.addAccompagnement, formdata);
-        if (response.status !== 200) {
-            throw new Error(response?.data?.message ?? "Erreur lors de l'ajout de l'accompagnement");
-        }
+        const data = await apiClientHttp.request<Accompaniment>({
+            endpoint: restaurantEndpoints.addAccompagnement.endpoint,
+            method: restaurantEndpoints.addAccompagnement.method,
+            service: 'restaurant',
+            data: formdata,
+        });
+
         return {
             status: 'success',
             message: 'Accompagnement ajouté avec succès',
-            data: response.data,
+            data: data,
         };
     } catch (error: any) {
         return {
             status: 'error',
-            message: error.message,
+            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout du Accompagnement",
         };
     }
 }
@@ -361,19 +421,22 @@ export async function updateAccompaniment(id: string, formData: FormData): Promi
     }
 
     try {
-        const response = await apiClient.post(restaurantEndpoints.updateAccompagnement(id), formdata);
-        if (response.status !== 200) {
-            throw new Error(response?.data?.message ?? "Erreur lors de la mise à jour de l'accompagnement");
-        }
+        const data = await apiClientHttp.request<Accompaniment>({
+            endpoint: restaurantEndpoints.updateAccompagnement.endpoint(id),
+            method: restaurantEndpoints.updateAccompagnement.method,
+            service: 'restaurant',
+            data: formdata,
+        });
+
         return {
             status: 'success',
             message: 'Accompagnement mis à jour avec succès',
-            data: response.data,
+            data: data,
         };
     } catch (error: any) {
         return {
             status: 'error',
-            message: error.message,
+            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de la mise à jour de l'accompagnement",
         };
     }
 }
@@ -399,19 +462,22 @@ export async function addBoisson(formData: FormData): Promise<ActionResult<Drink
     }
 
     try {
-        const response = await apiClient.post(restaurantEndpoints.addBoisson, formdata);
-        if (response.status !== 200) {
-            throw new Error(response?.data?.message ?? "Erreur lors de l'ajout de la boisson");
-        }
+        const data = await apiClientHttp.request<Drink>({
+            endpoint: restaurantEndpoints.addBoisson.endpoint,
+            method: restaurantEndpoints.addBoisson.method,
+            data: formdata,
+            service: 'restaurant',
+        });
+
         return {
             status: 'success',
             message: 'Boisson ajoutée avec succès',
-            data: response.data,
+            data: data,
         };
     } catch (error: any) {
         return {
             status: 'error',
-            message: error.message,
+            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout de la boisson",
         };
     }
 }
@@ -435,21 +501,23 @@ export async function updateBoisson(id: string, formData: FormData): Promise<Act
             message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
-
     try {
-        const response = await apiClient.post(restaurantEndpoints.updateBoisson(id), formdata);
-        if (response.status !== 200) {
-            throw new Error(response?.data?.message ?? 'Erreur lors de la mise à jour de la boisson');
-        }
+        const data = await apiClientHttp.request<Drink>({
+            endpoint: restaurantEndpoints.updateBoisson.endpoint(id),
+            method: restaurantEndpoints.updateBoisson.method,
+            data: formdata,
+            service: 'restaurant',
+        });
+
         return {
             status: 'success',
             message: 'Boisson mise à jour avec succès',
-            data: response.data,
+            data: data,
         };
     } catch (error: any) {
         return {
             status: 'error',
-            message: error.message,
+            message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur lors de la mise à jour de la boisson',
         };
     }
 }
@@ -473,21 +541,23 @@ export async function addOption(formData: FormData): Promise<ActionResult<Option
             message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
-
     try {
-        const response = await apiClient.post(restaurantEndpoints.addPlatOption, formdata);
-        if (response.status !== 200) {
-            throw new Error(response?.data?.message ?? "Erreur lors de l'ajout de l'option");
-        }
+        const data = await apiClientHttp.request<Option>({
+            endpoint: restaurantEndpoints.addPlatOption.endpoint,
+            method: restaurantEndpoints.addPlatOption.method,
+            data: formdata,
+            service: 'restaurant',
+        });
+
         return {
             status: 'success',
             message: 'Option ajoutée avec succès',
-            data: response.data,
+            data: data,
         };
     } catch (error: any) {
         return {
             status: 'error',
-            message: error.message,
+            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout de l'option",
         };
     }
 }
@@ -510,21 +580,23 @@ export async function addOptionValue(formData: FormData): Promise<ActionResult<O
             message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
-
     try {
-        const response = await apiClient.post(restaurantEndpoints.addPlatOptionValue, formdata);
-        if (response.status !== 200) {
-            throw new Error(response?.data?.message ?? "Erreur lors de l'ajout de la valeur de l'option");
-        }
+        const data = await apiClientHttp.request<OptionValue>({
+            endpoint: restaurantEndpoints.addPlatOptionValue.endpoint,
+            method: restaurantEndpoints.addPlatOptionValue.method,
+            data: formdata,
+            service: 'restaurant',
+        });
+
         return {
             status: 'success',
             message: "Valeur de l'option ajoutée avec succès",
-            data: response.data,
+            data: data,
         };
     } catch (error: any) {
         return {
             status: 'error',
-            message: error.message,
+            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout de la valeur de l'option",
         };
     }
 }
@@ -548,21 +620,23 @@ export async function updateOption(formData: FormData): Promise<ActionResult<Opt
             message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
-
     try {
-        const response = await apiClient.post(restaurantEndpoints.addPlatOption, formdata);
-        if (response.status !== 200) {
-            throw new Error(response?.data?.message ?? "Erreur lors de la mise à jour de l'option");
-        }
+        const data = await apiClientHttp.request<Option>({
+            endpoint: restaurantEndpoints.addPlatOption.endpoint,
+            method: restaurantEndpoints.addPlatOption.method,
+            data: formdata,
+            service: 'restaurant',
+        });
+
         return {
             status: 'success',
             message: 'Option mise à jour avec succès',
-            data: response.data,
+            data: data,
         };
     } catch (error: any) {
         return {
             status: 'error',
-            message: error.message,
+            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de la mise à jour de l'option",
         };
     }
 }
@@ -585,21 +659,23 @@ export async function updateOptionValue(formData: FormData): Promise<ActionResul
             message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
-
     try {
-        const response = await apiClient.post(restaurantEndpoints.addPlatOptionValue, formdata);
-        if (response.status !== 200) {
-            throw new Error(response?.data?.message ?? "Erreur lors de la mise à jour de la valeur de l'option");
-        }
+        const data = await apiClientHttp.request<OptionValue>({
+            endpoint: restaurantEndpoints.addPlatOptionValue.endpoint,
+            method: restaurantEndpoints.addPlatOptionValue.method,
+            data: formdata,
+            service: 'restaurant',
+        });
+
         return {
             status: 'success',
             message: "Valeur de l'option mise à jour avec succès",
-            data: response.data,
+            data: data,
         };
     } catch (error: any) {
         return {
             status: 'error',
-            message: error.message,
+            message: error?.response?.data ?? error?.response?.data?.message ?? "rreur lors de la mise à jour de la valeur de l'option",
         };
     }
 }

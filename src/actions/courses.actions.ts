@@ -1,10 +1,9 @@
 'use server';
-
-import { apiClientBackend } from '@/lib/api-client-backend';
 import { ActionResult } from '@/types';
 import { CourseExterne, PaginatedResponse } from '@/types/models';
 import { processFormData } from '@/utils/formdata-zod.utilities';
 import { courseExterneSchema } from '../schemas/courses.schema';
+import { apiClientHttp } from '@/lib/api-client-http';
 
 // Configuration
 const BASE_URL = '/api/restaurant/course-externe';
@@ -32,19 +31,19 @@ export async function addCourseExterne(formData: any, restaurantId: string): Pro
     const {
         success,
         data: formdata,
-        errors,
+        errorsInArray,
     } = processFormData(courseExterneSchema, formData, {
         useDynamicValidation: true,
     });
 
-    if (!success) {
+    if (!success && errorsInArray) {
         return {
             status: 'error',
-            message: 'Données manquantes ou mal formatées',
+            message: errorsInArray[0].message ?? 'Données manquantes ou mal formatées',
         };
     }
     try {
-        const response = await apiClientBackend.request({
+        const data = await apiClientHttp.request<string>({
             endpoint: courseEndpoints.createCourseExterne.endpoint,
             method: courseEndpoints.createCourseExterne.method,
             data: {
@@ -52,42 +51,35 @@ export async function addCourseExterne(formData: any, restaurantId: string): Pro
                 commandes: formdata.commandes,
             },
         });
-        
-        if (response.status !== 201) {
-            return {
-                status: 'error',
-                message: 'Erreur lors de la création de la course',
-            };
-        }
         return {
             status: 'success',
             message: 'Course crée avec succès',
+            data,
         };
-    } catch (error) {
+    } catch (error: any) {
         return {
             status: 'error',
-            message: "Erreur lors de l'ajout de l'horaire",
+            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout de l'horaire",
         };
     }
 }
 
 export async function getAllCourseExterne(idRestaurant: string): Promise<CourseExterne[]> {
     try {
-        const response = await apiClientBackend.request({
+        const data = await apiClientHttp.request<CourseExterne[]>({
             endpoint: courseEndpoints.getAllCourseExterne.endpoint(idRestaurant),
             method: courseEndpoints.getAllCourseExterne.method,
         });
 
-        return response.data;
+        return data;
     } catch (error) {
-        console.error('Error fetching all course externe:', error);
         return [];
     }
 }
 
 export async function getPaginationCourseExterne(idRestaurant: string, page: number = 0, size: number = 10): Promise<PaginatedResponse<CourseExterne> | null> {
     try {
-        const response = await apiClientBackend.request({
+        const data = await apiClientHttp.request<PaginatedResponse<CourseExterne>>({
             endpoint: courseEndpoints.getPaginationCourseExterne.endpoint(idRestaurant),
             method: courseEndpoints.getPaginationCourseExterne.method,
             params: {
@@ -96,30 +88,28 @@ export async function getPaginationCourseExterne(idRestaurant: string, page: num
             },
         });
 
-        return response.data;
+        return data;
     } catch (error) {
-        console.error('Error fetching paginate course externe:', error);
         return null;
     }
 }
 
 export async function getCourseExterne(idCourse: string): Promise<CourseExterne | null> {
     try {
-        const response = await apiClientBackend.request({
+        const data = await apiClientHttp.request<CourseExterne>({
             endpoint: courseEndpoints.getCourseExterne.endpoint(idCourse),
             method: courseEndpoints.getCourseExterne.method,
         });
 
-        return response.data;
+        return data;
     } catch (error) {
-        console.error('Error fetching course externe:', error);
         return null;
     }
 }
 
 export async function terminerCourseExterne(courseId: string): Promise<ActionResult<CourseExterne>> {
     try {
-        const response = await apiClientBackend.request({
+        const data = await apiClientHttp.request<CourseExterne>({
             endpoint: courseEndpoints.terminerCourseExterne.endpoint,
             method: courseEndpoints.terminerCourseExterne.method,
             data: {
@@ -130,19 +120,19 @@ export async function terminerCourseExterne(courseId: string): Promise<ActionRes
         return {
             status: 'success',
             message: 'Course Terminée',
-            data: response.data,
+            data: data,
         };
     } catch (error: any) {
         return {
             status: 'error',
-            message: 'Erreur lors du traitement',
+            message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur lors du traitement',
         };
     }
 }
 
 export async function cancelCourseExterne(courseId: string, restaurantId: string): Promise<ActionResult<CourseExterne>> {
     try {
-        const response = await apiClientBackend.request({
+        const data = await apiClientHttp.request<CourseExterne>({
             endpoint: courseEndpoints.annulerCourseExterne.endpoint,
             method: courseEndpoints.annulerCourseExterne.method,
             data: {
@@ -150,16 +140,16 @@ export async function cancelCourseExterne(courseId: string, restaurantId: string
                 courseId,
             },
         });
-        console.log(response);
+
         return {
             status: 'success',
             message: 'Course Annulée',
-            data: response.data,
+            data,
         };
-    } catch (error) {
+    } catch (error: any) {
         return {
             status: 'error',
-            message: 'Erreur lors du traitement',
+            message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur lors du traitement',
         };
     }
 }
