@@ -49,7 +49,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
         {
             href: '/file-attente',
             icon: <TbTruckDelivery className="h-5 w-5" />,
-            label: 'Flotte de livreur',
+            label: 'File d\'attente',
         },
         {
             href: '/orders',

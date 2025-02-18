@@ -75,6 +75,7 @@ export async function createRestaurant(formData: FormData): Promise<ActionResult
         success,
         data: formdata,
         errorsInArray,
+        errors
     } = processFormData(createRestaurantSchema, formData, {
         useDynamicValidation: true,
         excludeFields: ['telephoneCountry'],
@@ -82,7 +83,6 @@ export async function createRestaurant(formData: FormData): Promise<ActionResult
             telephone: (value) => TrimPhoneNumber(value as string),
         },
     });
-
     if (!success && errorsInArray) {
         return {
             status: 'error',
@@ -119,7 +119,6 @@ export async function createRestaurant(formData: FormData): Promise<ActionResult
             data: data,
         };
     } catch (error: any) {
-       
         if (error?.response?.status == 413) {
             return {
                 status: 'error',
@@ -272,9 +271,9 @@ export async function getDishesGroupByCollection(): Promise<CollectionWithDishes
         const newData =
             data && data?.length > 0
                 ? data.map((item: CollectionWithDishes) => ({
-                      collectionModel: item.collectionModel,
-                      totalPlat: item.totalPlat,
-                  }))
+                    collectionModel: item.collectionModel,
+                    totalPlat: item.totalPlat,
+                }))
                 : [];
         return newData;
     } catch (error) {

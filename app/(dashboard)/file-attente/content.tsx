@@ -1,121 +1,75 @@
 'use client';
 import { useState } from 'react';
-import { Clock, MapPin, Activity, Package, Radio } from 'lucide-react';
-import { FileAttenteLivreur, TimeOfDay } from '@/types/file-attente.model';
-import { title } from '@/components/primitives';
-import Image from 'next/image';
-import createUrlFile from '@/utils/createUrlFile';
+import { Map, Bike, Database } from 'lucide-react';
+import { PageWrapper } from '@/components/commons/page-wrapper';
+import { CardHeader } from '@/components/commons/card-header';
+import { Card, CardBody, Input } from '@nextui-org/react';
+import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
+import { NextUICard } from '@/components/commons/next-ui-card';
+import { FileAttenteTab } from './file-attente-tab/file-attente-tab';
+import { SearchField } from '@/components/commons/form/search-field';
 
 interface Props {
-    initialData: FileAttenteLivreur[];
+    initialData: any[];
 }
 export default function Content({ initialData }: Props) {
-    const data = initialData;
-    const [selectedDriver, setSelectedDriver] = useState<string | null>(null);
-
-    const formatTime = (time: TimeOfDay) => {
-        return `${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}`;
-    };
-
-    const activeDrivers = data.filter((l) => l.statut === 'Actif').length;
-    const totalDrivers = data.length;
-    const activePercentage = (activeDrivers / totalDrivers) * 100;
+    const [searchKey, setSearchKey] = useState("");
+    const [rowData, setRowData] = useState<any>({})
+    const onChange = (event: any) => {
+        setSearchKey(event.target.value)
+    }
 
     return (
-        <div className="w-full pb-10 flex flex-1 flex-col gap-4">
-            <div className="flex items-center justify-between">
-                <h1 className={title({ size: 'h3', class: 'text-primary' })}>Ma flotte de livreur</h1>
-            </div>
-
-            {/* Stats Section */}
-            <div className={`mb-16 flex justify-center gap-8`}>
-                {/* Active Drivers Stat */}
-                <div className="relative w-48 h-48">
-                    <div className="absolute inset-0 rounded-full border-4 border-gray-100 animate-spin-slow">
-                        <div className="absolute -top-1 left-1/2 w-2 h-2 bg-primary rounded-full transform -translate-x-1/2 -translate-y-1/2" />
-                    </div>
-                    <div className="absolute inset-2 bg-white rounded-full shadow-lg flex flex-col items-center justify-center">
-                        <Activity className="w-8 h-8 text-primary mb-2" />
-                        <span className="text-3xl font-bold text-gray-900">{activeDrivers}</span>
-                        <p className="text-gray-600">Active</p>
-                    </div>
-                </div>
-
-                {/* Total Stat */}
-                <div className="relative w-48 h-48">
-                    <div className="absolute inset-0 rounded-full border-4 border-gray-100 animate-spin-slow">
-                        <div className="absolute -top-1 left-1/2 w-2 h-2 bg-primary rounded-full transform -translate-x-1/2 -translate-y-1/2" />
-                    </div>
-                    <div className="absolute inset-2 bg-white rounded-full shadow-lg flex flex-col items-center justify-center">
-                        <Package className="w-8 h-8 text-primary mb-2" />
-                        <span className="text-3xl font-bold text-gray-900">{totalDrivers}</span>
-                        <p className="text-gray-600">Total</p>
+        <PageWrapper>
+            <CardHeader title='Courses' />
+            <div className="space-y-4">
+                <div className="flex gap-4 w-full">
+                    <SearchField onChange={onChange} searchKey={searchKey} />
+                    <div className=''>
+                        <Link href={'#'}>
+                            <Badge className="rounded-full pr-4 cursor-pointer">
+                                <Map className="mr-4" size={30} /> Maps
+                            </Badge>
+                        </Link>
                     </div>
                 </div>
             </div>
+            <div className='grid grid-cols-1 gap-2  lg:grid-cols-4 md:grid-cols-3 xl:grid-cols-4 sm:grid-cols-1'>
+                <NextUICard title={'Flotte de coursiers'} nombreCommande={"20"}
+                    status={"en attente"} icon={<Bike size={"20"} />}
+                    titleClassName='bg-warning-500 rounded-md pl-4 pr-4 text-sm text-white font-bold pb-1' />
 
-            {/* Livreurs Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                {data.map((livreur, index) => (
-                    <div
-                        key={livreur.id}
-                        onClick={() => setSelectedDriver(livreur.id)}
-                        className={`
-                group relative bg-white p-8 rounded-3xl shadow-lg
-                transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl
-                animate-fade-in-up cursor-pointer
-                ${selectedDriver === livreur.id ? 'ring-2 ring-primary scale-[1.02]' : ''}
-              `}
-                        style={{
-                            animationDelay: `${index * 150}ms`,
-                        }}
-                    >
-                        {/* Background Decoration */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-red-50 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <NextUICard title={'Flotte de coursiers'} nombreCommande={"27"}
+                    icon={<Database size={20} />}
+                    titleClassName='bg-red-500 rounded-md pl-4 pr-4 text-sm text-white font-bold pb-1' />
 
-                        {/* Content */}
-                        <div className="relative">
-                            {/* Avatar */}
-                            <div className="relative mb-4 flex justify-center">
-                                <Image
-                                    width={96}
-                                    height={96}
-                                    src={createUrlFile(livreur.avatar ?? '', 'delivery')}
-                                    alt={livreur.nomComplet}
-                                    className="w-24 h-24 rounded-full object-cover ring-4 ring-white shadow-lg"
-                                />
-                                <div
-                                    className={`absolute -bottom-1 right-16 w-4 h-4 rounded-full 
-                    ${livreur.statut === 'Actif' ? 'bg-green-400' : 'bg-red-400'}
-                    ring-2 ring-white`}
-                                />
-                            </div>
+                <NextUICard title={'Flotte de coursiers'} nombreCommande={"02"}
+                    icon={<Database size={20} />}
+                    titleClassName='bg-green-400 rounded-md pl-4 pr-4 text-sm text-white font-bold pb-1' />
 
-                            {/* Info */}
-                            <div className="text-center">
-                                <h2 className="text-xl font-bold text-gray-900 mb-1">{livreur.nomComplet}</h2>
-                                <span
-                                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                    ${livreur.statut === 'Actif' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
-                                >
-                                    {livreur.statut}
-                                </span>
-
-                                <div className="mt-4 space-y-2 text-sm text-gray-600">
-                                    <div className="flex items-center justify-center">
-                                        <MapPin className="w-4 h-4 mr-1 text-primary" />
-                                        <span>Position #{livreur.position}</span>
-                                    </div>
-                                    <div className="flex items-center justify-center">
-                                        <Clock className="w-4 h-4 mr-1 text-primary" />
-                                        <span>{formatTime(livreur.heureJour)}</span>
-                                    </div>
-                                </div>
+                <Card className={`py-1 border-2 ${rowData.position && "bg-purple-800 text-white"} border-gary-500`}>
+                    <div className="pb-0 pt-2 px-4 flex-col items-start card">
+                        <p className={`${rowData.position ? "text-white" : "text-gray-500"} font-bold text-md`}>
+                            {
+                                rowData.commande ? rowData.commande : `En attente d'une commande prête`
+                            }
+                        </p>
+                    </div>
+                    <CardBody className="overflow-visible py-2">
+                        <div className="mt-3 ">
+                            <div className={`text-md text-gray-500 items-center  ${rowData.position ? "text-white" : "text-gray-300 font-bold"}`}>Temps de recupération</div>
+                            <div className='flex gap-4 justify-between items-center'>
+                                <div className={`pt-2 text-gray-400 text-3xl ${rowData.position ? "text-white" : "text-gray-3"} font-bold`}>{rowData.heure ? rowData.heure : "00 : 00"}</div>
+                                {rowData.position &&
+                                    <div className='bg-primary mr-3 p-3 rounded-full pl-4 pr-4 text-center'>Position: <span className='font-bold text-1xl'>{rowData.position}</span></div>
+                                }
                             </div>
                         </div>
-                    </div>
-                ))}
+                    </CardBody>
+                </Card>
             </div>
-        </div>
+            <FileAttenteTab data={initialData} searchKey={searchKey} setRowData={setRowData} rowData={rowData} />
+        </PageWrapper>
     );
 }
