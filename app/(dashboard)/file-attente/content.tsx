@@ -40,11 +40,11 @@ export default function Content({ initialData }: Props) {
                     status={"en attente"} icon={<Bike size={"20"} />}
                     titleClassName='bg-warning-500 rounded-md pl-4 pr-4 text-sm text-white font-bold pb-1' />
 
-                <NextUICard title={'Flotte de coursiers'} nombreCommande={"27"}
+                <NextUICard title={'Nombre de commandes'} nombreCommande={"27"}
                     icon={<Database size={20} />}
                     titleClassName='bg-red-500 rounded-md pl-4 pr-4 text-sm text-white font-bold pb-1' />
 
-                <NextUICard title={'Flotte de coursiers'} nombreCommande={"02"}
+                <NextUICard title={'Commandes terminées'} nombreCommande={"02"}
                     icon={<Database size={20} />}
                     titleClassName='bg-green-400 rounded-md pl-4 pr-4 text-sm text-white font-bold pb-1' />
 
