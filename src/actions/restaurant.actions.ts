@@ -274,9 +274,9 @@ export async function getDishesGroupByCollection(): Promise<CollectionWithDishes
         const newData =
             data && data?.length > 0
                 ? data.map((item: CollectionWithDishes) => ({
-                      collectionModel: item.collectionModel,
-                      totalPlat: item.totalPlat,
-                  }))
+                    collectionModel: item.collectionModel,
+                    totalPlat: item.totalPlat,
+                }))
                 : [];
         return newData;
     } catch (error) {
