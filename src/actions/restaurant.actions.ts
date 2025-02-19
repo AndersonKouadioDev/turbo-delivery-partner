@@ -71,10 +71,13 @@ const restaurantEndpoints = {
 };
 
 export async function createRestaurant(formData: FormData): Promise<ActionResult<{ restaurant: Restaurant; createdBy: User }>> {
+    
+    // Validations de donnée par le schema
     const {
         success,
         data: formdata,
         errorsInArray,
+        errors,
     } = processFormData(createRestaurantSchema, formData, {
         useDynamicValidation: true,
         excludeFields: ['telephoneCountry'],
@@ -82,7 +85,7 @@ export async function createRestaurant(formData: FormData): Promise<ActionResult
             telephone: (value) => TrimPhoneNumber(value as string),
         },
     });
-
+//  Si erreur de validation
     if (!success && errorsInArray) {
         return {
             status: 'error',
@@ -119,7 +122,6 @@ export async function createRestaurant(formData: FormData): Promise<ActionResult
             data: data,
         };
     } catch (error: any) {
-       
         if (error?.response?.status == 413) {
             return {
                 status: 'error',
