@@ -16,7 +16,7 @@ export async function getAllChiffreAffaire(restaurantID: string): Promise<Chiffr
             method: statistiquesEndpoints.getAllChiffreAffaire.method,
             service: 'backend',
         });
-
+       
         return data;
     } catch (error) {
         return null;

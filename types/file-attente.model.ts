@@ -1,3 +1,5 @@
+import { CommandeCourseExterne } from "./models";
+
 export interface TimeOfDay {
     hour: number;
     minute: number;
@@ -13,4 +15,7 @@ export interface TimeOfDay {
     dateJour: string;
     heureJour: TimeOfDay;
     statut: string;
+    progression?:number;
+    estRetirerDeLaFileAttente?:boolean
+    commande?:Partial<CommandeCourseExterne>,
   }
