@@ -1,5 +1,5 @@
 'use client';
-import { Card, CardBody, CardHeader } from '@nextui-org/react';
+import { Button, Card, CardBody, CardHeader, Tooltip } from '@nextui-org/react';
 import { title } from '@/components/primitives';
 import { Area, AreaChart, CartesianGrid, XAxis, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { ChartConfig, ChartContainer } from '@/components/ui/chart';
@@ -7,6 +7,7 @@ import { rapportCommande } from '@/data';
 import { ChiffreAffaireRestaurant } from '@/types/statistiques.model';
 import useContentCtx from './useContentCtx';
 import { TbArrowUpRight, TbChartBar, TbMoneybag } from 'react-icons/tb';
+import { Info } from 'lucide-react';
 
 const chartConfig = {
     orders: {
@@ -85,7 +86,7 @@ export default function Content({ initialData }: Props) {
                 </Card>
 
                 {/* Évolution des Commandes */}
-                <Card className="bg-white border-none shadow-md">
+                {/* <Card className="bg-white border-none shadow-md">
                     <CardHeader>
                         <h2 className="text-xl font-semibold">Évolution des Commandes</h2>
                     </CardHeader>
@@ -100,13 +101,31 @@ export default function Content({ initialData }: Props) {
                             </ChartContainer>
                         </div>
                     </CardBody>
+                </Card> */}
+                <Card className="bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-xl hover:shadow-2xl transition-all duration-200">
+                    <CardHeader className="pb-0 pt-4 px-6">
+                        <h4 className="text-lg font-medium opacity-90">Commission sur Chiffre Affaire</h4>
+                    </CardHeader>
+                    <CardBody className="py-6">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <div className="p-3 bg-white/20 rounded-lg">
+                                    <TbChartBar className="w-8 h-8" />
+                                </div>
+                                <div>
+                                    <p className="text-3xl font-bold">{data.commissionChiffreAffaire.toLocaleString()} XOF</p>
+                                </div>
+                            </div>
+                            <TbArrowUpRight className="w-8 h-8 opacity-80" />
+                        </div>
+                    </CardBody>
                 </Card>
             </div>
 
             {/* Commissions */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> */}
                 {/* Commission sur Chiffre d'Affaires */}
-                <Card className="bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-xl hover:shadow-2xl transition-all duration-200">
+                {/* <Card className="bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-xl hover:shadow-2xl transition-all duration-200">
                     <CardHeader className="pb-0 pt-4 px-6">
                         <h4 className="text-lg font-medium opacity-90">Commission sur CA</h4>
                     </CardHeader>
@@ -123,10 +142,10 @@ export default function Content({ initialData }: Props) {
                             <TbArrowUpRight className="w-8 h-8 opacity-80" />
                         </div>
                     </CardBody>
-                </Card>
+                </Card> */}
 
                 {/* Commission par Commande */}
-                <Card className="bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-xl hover:shadow-2xl transition-all duration-200">
+                {/* <Card className="bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-xl hover:shadow-2xl transition-all duration-200">
                     <CardHeader className="pb-0 pt-4 px-6">
                         <h4 className="text-lg font-medium opacity-90">Commission par Commande</h4>
                     </CardHeader>
@@ -143,18 +162,30 @@ export default function Content({ initialData }: Props) {
                             <TbArrowUpRight className="w-8 h-8 opacity-80" />
                         </div>
                     </CardBody>
-                </Card>
-            </div>
+                </Card> */}
+            {/* </div> */}
 
             {/* Details Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {detailCards.map((card, index) => (
                     <Card key={index} className="bg-white border-none shadow-md">
-                        <CardHeader className="flex gap-3">
-                            <div className={`p-2 rounded-lg ${card.color}`}>
-                                <card.icon className="w-5 h-5 text-white" />
+                        <CardHeader className="flex gap-3 justify-between">
+                            <div className="flex gap-3 items-center">
+                                <div className={`p-2 rounded-lg ${card.color}`}>
+                                    <card.icon className="w-5 h-5 text-white" />
+                                </div>
+                                <h3 className="text-lg font-semibold">{card.title}</h3>
                             </div>
-                            <h3 className="text-lg font-semibold">{card.title}</h3>
+                            <Tooltip
+                                content={
+                                    <div className="px-1 py-2 max-w-60">
+                                        <div className="text-small font-bold">{card.title}</div>
+                                        <div className="text-tiny">{card.description}</div>
+                                    </div>
+                                }
+                            >
+                                <Info size={20} />
+                            </Tooltip>
                         </CardHeader>
                         <CardBody className="pt-0">
                             {card.stats.map((stat, statIndex) => (

@@ -58,6 +58,7 @@ export default function useContentCtx({ initialData }: Props) {
             ],
             icon: TbCheck,
             color: 'bg-green-500',
+            description: "Pour les commandes livrées avec paiement reçu du livreur.",
         },
         {
             title: 'Commandes en Attente',
@@ -68,6 +69,7 @@ export default function useContentCtx({ initialData }: Props) {
             ],
             icon: TbHourglass,
             color: 'bg-yellow-500',
+            description: "Pour les commandes livrées mais dont le paiement du livreur est en attente.",
         },
         {
             title: 'Commandes en Cours',
@@ -78,6 +80,7 @@ export default function useContentCtx({ initialData }: Props) {
             ],
             icon: TbHourglass,
             color: 'bg-violet-500',
+            description: "Pour les commandes actuellement prises en charge par un livreur.",
         },
         {
             title: 'Commandes Initiées',
@@ -88,6 +91,7 @@ export default function useContentCtx({ initialData }: Props) {
             ],
             icon: TbClock,
             color: 'bg-blue-500',
+            description: "Pour les commandes qui viennent d'être passées et qui n'ont pas encore été attribuées.",
         },
     ];
 
