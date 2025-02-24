@@ -71,11 +71,11 @@ const restaurantEndpoints = {
 };
 
 export async function createRestaurant(formData: FormData): Promise<ActionResult<{ restaurant: Restaurant; createdBy: User }>> {
+    // Validations de donnée par le schema
     const {
         success,
         data: formdata,
         errorsInArray,
-        errors
     } = processFormData(createRestaurantSchema, formData, {
         useDynamicValidation: true,
         excludeFields: ['telephoneCountry'],
@@ -83,6 +83,7 @@ export async function createRestaurant(formData: FormData): Promise<ActionResult
             telephone: (value) => TrimPhoneNumber(value as string),
         },
     });
+    //  Si erreur de validation
     if (!success && errorsInArray) {
         return {
             status: 'error',
@@ -271,9 +272,9 @@ export async function getDishesGroupByCollection(): Promise<CollectionWithDishes
         const newData =
             data && data?.length > 0
                 ? data.map((item: CollectionWithDishes) => ({
-                    collectionModel: item.collectionModel,
-                    totalPlat: item.totalPlat,
-                }))
+                      collectionModel: item.collectionModel,
+                      totalPlat: item.totalPlat,
+                  }))
                 : [];
         return newData;
     } catch (error) {
