@@ -13,4 +13,7 @@ export interface TimeOfDay {
     dateJour: string;
     heureJour: TimeOfDay;
     statut: string;
+    progression?: number;
+    commande?: string;
+    estRetirerDeLaFileAttente?: boolean;
   }
