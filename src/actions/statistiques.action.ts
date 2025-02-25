@@ -18,7 +18,7 @@ export async function getAllChiffreAffaire(restaurantID: string): Promise<Chiffr
         });
        
         return data;
-    } catch (error) {
+    } catch (error:any) {
         return null;
     }
 }
