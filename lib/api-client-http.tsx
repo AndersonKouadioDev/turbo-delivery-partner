@@ -1,29 +1,17 @@
 import axios, { AxiosInstance, AxiosHeaders, AxiosRequestConfig, AxiosError } from 'axios';
 import { auth } from '@/auth';
 
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-
 export type ServiceType = 'erp' | 'restaurant' | 'livreur' | 'client' | 'backend';
 
 class ApiClientHttp {
     private axiosInstance: AxiosInstance;
-    public baseUrl: string = '';
-    public fullUrl: string = '';
-    public endpoint: string = '';
-    public service: ServiceType;
 
-    constructor(service: ServiceType) {
-        this.service = service;
-        
-        // Définir la baseUrl initiale
-        this.setBaseUrl();
-
+    constructor(baseUrl: string) {
         this.axiosInstance = axios.create({
-            baseURL: this.baseUrl,
+            baseURL: baseUrl,
             headers: {
                 'Content-Type': 'application/json',
             },
-            timeout: 10000,
         });
 
         // Interceptor pour gérer les réponses
@@ -38,22 +26,13 @@ class ApiClientHttp {
             },
         );
 
-        // Interceptor pour les requêtes
+        // Interceptor pour ajouter les en-têtes
         this.axiosInstance.interceptors.request.use(async (config) => {
-            // Important: Vérifier le service actuel, pas le service initial
-            const headers = new AxiosHeaders();
-
-            if (this.service !== 'backend') {
-                const session = await this.getSession();
-                const token = session?.user?.token;
-                if (token) {
-                    headers.set('Authorization', `Bearer ${token}`);
-                }
-            }
-
-            config.headers = headers;
-            config.baseURL = this.baseUrl;
+            // console.log(config)
             return config;
+            // const headers = await this.setHeaders();
+            // config.headers = headers;
+            // return config;
         });
     }
 
@@ -70,41 +49,24 @@ class ApiClientHttp {
         return session;
     }
 
-    private setBaseUrl(): void {
-        const baseUrl = {
-            erp: process.env.NEXT_PUBLIC_API_ERP_URL,
-            restaurant: process.env.NEXT_PUBLIC_API_RESTO_URL,
-            livreur: process.env.NEXT_PUBLIC_API_DELIVERY_URL,
-            client: process.env.NEXT_PUBLIC_API_CLIENT_URL,
-            backend: process.env.NEXT_PUBLIC_API_BACKEND_URL,
-        }[this.service] || '';
+    private async setHeaders(): Promise<AxiosHeaders> {
+        const session = await this.getSession();
+        const headers = new AxiosHeaders();
 
-        if (!baseUrl) {
-            throw new Error(`URL non définie pour le service ${this.service}`);
-        }
-        this.baseUrl = baseUrl;
+        headers.set('Authorization', session?.user?.token ? `Bearer ${session.user.token}` : '');
+
+        return headers;
     }
 
-    private setEndpoint(value: string, params?: Record<string, string>): void {
-        if (!value.startsWith('/')) {
-            value = '/' + value;
-        }
-        const queryString = new URLSearchParams(params).toString();
-        this.endpoint = `${value.trim()}${queryString ? `?${queryString}` : ''}`;
-    }
+    private async getHeaders(service: ServiceType): Promise<AxiosHeaders> {
+        const session = await this.getSession();
+        const headers = new AxiosHeaders();
 
-    private setFullUrl(value: string, service: ServiceType, params?: Record<string, string>): void {
-        // Mettre à jour le service
-        this.service = service;
-        
-        // Mettre à jour la baseUrl avec le nouveau service
-        this.setBaseUrl();
-        
-        // Créer l'endpoint
-        this.setEndpoint(value, params);
-        
-        // Créer l'url complète
-        this.fullUrl = `${this.baseUrl}${this.endpoint}`;
+        if (service !== 'backend') {
+            headers.set('Authorization', session?.user?.token ? `Bearer ${session.user.token}` : '');
+        }
+
+        return headers;
     }
 
     async request<T = any>({
@@ -112,38 +74,50 @@ class ApiClientHttp {
         method,
         data,
         params,
-        service = 'backend',
+        service,
         config,
     }: {
         endpoint: string;
-        method: HttpMethod | string;
+        method: string;
         data?: any;
         params?: Record<string, string>;
         service?: ServiceType;
         config?: AxiosRequestConfig;
     }): Promise<T> {
-        // Création de l'url complète
-        this.setFullUrl(endpoint, service, params);
+        if (service) {
+            const baseUrl =
+                {
+                    erp: process.env.NEXT_PUBLIC_API_ERP_URL,
+                    restaurant: process.env.NEXT_PUBLIC_API_RESTO_URL,
+                    livreur: process.env.NEXT_PUBLIC_API_DELIVERY_URL,
+                    client: process.env.NEXT_PUBLIC_API_CLIENT_URL,
+                    backend: process.env.NEXT_PUBLIC_API_BACKEND_URL,
+                }[service] || '';
+
+            const headers = await this.getHeaders(service);
+            config = { ...config, baseURL: baseUrl, headers };
+        }
+
         try {
+            const queryString = new URLSearchParams(params).toString();
+            const url = `${endpoint.trim()}${queryString ? `?${queryString}` : ''}`;
+
             switch (method.trim().toLowerCase()) {
                 case 'post':
-                    return (await this.axiosInstance.post(this.endpoint, data, config)).data;
+                    return (await this.axiosInstance.post(url, data, config)).data;
                 case 'put':
-                    return (await this.axiosInstance.put(this.endpoint, data, config)).data;
+                    return (await this.axiosInstance.put(url, data, config)).data;
                 case 'patch':
-                    return (await this.axiosInstance.patch(this.endpoint, data, config)).data;
+                    return (await this.axiosInstance.patch(url, data, config)).data;
                 case 'delete':
-                    return (await this.axiosInstance.delete(this.endpoint, config)).data;
+                    return (await this.axiosInstance.delete(url, config)).data;
                 default:
-                    return (await this.axiosInstance.get(this.endpoint, config)).data;
+                    return (await this.axiosInstance.get(url, config)).data;
             }
         } catch (error) {
-            if (error instanceof AxiosError) {
-                console.error('Erreur API:', error.response?.data);
-            }
             throw error;
         }
     }
 }
 
-export const apiClientHttp = new ApiClientHttp('backend');
+export const apiClientHttp = new ApiClientHttp(process.env.NEXT_PUBLIC_API_BACKEND_URL || '');
