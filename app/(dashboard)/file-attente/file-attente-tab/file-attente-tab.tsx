@@ -17,7 +17,7 @@ export function FileAttenteTab({ data, searchKey, setRowData, rowData }: Props) 
         <div className="mt-4">
             <Tabs items={items || []} className="w-full">
                 {(item) => (
-                    <Tab key={item.kay} title={<span className="ml-10 pl-5 pr-5">{item.title}</span>}>
+                    <Tab key={item.kay} title={<span className="m-0 p-0 lg:ml-10 lg:pl-5 lg:pr-5 xl:ml-10 xl:pl-5 xl:pr-5">{item.title}</span>}>
                         {
                             item.kay === "disponible" ?
                                 <CoursiersDiaponible data={data} searchKey={searchKey} setRowData={setRowData} rowData={rowData} />

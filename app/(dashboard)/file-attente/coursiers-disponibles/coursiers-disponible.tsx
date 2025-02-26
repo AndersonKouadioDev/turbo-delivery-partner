@@ -17,8 +17,8 @@ export function CoursiersDiaponible({ data, searchKey, setRowData, rowData }: Co
     const ctrl = useCoursiersDisponibleController({ data, searchKey });
     return (
         <div className="max-h-[600px] lg:overflow-y-auto lg:overflow-x-hidden ">
-            <div className="overflow-x-scroll">
-                <table className="min-w-full divide-y divide-gray-200 overflow-x-scroll min-w-[400px]">
+            <div className="overflow-scroll max-w-[300px] md:max-w-[500px] lg:overflow-y-auto lg:overflow-x-hidden lg:max-w-full xl:max-w-full xl:overflow-y-auto">
+                <table className=" divide-y divide-gray-200 ">
                     <tbody className=" divide-y ">
                         {ctrl.filterData.map((item) => (
                             <tr key={item.id} onClick={() => setRowData && setRowData(item)}
