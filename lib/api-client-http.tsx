@@ -95,7 +95,14 @@ class ApiClientHttp {
                 }[service] || '';
 
             const headers = await this.getHeaders(service);
-            config = { ...config, baseURL: baseUrl, headers };
+            config = {
+                ...config,
+                baseURL: baseUrl,
+                headers: {
+                    ...config?.headers,
+                    ...headers,
+                },
+            };
         }
 
         try {
@@ -118,17 +125,17 @@ class ApiClientHttp {
             if (axios.isAxiosError(error)) {
                 // Log helpful error information
                 console.error('API Request failed:', {
-                  status: error.response?.status,
-                  statusText: error.response?.statusText,
-                  url: error.config?.url,
-                  baseUrl: error.config?.baseURL,
-                  method: error.config?.method,
-                  headers: error.config?.headers,
-                  data: error.response?.data,
+                    status: error.response?.status,
+                    statusText: error.response?.statusText,
+                    url: error.config?.url,
+                    baseUrl: error.config?.baseURL,
+                    method: error.config?.method,
+                    headers: error.config?.headers,
+                    data: error.response?.data,
                 });
-              } else {
+            } else {
                 console.error('Unknown API error:', error);
-              }
+            }
             throw error;
         }
     }
