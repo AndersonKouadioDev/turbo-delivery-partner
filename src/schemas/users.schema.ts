@@ -30,7 +30,7 @@ export const register3Schema = z.object({
 export type _register3Schema = z.infer<typeof register3Schema>;
 
 // Change Password
-const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
 export const changePasswordSchema = z
     .object({

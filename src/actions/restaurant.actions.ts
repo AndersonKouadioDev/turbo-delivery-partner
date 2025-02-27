@@ -90,7 +90,7 @@ export async function createRestaurant(formData: FormData): Promise<ActionResult
             message: errorsInArray![0].message ?? 'Données manquantes ou mal formatées',
         };
     }
-
+   
     try {
         // Create a new FormData object to ensure we're sending multipart/form-data
         const sendFormData = createFormData(formdata);
@@ -126,7 +126,7 @@ export async function createRestaurant(formData: FormData): Promise<ActionResult
                 message: 'Fichiers volumineux. Utilisez des fichiers de moins de 5Mo',
             };
         }
-
+        
         return {
             status: 'error',
             message: JSON.stringify(error?.response?.data) ?? error?.response?.data?.message ?? 'Erreur lors de la création du restaurant',
