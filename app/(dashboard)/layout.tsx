@@ -10,6 +10,7 @@ import ThemeSwitch from '@/components/layouts/themeSwitch';
 import { auth } from '@/auth';
 import { findOneRestaurant } from '@/src/actions/restaurant.actions';
 import { TbTruckDelivery } from 'react-icons/tb';
+import Notifications from '@/components/dashboard/notifications/notifications';
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -21,7 +22,6 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
     const data = await findOneRestaurant();
     const restaurant = data?.restaurant;
 
-    console.log(session);
     // console.log(restaurant);
 
     const navItems = [
@@ -52,6 +52,11 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
             label: 'File d\'attente',
         },
         {
+            href: '/notification',
+            icon: <Bell className="h-5 w-5" />,
+            label: 'Notification',
+        },
+        {
             href: '/orders',
             icon: <ShoppingBag className="h-5 w-5" />,
             label: 'Mes Commandes',
@@ -77,7 +82,9 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
                             <Logo />
                             <span className="">Turbo Delivery</span>
                         </Link>
-                        <Button variant="bordered" startContent={<Bell className="h-4 w-4" />} className="ml-auto h-8 w-8" isIconOnly={true} radius="sm" />
+                        {/* <Button variant="bordered" startContent={
+                            <Bell className="h-4 w-4" />} className="ml-auto h-8 w-8" isIconOnly={true} radius="sm" /> */}
+                            <Notifications />
                     </div>
                     <div className="flex-1">
                         <DashboardNavItems navItems={navItems} />
@@ -95,6 +102,9 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
                             <DashboardNavItems navItems={navItems} />
                         </SheetContent>
                     </Sheet>
+                    <div className='md:hidden lg:hidden xl:hidden'>
+                    <Notifications />
+                    </div>
                     <div className="w-full flex-1 flex items-center justify-end">
                         {/* <DashboardSearchBar /> */}
                         {/* <ThemeSwitch /> */}

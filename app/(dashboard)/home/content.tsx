@@ -7,6 +7,7 @@ import { Card, CardBody, CardHeader, Progress } from "@nextui-org/react";
 import { Clock, Pizza, ChevronRight, Star } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { categories, foodItems, bestSellers, orders } from "@/data";
+import Notifications from "@/components/dashboard/notifications/notifications";
 export default function Content() {
   return (
     <div className="w-full h-full flex flex-1 flex-col gap-4 lg:gap-6 mb-10">
