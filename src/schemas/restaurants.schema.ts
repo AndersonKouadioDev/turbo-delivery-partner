@@ -5,9 +5,9 @@ export const createRestaurantSchema = z.object({
     nomEtablissement: z.string().min(1, "Le nom de l'établissement est requis"),
     commune: z.string().min(1, 'La commune est requise'),
     localisation: z.string().min(1, 'La localisation est requise'),
-    idLocation: z.string(),
-    longitude: z.string(),
-    latitude: z.string(),
+    idLocation: z.string().min(1, 'La idLocation est requis'),
+    longitude: z.string().min(1, 'La longitude est requise'),
+    latitude: z.string().min(1, 'La latitude est requise'),
     docUrl: z
         .instanceof(File)
         .refine((file) => file.size > 0, 'Le document est requis')
@@ -25,7 +25,7 @@ export const createRestaurantSchema = z.object({
         .refine((file) => file.size > 0, 'Le logo est requis')
         .refine((file) => file.size <= 10 * 1024 * 1024, 'La taille du logo ne doit pas dépasser 2 Mo')
         .refine((file) => ['image/jpg', 'image/jpeg', 'image/png'].includes(file.type), 'Format de logo non supporté (JPEG, PNG, GIF uniquement)'),
-    telephone: z.string(),
+    telephone: z.string().min(1, 'La telephone est requis'),
     codePostal: z.string().optional(),
     email: z.string().email('Adresse e-mail invalide'),
 });
