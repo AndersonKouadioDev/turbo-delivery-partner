@@ -2,19 +2,28 @@
 
 import { useState } from "react";
 import { title } from "@/components/primitives";
-import { Image, CircularProgress, Button, Input } from "@nextui-org/react";
+import { Image, CircularProgress, Button, Input, Select, SelectItem, DateRangePicker, RangeValue, CalendarDate } from "@nextui-org/react";
 import { Card, CardBody, CardHeader, Progress } from "@nextui-org/react";
 import { Clock, Pizza, ChevronRight, Star } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { categories, foodItems, bestSellers, orders } from "@/data";
-import Notifications from "@/components/dashboard/notifications/notifications";
+import { useContentController } from "./useContentCtx";
 export default function Content() {
+  const ctrl = useContentController()
   return (
     <div className="w-full h-full flex flex-1 flex-col gap-4 lg:gap-6 mb-10">
       <div className="flex items-center">
         <h1 className={title({ size: "h3", class: "text-primary" })}>
           Accueil
         </h1>
+      </div>
+      <div className="flex gap-4">
+        <Select className="max-w-xs" defaultSelectedKeys={['customized']} onSelectionChange={(keys) => ctrl.setPeriod(keys as any)}>
+          {ctrl.periods.map((period: { key: string; label: string }) => (
+            <SelectItem key={period.key}>{period.label}</SelectItem>
+          ))}
+        </Select>
+        <DateRangePicker className="max-w-xs relative" onChange={(value) => ctrl.handleDateChange(value as RangeValue<CalendarDate>)} />
       </div>
       <div className="grid grid-cols-12 gap-6 lg:gap-4 justify-center">
         <Card

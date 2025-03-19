@@ -1,9 +1,10 @@
 
+import { FileAttenteLivreur } from "@/types/file-attente.model";
 import { useDisclosure } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
 interface Props {
-    data: any[];
+    data: FileAttenteLivreur[];
     searchKey?: string
 }
 
@@ -17,7 +18,7 @@ export function useCoursiersDisponibleController({ searchKey, data }: Props) {
     useEffect(() => {
         if (searchKey) {
             const filteredData = data.filter((user) =>
-                user?.nomPrenom?.toLowerCase().includes(searchKey?.toLowerCase())
+                user?.nomComplet?.toLowerCase().includes(searchKey?.toLowerCase())
             );
             setFilterData(filteredData);
         } else {
@@ -45,7 +46,8 @@ export function useCoursiersDisponibleController({ searchKey, data }: Props) {
         turboDisclosure,
         handleTurboOpen,
         handleErrorOpen,
-        errorDisclosure
+        errorDisclosure,
+
 
     }
 }
