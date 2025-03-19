@@ -20,7 +20,6 @@ interface Props {
 export default function Content({ initialData, stattitiqueFileAttente }: Props) {
     const ctrl = useFileAttenteController(initialData, stattitiqueFileAttente)
     const [searchKey, setSearchKey] = useState("");
-    const [rowData, setRowData] = useState<any>({})
     const onChange = (event: any) => {
         setSearchKey(event.target.value)
     }
@@ -74,7 +73,7 @@ export default function Content({ initialData, stattitiqueFileAttente }: Props) 
                     </CardBody>
                 </Card>
             </div>
-            <FileAttenteTab data={ctrl.datas} searchKey={searchKey} timeProgressions={ctrl.timeProgressions} />
+            <FileAttenteTab data={ctrl.datas} searchKey={searchKey} timeProgressions={ctrl.timeProgressions} currentDelivery={ctrl.currentDelivery} />
         </PageWrapper>
     );
 }

@@ -11,9 +11,10 @@ interface CoursiersDiaponibleProps {
     data: FileAttenteLivreur[];
     searchKey?: string;
     timeProgressions: number;
+    currentDelivery?: FileAttenteLivreur
 }
 
-export function CoursiersDiaponible({ data, searchKey, timeProgressions }: CoursiersDiaponibleProps) {
+export function CoursiersDiaponible({ data, searchKey, timeProgressions, currentDelivery }: CoursiersDiaponibleProps) {
     const ctrl = useCoursiersDisponibleController({ data, searchKey });
     return (
         <div className="max-h-[600px] lg:overflow-y-auto lg:overflow-x-hidden ">
@@ -46,10 +47,14 @@ export function CoursiersDiaponible({ data, searchKey, timeProgressions }: Cours
                                                     </div>
                                                     <div className="flex">{item.nomComplet}</div>
                                                 </div>
-                                                <div
-                                                    className="absolute left-0 top-0 h-10 mt-3 bg-gradient-to-r from-orange-200 to-orange-400 rounded-lg z-0"
-                                                    style={{ width: `${timeProgressions}%` }}
-                                                ></div>
+                                                {
+                                                    (currentDelivery && currentDelivery.id === item.id) &&
+                                                    <div
+                                                        className="absolute left-0 top-0 h-10 mt-3 bg-gradient-to-r from-orange-200 to-orange-400 rounded-lg z-0"
+                                                        style={{ width: `${timeProgressions}%` }}
+                                                    ></div>
+                                                }
+
                                             </td>
 
                                             <td className=" py-4 whitespace-nowrap flex w-[150px] gap-2">
@@ -63,11 +68,11 @@ export function CoursiersDiaponible({ data, searchKey, timeProgressions }: Cours
                                                     </>
                                                 ) : ""}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            {/* <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <Button variant={"success"} className="h-7 text-md" onClick={ctrl.handleTurboyOpen} disabled={item.estRetirerDeLaFileAttente}>Ecrire au turboy</Button>&nbsp;&nbsp;
                                                 <Button variant={"success"} className="h-7" onClick={ctrl.handleTurboOpen} disabled={item.estRetirerDeLaFileAttente}>Ecrire à un turbo</Button>&nbsp;&nbsp;
                                                 <Button variant={"primary"} className="h-7" onClick={ctrl.handleErrorOpen} disabled={item.estRetirerDeLaFileAttente}>Signaler une erreur</Button>
-                                            </td>
+                                            </td> */}
                                         </tr>
                                     ))}
                                 </>

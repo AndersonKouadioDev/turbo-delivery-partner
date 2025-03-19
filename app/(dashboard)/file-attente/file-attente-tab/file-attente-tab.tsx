@@ -6,9 +6,10 @@ import { FileAttenteLivreur } from "@/types/file-attente.model";
 interface Props {
     data: FileAttenteLivreur[];
     searchKey?: string;
-    timeProgressions: number
+    timeProgressions: number;
+    currentDelivery?: FileAttenteLivreur
 }
-export function FileAttenteTab({ data, searchKey, timeProgressions }: Props) {
+export function FileAttenteTab({ data, searchKey, timeProgressions, currentDelivery }: Props) {
     const items = [
         { title: "Disponible maintenant", kay: "disponible" },
         { title: "Pas en activité", kay: "indisponible" }
@@ -20,7 +21,7 @@ export function FileAttenteTab({ data, searchKey, timeProgressions }: Props) {
                     <Tab key={item.kay} title={<span className="m-0 p-0 lg:ml-10 lg:pl-5 lg:pr-5 xl:ml-10 xl:pl-5 xl:pr-5">{item.title}</span>}>
                         {
                             item.kay === "disponible" ?
-                                <CoursiersDiaponible data={data} searchKey={searchKey} timeProgressions={timeProgressions} />
+                                <CoursiersDiaponible data={data} searchKey={searchKey} timeProgressions={timeProgressions} currentDelivery={currentDelivery} />
                                 :
                                 <CoursisersPasActivite data={data} searchKey={searchKey} />
                         }
