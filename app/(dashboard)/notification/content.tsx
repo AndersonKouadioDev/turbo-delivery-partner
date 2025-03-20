@@ -1,14 +1,17 @@
-"use client"
+'use client';
 
-import { CardHeader } from "@/components/commons/card-header";
-import { PageWrapper } from "@/components/commons/page-wrapper";
-import IconInfoCircle from "@/components/icon/icon-info-circle";
-import { Card } from "@/components/ui/card";
-import { NotificationVM } from "@/types/notifcation.model";
-import { Button, Divider, DropdownItem, DropdownMenu, DropdownTrigger, Dropdown } from "@nextui-org/react";
-import Link from "next/link";
+import { CardHeader } from '@/components/commons/card-header';
+import { PageWrapper } from '@/components/commons/page-wrapper';
+import IconInfoCircle from '@/components/icon/icon-info-circle';
+import { Card } from '@/components/ui/card';
+import { NotificationVM } from '@/types/notifcation.model';
+import { Button, Divider, DropdownItem, DropdownMenu, DropdownTrigger, Dropdown } from '@nextui-org/react';
+import Link from 'next/link';
+import { useNotificationController } from './controller';
 
-export function NotificationContent({ notifications }: { notifications: NotificationVM[] }) {
+export function NotificationContent({ initalNotification }: { initalNotification: NotificationVM[] }) {
+    const { notifications, notificationFilter } = useNotificationController({ initalNotification: initalNotification });
+
     return (
         <PageWrapper>
             <CardHeader title="Liste des notifications" />
@@ -28,15 +31,15 @@ export function NotificationContent({ notifications }: { notifications: Notifica
                                             <div className="flex w-full justify-between ltr:pl-3 rtl:pr-3 ml-2 flex-wrap sm:flex-nowrap">
                                                 <div className="ltr:pr-3 rtl:pl-3 flex-1">
                                                     <h6 className="font-bold">{notification.titre}</h6>
-                                                    {notification.message && <p className={`${!notification.lu && "font-semibold"}`}>{notification.message}</p>}
+                                                    {notification.message && <p className={`${!notification.lu && 'font-semibold'}`}>{notification.message}</p>}
                                                     {!notification.lu && (
                                                         <div className="flex justify-between items-center mt-2">
                                                             <Button className="h-8 py-2 rounded-full bg-gradient-to-r from-red-600 to-red-500">
-                                                                <Link href={notification.lien ? notification.lien : "#"}>
+                                                                <Link href={notification.lien ? notification.lien : '#'}>
                                                                     {notification.type
                                                                         ?.toString()
                                                                         .toLocaleLowerCase()
-                                                                        .replace(/_/g, " ")
+                                                                        .replace(/_/g, ' ')
                                                                         .replace(/\b\w/g, (char) => char.toUpperCase())}
                                                                 </Link>
                                                             </Button>
@@ -47,11 +50,15 @@ export function NotificationContent({ notifications }: { notifications: Notifica
                                                     <span className="block text-xs font-normal dark:text-gray-500 lg:pb-8 md:pb-8 nxl:pb-8">{notification.tempsPasse}</span>
                                                     <Dropdown>
                                                         <DropdownTrigger>
-                                                            <Button variant="bordered" className="border-none text-2xl">...</Button>
+                                                            <Button variant="bordered" className="border-none text-2xl">
+                                                                ...
+                                                            </Button>
                                                         </DropdownTrigger>
                                                         <DropdownMenu aria-label="Static Actions">
                                                             <DropdownItem key="new">
-                                                                <Link href={"/notification/" + notification.id} className="text-blue-500 cursor-pointer hover:text-blue-800 p-1">Voir detail</Link>
+                                                                <Link href={'/notification/' + notification.id} className="text-blue-500 cursor-pointer hover:text-blue-800 p-1">
+                                                                    Voir detail
+                                                                </Link>
                                                             </DropdownItem>
                                                         </DropdownMenu>
                                                     </Dropdown>
