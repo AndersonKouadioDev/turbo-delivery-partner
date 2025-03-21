@@ -688,7 +688,7 @@ export async function repositionnerLivreur(livreurId: string): Promise<any> {
             endpoint: restaurantEndpoints.repositionnerLivreur.endpoint,
             method: restaurantEndpoints.repositionnerLivreur.method,
             service: 'restaurant',
-            data: { livreurId }
+            data: { livreurId: livreurId }
         });
         return {
             status: 'success',
