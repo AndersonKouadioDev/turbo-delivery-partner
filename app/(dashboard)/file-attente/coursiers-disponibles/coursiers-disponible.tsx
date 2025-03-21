@@ -6,16 +6,18 @@ import { Bike } from "lucide-react";
 import { Textarea } from "@nextui-org/react";
 import EmptyDataTable from "@/components/commons/EmptyDataTable";
 import { FileAttenteLivreur } from "@/types/file-attente.model";
+import { ConfirmDialog } from "@/components/commons/confirm-dialog";
 
 interface CoursiersDiaponibleProps {
     data: FileAttenteLivreur[];
     searchKey?: string;
     timeProgressions: number;
-    currentDelivery?: FileAttenteLivreur
+    currentDelivery?: FileAttenteLivreur,
+    restaurantId: string;
 }
 
-export function CoursiersDiaponible({ data, searchKey, timeProgressions, currentDelivery }: CoursiersDiaponibleProps) {
-    const ctrl = useCoursiersDisponibleController({ data, searchKey });
+export function CoursiersDiaponible({ data, searchKey, timeProgressions, currentDelivery, restaurantId }: CoursiersDiaponibleProps) {
+    const ctrl = useCoursiersDisponibleController({ data, searchKey, restaurantId });
     return (
         <div className="max-h-[600px] lg:overflow-y-auto lg:overflow-x-hidden ">
             <div className="overflow-scroll max-w-[300px] md:max-w-[500px] lg:overflow-y-auto lg:overflow-x-hidden lg:max-w-full xl:max-w-full xl:overflow-y-auto">
@@ -30,7 +32,7 @@ export function CoursiersDiaponible({ data, searchKey, timeProgressions, current
                                 <>
                                     {ctrl.filterData.map((item: FileAttenteLivreur) => (
                                         <tr key={item.id}
-                                            className={`cursor-pointer ${item.estRetirerDeLaFileAttente ? '' : 'opacity-50 bg-gray-100 cursor-not-allowed'} flex items-center`}>
+                                            className={`cursor-pointer cursor-not-allowed flex items-center`}>
                                             <td className=" py-4 min-w-[140px]">
                                                 <div className="flex items-center rounded-lg  py-1 text-sm border p-1 border-gray-400">
                                                     Position : {item.position}
@@ -68,11 +70,12 @@ export function CoursiersDiaponible({ data, searchKey, timeProgressions, current
                                                     </>
                                                 ) : ""}
                                             </td>
-                                            {/* <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <Button variant={"success"} className="h-7 text-md" onClick={ctrl.handleTurboyOpen} disabled={item.estRetirerDeLaFileAttente}>Ecrire au turboy</Button>&nbsp;&nbsp;
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <Button variant={"success"} className="h-7 text-md" onClick={() => ctrl.retirerLivreurs(item.id)} disabled={item.estRetirerDeLaFileAttente}>Ecrire au turboy</Button>&nbsp;&nbsp;
+                                                {/* <Button variant={"success"} className="h-7 text-md" onClick={ctrl.handleTurboyOpen} disabled={item.estRetirerDeLaFileAttente}>Ecrire au turboy</Button>&nbsp;&nbsp;
                                                 <Button variant={"success"} className="h-7" onClick={ctrl.handleTurboOpen} disabled={item.estRetirerDeLaFileAttente}>Ecrire à un turbo</Button>&nbsp;&nbsp;
-                                                <Button variant={"primary"} className="h-7" onClick={ctrl.handleErrorOpen} disabled={item.estRetirerDeLaFileAttente}>Signaler une erreur</Button>
-                                            </td> */}
+                                                <Button variant={"primary"} className="h-7" onClick={ctrl.handleErrorOpen} disabled={item.estRetirerDeLaFileAttente}>Signaler une erreur</Button> */}
+                                            </td>
                                         </tr>
                                     ))}
                                 </>
@@ -94,6 +97,7 @@ export function CoursiersDiaponible({ data, searchKey, timeProgressions, current
             </div>} title="Signaler une erreur" />
             <div className="flex flex-wrap gap-3">
             </div>
+            <ConfirmDialog {...ctrl.confirm} />
         </div>
     )
 }

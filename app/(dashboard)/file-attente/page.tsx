@@ -8,7 +8,6 @@ export default async function Page() {
     const session = await auth();
     const data = await fetchFilleAttente(session?.user?.restauranID ?? '');
     const stattitiqueFileAttente = await fetchStatistique()
-
     return (
         <Suspense fallback={<Loading />}>
             <Content initialData={data} stattitiqueFileAttente={stattitiqueFileAttente} restaurantId={session?.user?.restauranID} />

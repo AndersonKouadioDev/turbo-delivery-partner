@@ -68,7 +68,8 @@ const restaurantEndpoints = {
     listBoisson: { endpoint: `/api/V1/turbo/resto/boisson/get`, method: 'GET' },
     addHoraire: { endpoint: `/api/V1/turbo/restaurant/add/horaire`, method: 'POST' },
     getHoraires: { endpoint: `/api/V1/turbo/restaurant/get/hours`, method: 'GET' },
-    repositionnerLivreur: { endpoint: `//api/restaurant/file-attente/repositionner`, method: 'PUT' },
+    repositionnerLivreur: { endpoint: `/api/livreur/file-attente/positionner`, method: 'PUT' },
+    retirerLivreur: { endpoint: `/api/livreur/file-attente/retirer`, method: 'PUT' }
 };
 
 export async function createRestaurant(formData: FormData): Promise<ActionResult<{ restaurant: Restaurant; createdBy: User }>> {
@@ -686,6 +687,28 @@ export async function repositionnerLivreur(livreurId: string): Promise<any> {
         const data = await apiClientHttp.request({
             endpoint: restaurantEndpoints.repositionnerLivreur.endpoint,
             method: restaurantEndpoints.repositionnerLivreur.method,
+            service: 'restaurant',
+            data: { livreurId }
+        });
+        return {
+            status: 'success',
+            message: 'Livreur répositionné avec succès',
+            data: data,
+        }
+    } catch (error: any) {
+        return {
+            status: 'error',
+            message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur lors de la réposition du livreur',
+        };
+    }
+
+}
+
+export async function retirerLivreur(livreurId: string): Promise<any> {
+    try {
+        const data = await apiClientHttp.request({
+            endpoint: restaurantEndpoints.retirerLivreur.endpoint,
+            method: restaurantEndpoints.retirerLivreur.method,
             service: 'restaurant',
             data: { livreurId }
         });

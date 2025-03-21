@@ -28,12 +28,11 @@ export function useFileAttenteController(
         try {
             const data = await repositionnerLivreur(livreruId);
             if (data && data.status === "success") {
-                toast.success(data.message);
-                await fetchFileAttenteLivreur();
                 setTempRecuperation(3 * 60);
                 setTimeProgression(0)
+                toast.success(data.message);
             } else {
-                toast.error(data?.message);
+                toast.error("Erreur lors de la réposition du livreur");
                 setHasErreur(true)
             }
         } catch (error: any) {
@@ -45,11 +44,12 @@ export function useFileAttenteController(
     }
 
     useEffect(() => {
-        if (stattitiqueFileAttente?.commandeEnAttente !== 0 && initialData && initialData.length > 0 && !haseError) {
+        if (!haseError && stattitiqueFileAttente?.commandeEnAttente !== 0) {
             setCurrentDelivery(initialData[0]);
             if (tempRecuperation === 1) {
                 setLoading(true)                   // Vérifie si le temps de recuperation est écoulé
                 repositionLivreur(initialData[0].id); //Reposition le livreur
+                fetchFileAttenteLivreur();
             }
             const timer = setInterval(() => {
                 if (!loading && !haseError) {
@@ -60,7 +60,7 @@ export function useFileAttenteController(
             return () => clearInterval(timer);
         }
 
-    }, [tempRecuperation, stattitiqueFileAttente?.commandeEnAttente]);
+    }, [tempRecuperation, stattitiqueFileAttente?.commandeEnAttente, loading]);
 
     const minutes = Math.floor(tempRecuperation / 60);
     const seconds = tempRecuperation % 60;
