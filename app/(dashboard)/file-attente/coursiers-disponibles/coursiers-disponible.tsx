@@ -13,7 +13,7 @@ interface CoursiersDiaponibleProps {
     searchKey?: string;
     timeProgressions: number;
     currentDelivery?: FileAttenteLivreur,
-    restaurantId: string;
+    restaurantId?: string;
 }
 
 export function CoursiersDiaponible({ data, searchKey, timeProgressions, currentDelivery, restaurantId }: CoursiersDiaponibleProps) {

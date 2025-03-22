@@ -714,13 +714,14 @@ export async function retirerLivreur(livreurId: string): Promise<any> {
         });
         return {
             status: 'success',
-            message: 'Livreur répositionné avec succès',
+            message: 'Livreur retirer avec succès',
             data: data,
         }
     } catch (error: any) {
+        console.log("error+++++++++++++++++", error)
         return {
             status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur lors de la réposition du livreur',
+            message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur s\'est produite !',
         };
     }
 

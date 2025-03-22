@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 interface Props {
     data: FileAttenteLivreur[];
     searchKey?: string;
-    restaurantId: string
+    restaurantId?: string
 }
 
 export function useCoursiersDisponibleController({ searchKey, data, restaurantId }: Props) {
@@ -60,10 +60,10 @@ export function useCoursiersDisponibleController({ searchKey, data, restaurantId
                     toast.success(data.message);
                     await fetchFileAttenteLivreur()
                 } else {
-                    toast.error("Erreur lors de la réposition du livreur");
+                    toast.error("Une erreur s'est produite !");
                 }
-            } catch (error) {
-                toast.error("Une erreur s'est produite")
+            } catch (error: any) {
+                toast.error(error.message || "Une erreur s'est produite")
             }
         }
         confirm.openConfirmDialog(confirmAndSend);
