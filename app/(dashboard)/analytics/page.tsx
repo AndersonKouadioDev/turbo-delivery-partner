@@ -6,7 +6,7 @@ import Loading from '@/components/layouts/loading';
 
 export default async function Page() {
     const session = await auth();
-    const data = await getAllChiffreAffaire(session?.user?.restauranID ?? '');
+    const data = await getAllChiffreAffaire({ restaurantID: session?.user?.restauranID ?? '' });
 
     if (!data) return <Loading />;
     return (

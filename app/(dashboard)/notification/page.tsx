@@ -6,12 +6,7 @@ import { fetchAllNotifcation } from '@/src/actions/notifcation.action';
 
 export default async function Page() {
     const session = await auth();
-
     const initalNotification = await fetchAllNotifcation(session?.user?.id ?? '');
-
-    if (initalNotification) {
-        return <Loading />;
-    }
     return (
         <Suspense fallback={<Loading />}>
             <NotificationContent initalNotification={initalNotification} />

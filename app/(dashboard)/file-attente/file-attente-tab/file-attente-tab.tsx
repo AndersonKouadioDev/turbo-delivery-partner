@@ -7,9 +7,10 @@ interface Props {
     data: FileAttenteLivreur[];
     searchKey?: string;
     timeProgressions: number;
-    currentDelivery?: FileAttenteLivreur
+    currentDelivery?: FileAttenteLivreur;
+    restaurantId?: string;
 }
-export function FileAttenteTab({ data, searchKey, timeProgressions, currentDelivery }: Props) {
+export function FileAttenteTab({ data, searchKey, timeProgressions, currentDelivery, restaurantId }: Props) {
     const items = [
         { title: "Disponible maintenant", kay: "disponible" },
         { title: "Pas en activité", kay: "indisponible" }
@@ -21,7 +22,7 @@ export function FileAttenteTab({ data, searchKey, timeProgressions, currentDeliv
                     <Tab key={item.kay} title={<span className="m-0 p-0 lg:ml-10 lg:pl-5 lg:pr-5 xl:ml-10 xl:pl-5 xl:pr-5">{item.title}</span>}>
                         {
                             item.kay === "disponible" ?
-                                <CoursiersDiaponible data={data} searchKey={searchKey} timeProgressions={timeProgressions} currentDelivery={currentDelivery} />
+                                <CoursiersDiaponible data={data} searchKey={searchKey} timeProgressions={timeProgressions} currentDelivery={currentDelivery} restaurantId={restaurantId} />
                                 :
                                 <CoursisersPasActivite data={data} searchKey={searchKey} />
                         }

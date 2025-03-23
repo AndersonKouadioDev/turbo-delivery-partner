@@ -17,8 +17,8 @@ interface Props {
     stattitiqueFileAttente: StatistiqueFileAttente | null;
     restaurantId?: string;
 }
-export default function Content({ initialData, stattitiqueFileAttente }: Props) {
-    const ctrl = useFileAttenteController(initialData, stattitiqueFileAttente)
+export default function Content({ initialData, stattitiqueFileAttente, restaurantId }: Props) {
+    const ctrl = useFileAttenteController(initialData, stattitiqueFileAttente, restaurantId)
     const [searchKey, setSearchKey] = useState("");
     const onChange = (event: any) => {
         setSearchKey(event.target.value)
@@ -73,7 +73,7 @@ export default function Content({ initialData, stattitiqueFileAttente }: Props) 
                     </CardBody>
                 </Card>
             </div>
-            <FileAttenteTab data={ctrl.datas} searchKey={searchKey} timeProgressions={ctrl.timeProgressions} currentDelivery={ctrl.currentDelivery} />
+            <FileAttenteTab data={ctrl.datas} searchKey={searchKey} timeProgressions={ctrl.timeProgressions} currentDelivery={ctrl.currentDelivery} restaurantId={restaurantId} />
         </PageWrapper>
     );
 }

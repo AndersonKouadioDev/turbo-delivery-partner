@@ -8,17 +8,18 @@ import { NotificationVM } from '@/types/notifcation.model';
 import { Button, Divider, DropdownItem, DropdownMenu, DropdownTrigger, Dropdown } from '@nextui-org/react';
 import Link from 'next/link';
 import { useNotificationController } from './controller';
+import EmptyDataTable from '@/components/commons/EmptyDataTable';
 
 export function NotificationContent({ initalNotification }: { initalNotification: NotificationVM[] }) {
-    const { notifications, notificationFilter } = useNotificationController({ initalNotification: initalNotification });
+    // const { notifications, notificationFilter } = useNotificationController({ initalNotification, utilisateurId });
 
     return (
         <PageWrapper>
             <CardHeader title="Liste des notifications" />
             <Card className="overflow-auto lg:overflow-hidden xl:overflow-hidden md:overflow-hidden w-full">
-                {notifications.length > 0 ? (
+                {initalNotification.length > 0 ? (
                     <>
-                        {notifications.map((notification) => {
+                        {initalNotification.map((notification) => {
                             return (
                                 <div key={notification.id} className="p-2">
                                     <div className="dark:text-white-light/90 p-2 w-full hover:bg-primary/10 mt-5">
@@ -72,11 +73,8 @@ export function NotificationContent({ initalNotification }: { initalNotification
                         })}
                     </>
                 ) : (
-                    <div className="text-center">
-                        <button type="button" className="flex-col items-center min-h-[200px] text-lg hover:!bg-transparent">
-                            <IconInfoCircle fill={true} className="h-10 w-10 text-primary ml-20" />
-                            <span className="text-center">Aucune notification trouvée !</span>
-                        </button>
+                    <div className="text-center py-6 text-primary font-bold mt-10 text-xl">
+                        <EmptyDataTable title='Aucun Resultat' />
                     </div>
                 )}
             </Card>

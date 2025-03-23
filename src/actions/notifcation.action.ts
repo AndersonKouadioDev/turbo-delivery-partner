@@ -20,10 +20,9 @@ export async function fetchAllNotifcation(utilisateurId: string): Promise<Notifi
             method: notificationEndpoints.getAllNotification.method,
             service: 'backend',
         });
-
         return data;
     } catch (error) {
-        return [];
+        return []
     }
 }
 
