@@ -7,6 +7,7 @@ import { Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { NotificationVM } from '@/types/notifcation.model';
+import EmptyDataTable from '@/components/commons/EmptyDataTable';
 
 const Content = ({ className, notifications, notificationNonLus, voirTout, toutMarqueCommeLus, isConnected, voirMoins }: {
     className?: string,
@@ -85,7 +86,7 @@ const Content = ({ className, notifications, notificationNonLus, voirTout, toutM
                                         </li>
                                     </div>
                                 );
-                            })} 
+                            })}
                             <Link href={"/notification"}>
                                 <div className="p-4 text-center">
                                     <span className=" font-bold text-md text-primary  w-full pl-2 pr-2 p-1 rounded-full cursor-pointer hover:bg-primary/30"
@@ -95,14 +96,9 @@ const Content = ({ className, notifications, notificationNonLus, voirTout, toutM
 
                         </>
                     ) : (
-                        <li onClick={(e) => e.stopPropagation()}>
-                            <button type="button" className="!grid min-h-[200px] place-content-center text-lg hover:!bg-transparent">
-                                <div className="mx-auto mb-4 rounded-full ring-4 ring-primary/30">
-                                    <IconInfoCircle fill={true} className="h-10 w-10 text-primary" />
-                                </div>
-                                Aucune notification trouvé !
-                            </button>
-                        </li>
+                        <div className="text-center py-6 text-primary font-bold mt-10 text-xl">
+                            <EmptyDataTable title='Aucun Resultat' />
+                        </div>
                     )}
                 </ul>
             </Dropdown>
