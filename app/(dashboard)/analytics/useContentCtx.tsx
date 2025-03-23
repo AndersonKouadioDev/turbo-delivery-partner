@@ -1,17 +1,55 @@
 'use client';
 
 import { ChiffreAffaireRestaurant } from '@/types/statistiques.model';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { TbMoneybag, TbChartBar, TbReceipt, TbClock, TbTrendingUp, TbCheck, TbHourglass } from 'react-icons/tb';
 import { formatNumber } from '@/utils/formatNumber';
+import { CalendarDate, RangeValue } from '@nextui-org/react';
+import { useSession } from 'next-auth/react';
+import { getAllChiffreAffaire } from '@/src/actions/statistiques.action';
 
 interface Props {
     initialData: ChiffreAffaireRestaurant;
 }
 
 export default function useContentCtx({ initialData }: Props) {
+    const { data: authData } = useSession();
     const [isLoading, setIsLoading] = useState(!initialData);
+    const [loader, setLoader] = useState<boolean>(false);
     const [data, setData] = useState<ChiffreAffaireRestaurant>(initialData);
+    const [period, setPeriod] = useState(new Set(['customized']));
+
+    const [dates, setDates] = useState<RangeValue<Date | null>>({
+        start: null,
+        end: null,
+    });
+
+    const handleDateChange = (value: RangeValue<CalendarDate>) => {
+        setDates({
+            start: value.start ? new Date(value.start.toString()) : null,
+            end: value.end ? new Date(value.end.toString()) : null,
+        });
+        handleFetchData();
+    };
+
+    const handleFetchData = useCallback(async () => {
+        setLoader(true);
+        const data = await getAllChiffreAffaire({
+            restaurantID: authData?.user.restauranID ?? '',
+            dates: {
+                start: dates.start,
+                end: dates.end,
+            },
+        });
+
+        if (data) {
+            setData((state) => {
+                return { ...state, ...data };
+            });
+        }
+
+        setLoader(false);
+    }, [dates.end, dates.start, authData?.user.restauranID]);
 
     // Calculate total orders and revenue
     const totalOrders = data.nbCommandeTotalTermine + data.nbCommandeTotalEnAttente + data.nbCommandeTotalInitie + data.nbCommandeTotalEnCours;
@@ -58,7 +96,7 @@ export default function useContentCtx({ initialData }: Props) {
             ],
             icon: TbCheck,
             color: 'bg-green-500',
-            description: "Pour les commandes livrées avec paiement reçu du livreur.",
+            description: 'Pour les commandes livrées avec paiement reçu du livreur.',
         },
         {
             title: 'Commandes en Attente',
@@ -69,7 +107,7 @@ export default function useContentCtx({ initialData }: Props) {
             ],
             icon: TbHourglass,
             color: 'bg-yellow-500',
-            description: "Pour les commandes livrées mais dont le paiement du livreur est en attente.",
+            description: 'Pour les commandes livrées mais dont le paiement du livreur est en attente.',
         },
         {
             title: 'Commandes en Cours',
@@ -80,7 +118,7 @@ export default function useContentCtx({ initialData }: Props) {
             ],
             icon: TbHourglass,
             color: 'bg-violet-500',
-            description: "Pour les commandes actuellement prises en charge par un livreur.",
+            description: 'Pour les commandes actuellement prises en charge par un livreur.',
         },
         {
             title: 'Commandes Initiées',
@@ -97,12 +135,16 @@ export default function useContentCtx({ initialData }: Props) {
 
     return {
         data,
-        isLoading,
+        isLoading: loader || isLoading,
+        setIsLoading,
         orderStatusData,
         statCards,
+        period,
+        setPeriod,
         detailCards,
         totalOrders,
         totalRevenue,
         totalCommission,
+        handleDateChange,
     };
 }
