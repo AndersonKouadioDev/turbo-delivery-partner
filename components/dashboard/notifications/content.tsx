@@ -32,7 +32,7 @@ const Content = ({ className, notifications, notificationNonLus, voirTout, toutM
                         <span className="absolute top-0 flex h-3 w-3 ltr:right-0 rtl:left-0">
                             <span className="absolute -top-[3px] inline-flex h-full w-full animate-ping rounded-full bg-success/50 opacity-75 ltr:-left-[3px] rtl:-right-[3px]"></span>
                             <span className={`relative inline-flex h-[6px] w-[6px] rounded-full bg-success p-1`}>
-                                <span className=' rounded-full text-red-500 font-bold'> {notificationNonLus.length}</span>
+                                <span className=' rounded-full text-red-500 font-bold'> {notificationNonLus.length > 0 && notificationNonLus.length}</span>
                             </span>
                         </span>
                     </span>

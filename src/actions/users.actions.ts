@@ -38,7 +38,6 @@ export async function loginUser(prevState: any, formData: FormData): Promise<Act
             useDynamicValidation: true,
         },
     );
-
     if (!success && errorsInArray) {
         return {
             status: 'error',
