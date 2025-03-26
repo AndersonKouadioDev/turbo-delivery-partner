@@ -1,12 +1,12 @@
 'use client';
-import { Button, Card, CardBody, CardHeader, Tooltip } from '@nextui-org/react';
+import { Card, CardBody, CardHeader, Tooltip, Input, Select, SelectItem, DateRangePicker, RangeValue, CalendarDate } from '@nextui-org/react';
 import { title } from '@/components/primitives';
-import { Area, AreaChart, CartesianGrid, XAxis, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { ChartConfig, ChartContainer } from '@/components/ui/chart';
 import { rapportCommande } from '@/data';
 import { ChiffreAffaireRestaurant } from '@/types/statistiques.model';
 import useContentCtx from './useContentCtx';
-import { TbArrowUpRight, TbChartBar, TbMoneybag } from 'react-icons/tb';
+import { TbArrowUpRight, TbChartBar } from 'react-icons/tb';
 import { Info } from 'lucide-react';
 
 const chartConfig = {
@@ -21,7 +21,8 @@ interface Props {
 }
 
 export default function Content({ initialData }: Props) {
-    const { data, orderStatusData, statCards, detailCards, totalOrders, totalRevenue } = useContentCtx({ initialData });
+    const { data, orderStatusData, statCards, detailCards, handleDateChange } = useContentCtx({ initialData });
+    // const ctrl = useContentController()
 
     return (
         <div className="w-full h-full flex flex-1 flex-col gap-6 mb-10 p-4">
@@ -31,7 +32,15 @@ export default function Content({ initialData }: Props) {
                     <h1 className={title({ size: 'h3', class: 'text-primary mb-0' })}>Tableau de bord</h1>
                 </div>
             </div>
-
+            <div className="flex gap-2 items-center">
+                {/* <Select className="max-w-xs" selectedKeys={period} onSelectionChange={(keys) => setPeriod(keys as any)}>
+                    {periods.map((period: { key: string; label: string }) => (
+                        <SelectItem key={period.key}>{period.label}</SelectItem>
+                    ))}
+                </Select> */}
+                <span>Rechercher la période</span>
+                <DateRangePicker className="max-w-xs relative" onChange={(value) => handleDateChange(value as RangeValue<CalendarDate>)} />
+            </div>
             {/* Main Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {statCards.map((stat, index) => (
@@ -124,8 +133,8 @@ export default function Content({ initialData }: Props) {
 
             {/* Commissions */}
             {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> */}
-                {/* Commission sur Chiffre d'Affaires */}
-                {/* <Card className="bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-xl hover:shadow-2xl transition-all duration-200">
+            {/* Commission sur Chiffre d'Affaires */}
+            {/* <Card className="bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-xl hover:shadow-2xl transition-all duration-200">
                     <CardHeader className="pb-0 pt-4 px-6">
                         <h4 className="text-lg font-medium opacity-90">Commission sur CA</h4>
                     </CardHeader>
@@ -144,8 +153,8 @@ export default function Content({ initialData }: Props) {
                     </CardBody>
                 </Card> */}
 
-                {/* Commission par Commande */}
-                {/* <Card className="bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-xl hover:shadow-2xl transition-all duration-200">
+            {/* Commission par Commande */}
+            {/* <Card className="bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-xl hover:shadow-2xl transition-all duration-200">
                     <CardHeader className="pb-0 pt-4 px-6">
                         <h4 className="text-lg font-medium opacity-90">Commission par Commande</h4>
                     </CardHeader>
