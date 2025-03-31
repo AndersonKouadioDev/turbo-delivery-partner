@@ -24,7 +24,7 @@ export function FileAttenteTab({ data, searchKey, timeProgressions, currentDeliv
                             item.kay === "disponible" ?
                                 <CoursiersDiaponible data={data} searchKey={searchKey} timeProgressions={timeProgressions} currentDelivery={currentDelivery} restaurantId={restaurantId} />
                                 :
-                                <CoursisersPasActivite data={data} searchKey={searchKey} />
+                                <CoursisersPasActivite data={[]} searchKey={searchKey} />
                         }
                     </Tab>
                 )}
