@@ -19,6 +19,7 @@ import { _createRestaurantSchema, createRestaurantSchema } from '@/src/schemas/r
 
 const steps: string[] = ["Informations sur l'établissement", "Adresse de l'établissement", "Documents de l'établissement"];
 
+
 export default function CreateRestaurantContent() {
     const [currentStep, setCurrentStep] = useState<number>(0);
 
