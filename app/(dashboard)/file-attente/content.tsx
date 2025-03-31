@@ -39,15 +39,15 @@ export default function Content({ initialData, stattitiqueFileAttente, restauran
                 </div>
             </div>
             <div className='grid grid-cols-1 gap-2  lg:grid-cols-4 md:grid-cols-3 xl:grid-cols-4 sm:grid-cols-1'>
-                <NextUICard title={'Flotte de coursiers'} nombreCommande={`${stattitiqueFileAttente ? stattitiqueFileAttente.coursier : 0}`}
+                <NextUICard title={'Flotte de coursiers'} nombreCommande={`${ctrl.statistiqueCommandes ? ctrl.statistiqueCommandes.coursier : 0}`}
                     status={"en attente"} icon={<Bike size={"20"} />}
                     titleClassName='bg-warning-500 rounded-md pl-4 pr-4 text-sm text-white font-bold pb-1' />
 
-                <NextUICard title={'Nombre de commandes'} nombreCommande={`${stattitiqueFileAttente ? stattitiqueFileAttente.commandeEnAttente : 0}`}
+                <NextUICard title={'Nombre de commandes'} nombreCommande={`${ctrl.statistiqueCommandes ? ctrl.statistiqueCommandes.commandeEnAttente : 0}`}
                     icon={<Database size={20} />}
                     titleClassName='bg-red-500 rounded-md pl-4 pr-4 text-sm text-white font-bold pb-1' />
 
-                <NextUICard title={'Commandes terminées'} nombreCommande={`${stattitiqueFileAttente ? stattitiqueFileAttente.commandeTermine : 0}`}
+                <NextUICard title={'Commandes terminées'} nombreCommande={`${ctrl.statistiqueCommandes ? ctrl.statistiqueCommandes.commandeTermine : 0}`}
                     icon={<Database size={20} />}
                     titleClassName='bg-green-400 rounded-md pl-4 pr-4 text-sm text-white font-bold pb-1' />
 
@@ -62,7 +62,7 @@ export default function Content({ initialData, stattitiqueFileAttente, restauran
                     <CardBody className="overflow-visible py-2">
                         <div className="mt-3 ">
                             <div className={`text-md text-gray-500 items-center  text-white font-bold `}>Temps de recupération</div>
-                            <div className='flex gap-4 justify-between items-center'>
+                            <div className='flex flex-wrap gap-4 justify-between items-center'>
                                 <div className={`pt-2 text-gray-400 text-3xl text-white font-bold`}>
                                     {String(ctrl.minutes).padStart(2, "0")} : {String(ctrl.seconds).padStart(2, "0")}
                                 </div>

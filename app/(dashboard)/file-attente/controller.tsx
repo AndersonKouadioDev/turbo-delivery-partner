@@ -1,6 +1,7 @@
-import { fetchFilleAttente } from "@/src/actions/file-attente.actions";
+import { fetchFilleAttente, fetchStatistique } from "@/src/actions/file-attente.actions";
 import { repositionnerLivreur } from "@/src/actions/restaurant.actions";
 import { FileAttenteLivreur, StatistiqueFileAttente } from "@/types/file-attente.model";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -9,46 +10,64 @@ export function useFileAttenteController(
     stattitiqueFileAttente: StatistiqueFileAttente | null,
     restaurantId?: string
 ) {
+    const router = useRouter()
     const [tempRecuperation, setTempRecuperation] = useState(3 * 60);
     const [currentDelivery, setCurrentDelivery] = useState<FileAttenteLivreur>();
     const [timeProgressions, setTimeProgression] = useState(0);
     const [datas, setData] = useState<FileAttenteLivreur[]>(initialData);
     const [haseError, setHasErreur] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [statistiqueCommandes, setStatistiquesCommande] = useState<StatistiqueFileAttente | null>(stattitiqueFileAttente);
 
     const fetchFileAttenteLivreur = async () => {
         try {
             const data = await fetchFilleAttente(restaurantId ?? '');
             setData(data);
-        } catch (error) { }
+        } catch (error) { } finally {
+            router.refresh();
+        }
+    }
+
+    const statisqueCommande = async () => {
+        try {
+            const data = await fetchStatistique(restaurantId ?? '');
+            setStatistiquesCommande(data);
+        } catch (error) { } finally {
+            router.refresh();
+        }
     }
 
     const repositionLivreur = async (livreruId: string) => {
         setLoading(true)
         try {
-            const data = await repositionnerLivreur(livreruId);
+            const data = await repositionnerLivreur({
+                livreurId: livreruId ?? ""
+            });
             if (data && data.status === "success") {
+                toast.success(data.message);
                 setTempRecuperation(3 * 60);
                 setTimeProgression(0)
-                toast.success(data.message);
             } else {
                 toast.error("Erreur lors de la réposition du livreur");
                 setHasErreur(true)
+                setTempRecuperation(3 * 60);
+                setTimeProgression(0)
             }
         } catch (error: any) {
             toast.error(error?.message || "Une erreur s'est produite !");
             setHasErreur(true)
         } finally {
-            setLoading(false)
+            router.refresh();
+            setLoading(false);
+            statisqueCommande();
         }
     }
 
     useEffect(() => {
-        if (!haseError && stattitiqueFileAttente?.commandeEnAttente !== 0) {
+        if (!haseError && stattitiqueFileAttente?.commandeEnAttente !== 0 && stattitiqueFileAttente?.coursier !== 0 && initialData.length > 0) {
             setCurrentDelivery(initialData[0]);
             if (tempRecuperation === 1) {
-                setLoading(true)                   // Vérifie si le temps de recuperation est écoulé
-                repositionLivreur(initialData[0].id); //Reposition le livreur
+                repositionLivreur(initialData[0]?.livreurId);
                 fetchFileAttenteLivreur();
             }
             const timer = setInterval(() => {
@@ -59,11 +78,10 @@ export function useFileAttenteController(
             }, 1000);
             return () => clearInterval(timer);
         }
-
     }, [tempRecuperation, stattitiqueFileAttente?.commandeEnAttente, loading]);
 
     const minutes = Math.floor(tempRecuperation / 60);
     const seconds = tempRecuperation % 60;
 
-    return { minutes, seconds, currentDelivery, datas, timeProgressions };
+    return { minutes, seconds, currentDelivery, datas, timeProgressions, statistiqueCommandes };
 }

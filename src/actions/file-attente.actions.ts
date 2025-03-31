@@ -3,11 +3,10 @@
 import { apiClientHttp } from '@/lib/api-client-http';
 import { FileAttenteLivreur, StatistiqueFileAttente } from '@/types/file-attente.model';
 
-const BASE_URL = '/api/restaurant/file-attente';
-const BASE_URL2 = "/api/file_attente/statistique"
+const BASE_URL = '/api';
 const fileAttenteEndpoints = {
-    fetchFilleAttente: { endpoint: (restaurantId: string) => `${BASE_URL}/${restaurantId}`, method: 'GET' },
-    fetchStatistique: { endpoint: () => BASE_URL2, method: 'GET' },
+    fetchFilleAttente: { endpoint: (restaurantId: string) => `${BASE_URL}/restaurant/file-attente/${restaurantId}`, method: 'GET' },
+    fetchStatistique: { endpoint: (id: string) => `${BASE_URL}/restaurant/file-attente/${id}/statistique`, method: 'GET' },
 };
 
 export async function fetchFilleAttente(restaurantID: string): Promise<FileAttenteLivreur[]> {
@@ -24,10 +23,10 @@ export async function fetchFilleAttente(restaurantID: string): Promise<FileAtten
     }
 }
 
-export async function fetchStatistique(): Promise<StatistiqueFileAttente | null> {
+export async function fetchStatistique(restaurantId: string): Promise<StatistiqueFileAttente | null> {
     try {
         const data = await apiClientHttp.request<any>({
-            endpoint: fileAttenteEndpoints.fetchStatistique.endpoint(),
+            endpoint: fileAttenteEndpoints.fetchStatistique.endpoint(restaurantId),
             method: fileAttenteEndpoints.fetchStatistique.method,
             service: 'backend',
         });

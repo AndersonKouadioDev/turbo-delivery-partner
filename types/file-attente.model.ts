@@ -16,6 +16,7 @@ export interface FileAttenteLivreur {
   heureJour: TimeOfDay;
   statut: string;
   progression?: number;
+  livreurId: string;
   estRetirerDeLaFileAttente?: boolean
   commande?: Partial<CommandeCourseExterne>,
 }

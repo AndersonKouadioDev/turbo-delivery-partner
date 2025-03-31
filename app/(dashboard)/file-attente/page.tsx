@@ -7,7 +7,7 @@ import { fetchFilleAttente, fetchStatistique } from '@/src/actions/file-attente.
 export default async function Page() {
     const session = await auth();
     const data = await fetchFilleAttente(session?.user?.restauranID ?? '');
-    const stattitiqueFileAttente = await fetchStatistique()
+    const stattitiqueFileAttente = await fetchStatistique(session?.user.restauranID ?? ''); //)
     return (
         <Suspense fallback={<Loading />}>
             <Content initialData={data} stattitiqueFileAttente={stattitiqueFileAttente} restaurantId={session?.user?.restauranID} />
