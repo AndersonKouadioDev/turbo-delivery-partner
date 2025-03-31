@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { autocomplete, placeDetails } from '@/lib/googlemaps-server';
 import { PlaceAutocompleteResult } from '@googlemaps/google-maps-services-js';
-import { Input } from '@nextui-org/react';
+import { Input } from "@heroui/react";
 import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form';
 
 import { _createRestaurantSchema } from '@/src/schemas/restaurants.schema';

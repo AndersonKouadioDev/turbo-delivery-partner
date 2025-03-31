@@ -1,7 +1,7 @@
 'use client';
 
 import { CourseExterne, Restaurant } from '@/types/models';
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem, Button } from '@nextui-org/react';
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem, Button } from "@heroui/react";
 import { useState } from 'react';
 import { IconDotsVertical } from '@tabler/icons-react';
 import { COURSES_STATUSES } from '@/data';

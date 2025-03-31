@@ -1,5 +1,5 @@
 "use client"
-import { Card, CardBody, CardHeader } from "@nextui-org/react";
+import { Card, CardBody, CardHeader } from "@heroui/react";
 import { ReactNode } from "react";
 
 interface Props {

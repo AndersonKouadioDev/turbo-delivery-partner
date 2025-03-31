@@ -2,7 +2,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from '@/store';
 import { toggleRTL } from '@/store/themeConfigSlice';
-import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react';
+import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/react";
 import { useRouter } from 'next/navigation';
 import { getTranslation } from '@/i18n';
 

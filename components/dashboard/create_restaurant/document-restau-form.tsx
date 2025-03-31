@@ -1,5 +1,5 @@
 import { Control, Controller, FieldErrors } from 'react-hook-form';
-import { DateInput } from '@nextui-org/react';
+import { DateInput } from '@heroui/react';
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -60,7 +60,7 @@ export const DocumentRestauForm: React.FC<FormStepProps> = ({ errors, control })
                             label="Date de début de service"
                             labelPlacement="outside"
                             name="dateService"
-                            onChange={(e) => onChange(e.toString())}
+                            onChange={(value) => onChange(value)}
                             variant="bordered"
                         />
                     )}

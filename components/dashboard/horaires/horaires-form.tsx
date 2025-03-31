@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Switch, Button } from '@nextui-org/react';
+import { Switch, Button } from "@heroui/react";
 import { DayOfWeek, WeekSchedule } from '@/types';
 import { useFormStatus } from 'react-dom';
 import { toast } from 'react-toastify';

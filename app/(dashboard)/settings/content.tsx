@@ -1,5 +1,5 @@
 "use client";
-import { Listbox, ListboxItem, ListboxSection } from "@nextui-org/react";
+import { Listbox, ListboxItem, ListboxSection } from "@heroui/react";
 import {
   User,
   Languages,

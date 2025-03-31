@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Map, Bike, Database } from 'lucide-react';
 import { PageWrapper } from '@/components/commons/page-wrapper';
 import { CardHeader } from '@/components/commons/card-header';
-import { Card, CardBody, Input } from '@nextui-org/react';
+import { Card, CardBody, Input } from "@heroui/react";
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { NextUICard } from '@/components/commons/next-ui-card';

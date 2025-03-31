@@ -3,7 +3,7 @@ import { NextUIModal } from "@/components/commons/next-ui-modal";
 import { useCoursiersDisponibleController } from "./controller";
 import { Button } from "@/components/ui/button";
 import { Bike } from "lucide-react";
-import { Textarea } from "@nextui-org/react";
+import { Textarea } from "@heroui/react";
 import EmptyDataTable from "@/components/commons/EmptyDataTable";
 import { FileAttenteLivreur } from "@/types/file-attente.model";
 import { ConfirmDialog } from "@/components/commons/confirm-dialog";

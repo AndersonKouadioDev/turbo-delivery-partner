@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Trash2, Plus } from 'lucide-react';
 import { ConfirmationModal } from "@/components/ui/confirmation-modal";
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import { useRouter } from 'next/navigation';
 import { addBoisson, updateBoisson } from '@/src/actions/restaurant.actions';
 import { toast } from 'react-toastify';

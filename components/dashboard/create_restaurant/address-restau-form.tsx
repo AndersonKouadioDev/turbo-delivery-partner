@@ -1,5 +1,5 @@
 import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form';
-import { Input } from '@nextui-org/react';
+import { Input } from "@heroui/react";
 import { InputPhone } from '@/components/ui/form-ui/input-phone';
 import 'react-phone-number-input/style.css';
 

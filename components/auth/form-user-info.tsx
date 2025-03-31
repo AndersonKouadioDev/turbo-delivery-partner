@@ -1,6 +1,6 @@
 'use client';
 
-import { Input, Button } from '@nextui-org/react';
+import { Input, Button } from "@heroui/react";
 import { useFormState } from 'react-dom';
 import { useCallback, useState } from 'react';
 

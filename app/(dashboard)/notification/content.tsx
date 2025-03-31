@@ -5,7 +5,7 @@ import { PageWrapper } from '@/components/commons/page-wrapper';
 import IconInfoCircle from '@/components/icon/icon-info-circle';
 import { Card } from '@/components/ui/card';
 import { NotificationVM } from '@/types/notifcation.model';
-import { Button, Divider, DropdownItem, DropdownMenu, DropdownTrigger, Dropdown } from '@nextui-org/react';
+import { Button, Divider, DropdownItem, DropdownMenu, DropdownTrigger, Dropdown } from "@heroui/react";
 import Link from 'next/link';
 import { useNotificationController } from './controller';
 import EmptyDataTable from '@/components/commons/EmptyDataTable';

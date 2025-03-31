@@ -2,7 +2,7 @@
 
 import { Bell, Shield, DollarSign } from "lucide-react";
 
-import { Accordion, AccordionItem, Card, CardBody, Divider, Button } from "@nextui-org/react";
+import { Accordion, AccordionItem, Card, CardBody, Divider, Button } from "@heroui/react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export default function Content() {

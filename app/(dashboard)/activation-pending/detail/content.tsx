@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
-import { Button, Card, CardBody, CardHeader } from '@nextui-org/react';
+import { Button, Card, CardBody, CardHeader } from "@heroui/react";
 import Link from 'next/link';
 import Image from 'next/image';
 import { Picture, Restaurant } from '@/types/models';

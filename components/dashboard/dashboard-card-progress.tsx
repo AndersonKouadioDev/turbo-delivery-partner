@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 
 export const DashboardCardProgress = () => {
   return (
