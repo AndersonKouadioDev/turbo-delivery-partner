@@ -15,7 +15,7 @@ import {
     updateAccompagnementSchema,
     updateBoissonSchema,
 } from '../schemas/restaurants.schema';
-import { FindOneRestaurant, OpeningHour, Restaurant, Collection, User, CollectionWithDishes, Dish, DishComplet, Accompaniment, Drink, Option, OptionValue } from '@/types/models';
+import { FindOneRestaurant, OpeningHour, Restaurant, Collection, User, CollectionWithDishes, Dish, DishComplet, Accompaniment, Drink, Option, OptionValue, RepositionnerCommande } from '@/types/models';
 import { unstable_update } from '@/auth';
 import { apiClientHttp } from '@/lib/api-client-http';
 
@@ -68,7 +68,7 @@ const restaurantEndpoints = {
     listBoisson: { endpoint: `/api/V1/turbo/resto/boisson/get`, method: 'GET' },
     addHoraire: { endpoint: `/api/V1/turbo/restaurant/add/horaire`, method: 'POST' },
     getHoraires: { endpoint: `/api/V1/turbo/restaurant/get/hours`, method: 'GET' },
-    repositionnerLivreur: { endpoint: `/api/livreur/file-attente/positionner`, method: 'PUT' },
+    repositionnerLivreur: { endpoint: `/api/restaurant/file-attente/repositionner`, method: 'PUT' },
     retirerLivreur: { endpoint: `/api/livreur/file-attente/retirer`, method: 'PUT' }
 };
 
@@ -682,13 +682,13 @@ export async function updateOptionValue(formData: FormData): Promise<ActionResul
     }
 }
 
-export async function repositionnerLivreur(livreurId: string): Promise<any> {
+export async function repositionnerLivreur(commande: RepositionnerCommande): Promise<any> {
     try {
         const data = await apiClientHttp.request({
             endpoint: restaurantEndpoints.repositionnerLivreur.endpoint,
             method: restaurantEndpoints.repositionnerLivreur.method,
-            service: 'restaurant',
-            data: { livreurId: livreurId }
+            service: 'backend',
+            data: commande
         });
         return {
             status: 'success',
@@ -698,7 +698,7 @@ export async function repositionnerLivreur(livreurId: string): Promise<any> {
     } catch (error: any) {
         return {
             status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur lors de la réposition du livreur',
+            message: error?.response?.data ?? error?.response?.data?.message ?? 'Une erreur est survenue lors du repositionnement du livreur',
         };
     }
 
@@ -718,7 +718,6 @@ export async function retirerLivreur(livreurId: string): Promise<any> {
             data: data,
         }
     } catch (error: any) {
-        console.log("error+++++++++++++++++", error)
         return {
             status: 'error',
             message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur s\'est produite !',
