@@ -86,6 +86,7 @@ export default function CreateRestaurantContent() {
             }
         }
     };
+    
     const prevStep = () => {
         if (currentStep > 0) {
             setCurrentStep(currentStep - 1);
