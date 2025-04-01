@@ -3,7 +3,7 @@ import { Bell, Home, Menu, Gauge, Settings, Pizza, MessageSquare, ShoppingBag, T
 
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DashboardNavItems } from '@/components/dashboard/dashboard-nav-items';
-import { Button } from '@nextui-org/react';
+import { Button } from '@heroui/react';
 import { DashboardUserDropdown } from '@/components/dashboard/dashboard-user-dropdown';
 import { Logo } from '@/components/icons';
 import ThemeSwitch from '@/components/layouts/themeSwitch';
@@ -49,7 +49,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
         {
             href: '/file-attente',
             icon: <TbTruckDelivery className="h-5 w-5" />,
-            label: 'File d\'attente',
+            label: "File d'attente",
         },
         {
             href: '/notification',
@@ -84,7 +84,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
                         </Link>
                         {/* <Button variant="bordered" startContent={
                             <Bell className="h-4 w-4" />} className="ml-auto h-8 w-8" isIconOnly={true} radius="sm" /> */}
-                            <Notifications />
+                        <Notifications />
                     </div>
                     <div className="flex-1">
                         <DashboardNavItems navItems={navItems} />
@@ -102,8 +102,8 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
                             <DashboardNavItems navItems={navItems} />
                         </SheetContent>
                     </Sheet>
-                    <div className='md:hidden lg:hidden xl:hidden'>
-                    <Notifications />
+                    <div className="md:hidden lg:hidden xl:hidden">
+                        <Notifications />
                     </div>
                     <div className="w-full flex-1 flex items-center justify-end">
                         {/* <DashboardSearchBar /> */}

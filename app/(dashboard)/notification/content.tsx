@@ -2,11 +2,9 @@
 
 import { CardHeader } from '@/components/commons/card-header';
 import { PageWrapper } from '@/components/commons/page-wrapper';
-import IconInfoCircle from '@/components/icon/icon-info-circle';
 import { NotificationVM } from '@/types/notifcation.model';
-import { Card, Button, Divider, DropdownItem, DropdownMenu, DropdownTrigger, Dropdown, CardBody } from '@nextui-org/react';
+import { Card, Button, DropdownItem, DropdownMenu, DropdownTrigger, Dropdown, CardBody } from '@heroui/react';
 import Link from 'next/link';
-import { useNotificationController } from './controller';
 import EmptyDataTable from '@/components/commons/EmptyDataTable';
 import { Bell } from 'lucide-react';
 

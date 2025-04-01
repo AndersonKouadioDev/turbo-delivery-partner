@@ -1,4 +1,4 @@
-import { tv } from "@nextui-org/theme";
+import { tv } from "@heroui/theme";
 
 export const title = tv({
   base: "tracking-tight inline font-semibold",

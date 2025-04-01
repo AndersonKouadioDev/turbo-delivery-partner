@@ -2,7 +2,7 @@
 
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 import { _createDishSchema } from '@/src/schemas/restaurants.schema';
-import { Input, Textarea } from '@nextui-org/react';
+import { Input, Textarea } from "@heroui/react";
 import { Input as Input2 } from '@/components/ui/input';
 import Image from 'next/image';
 import { Camera, X } from 'lucide-react';

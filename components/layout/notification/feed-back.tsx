@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import { IconAlertCircle, IconCheck, IconInfoCircle, IconX } from '@tabler/icons-react';
 
 // Types de retour possibles pour le feedback

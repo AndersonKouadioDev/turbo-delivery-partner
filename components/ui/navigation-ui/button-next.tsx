@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, ButtonProps } from "@nextui-org/react";
+import { Button, ButtonProps } from "@heroui/react";
 import { IconChevronRight } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";

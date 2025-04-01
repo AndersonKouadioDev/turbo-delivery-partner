@@ -3,7 +3,7 @@
 import { apiClientHttp } from '@/lib/api-client-http';
 import { ChiffreAffaireRestaurant } from '@/types/statistiques.model';
 import { formatDate } from '@/utils/date-formate';
-import { RangeValue } from '@nextui-org/react';
+import { RangeValue } from "@heroui/react";
 
 const BASE_URL = '/api/restaurant/chiffre-affaire';
 
@@ -22,7 +22,7 @@ export async function getAllChiffreAffaire({ restaurantID, dates }: { restaurant
                 dateFin: dates && dates.end ? formatDate(dates.end, 'YYYY-MM-DD') : '',
             },
         });
-
+        
         return data;
     } catch (error: any) {
         return null;

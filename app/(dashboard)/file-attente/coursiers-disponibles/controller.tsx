@@ -3,7 +3,7 @@ import useConfirm from "@/components/commons/use-confirm-dialog";
 import { fetchFilleAttente } from "@/src/actions/file-attente.actions";
 import { retirerLivreur } from "@/src/actions/restaurant.actions";
 import { FileAttenteLivreur } from "@/types/file-attente.model";
-import { useDisclosure } from "@nextui-org/react";
+import { useDisclosure } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 

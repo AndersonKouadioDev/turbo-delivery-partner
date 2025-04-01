@@ -3,7 +3,7 @@
 import IconX from '@/components/icon/icon-x';
 import { CourseExterne, Restaurant } from '@/types/models';
 import { Transition, Dialog, TransitionChild, DialogPanel } from '@headlessui/react';
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import React, { Fragment, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { signOut } from '@/src/actions/users.actions';
 import { Restaurant } from '@/types/models';
 import { title } from '../primitives';
-import { Avatar } from '@nextui-org/react';
+import { Avatar } from "@heroui/react";
 import createUrlFile from '@/utils/createUrlFile';
 import { User } from 'next-auth';
 import { useRouter } from 'next/navigation';

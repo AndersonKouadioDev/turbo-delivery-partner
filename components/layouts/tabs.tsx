@@ -9,7 +9,7 @@ import {
   IconSettings2,
 } from "@tabler/icons-react";
 import { AiOutlineDashboard } from "react-icons/ai";
-import { Chip } from "@nextui-org/react";
+import { Chip } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";

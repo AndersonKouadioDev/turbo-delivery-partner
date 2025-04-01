@@ -4,7 +4,7 @@ import { ChiffreAffaireRestaurant } from '@/types/statistiques.model';
 import { useCallback, useEffect, useState } from 'react';
 import { TbMoneybag, TbChartBar, TbReceipt, TbClock, TbTrendingUp, TbCheck, TbHourglass } from 'react-icons/tb';
 import { formatNumber } from '@/utils/formatNumber';
-import { CalendarDate, RangeValue } from '@nextui-org/react';
+import { CalendarDate, RangeValue } from "@heroui/react";
 import { useSession } from 'next-auth/react';
 import { getAllChiffreAffaire } from '@/src/actions/statistiques.action';
 

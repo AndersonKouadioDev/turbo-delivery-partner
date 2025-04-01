@@ -1,7 +1,7 @@
 'use client';
 
 import { DishDetails } from '@/components/dashboard/collections/dish/dish-details';
-import { BreadcrumbItem, Breadcrumbs } from '@nextui-org/react';
+import { BreadcrumbItem, Breadcrumbs } from "@heroui/react";
 import Link from 'next/link';
 import { DishComplet } from '@/types/models';
 

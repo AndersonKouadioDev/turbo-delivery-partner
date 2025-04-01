@@ -1,7 +1,7 @@
 import { ButtonBack } from '@/components/ui/navigation-ui/button-back';
 import { title } from '@/components/primitives';
 import { AccountForm } from '@/components/dashboard/settings/account/account-form';
-import { Divider } from '@nextui-org/react';
+import { Divider } from "@heroui/react";
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
 

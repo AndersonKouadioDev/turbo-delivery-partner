@@ -1,11 +1,5 @@
-import React, { Suspense } from "react";
-import Content from "./home/content";
-import Loading from "@/components/layouts/loading";
+import Content from './home/content';
 
 export default async function Page() {
-  return (
-    <Suspense fallback={<Loading/>}>
-      <Content />
-    </Suspense>
-  );
+    return <Content />;
 }

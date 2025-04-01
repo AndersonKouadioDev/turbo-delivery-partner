@@ -3,7 +3,7 @@
 import '@smastrom/react-rating/style.css';
 
 import { title } from '@/components/primitives';
-import { Image, Avatar } from '@nextui-org/react';
+import { Image, Avatar } from "@heroui/react";
 import { Rating } from '@smastrom/react-rating';
 import '@smastrom/react-rating/style.css';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';

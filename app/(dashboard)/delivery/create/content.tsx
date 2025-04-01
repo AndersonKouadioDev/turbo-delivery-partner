@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Form } from '@/components/ui/form';
-import { BreadcrumbItem, Breadcrumbs, Button } from '@nextui-org/react';
+import { BreadcrumbItem, Breadcrumbs, Button } from "@heroui/react";
 import { AllCommandeSchema, FormValues } from '@/src/schemas/courses.schema';
 import { CommandeFormSection } from './components/CommandeFormSection';
 import { MapComponent } from '../component/MapComponent';

@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createDishSchema, type _createDishSchema } from '@/src/schemas/restaurants.schema';
 import { BasicInfoForm } from '@/components/dashboard/collections/dish/basic-info-form';
 import { CollectionsForm } from '@/components/dashboard/collections/dish/collections-form';
-import { Button, Progress, Breadcrumbs, BreadcrumbItem } from '@nextui-org/react';
+import { Button, Progress, Breadcrumbs, BreadcrumbItem } from "@heroui/react";
 import Link from 'next/link';
 import { Collection } from '@/types/models';
 import { useFormState } from 'react-dom';

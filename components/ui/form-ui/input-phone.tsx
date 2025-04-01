@@ -2,7 +2,7 @@
 
 import PhoneInput, { formatPhoneNumberIntl, isPossiblePhoneNumber, Value } from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
-import { Input as InputNextUI } from '@nextui-org/react';
+import { Input as InputNextUI } from "@heroui/react";
 import { forwardRef, useMemo } from 'react';
 
 import { cn } from '@/lib/utils';

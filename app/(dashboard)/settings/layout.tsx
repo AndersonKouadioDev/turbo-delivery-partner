@@ -1,5 +1,5 @@
 import { title } from '@/components/primitives';
-import { Card, CardBody } from '@nextui-org/react';
+import { Card, CardBody } from "@heroui/react";
 import '@smastrom/react-rating/style.css';
 
 import RestaurantDetail from '@/components/dashboard/settings/restaurant-detail';

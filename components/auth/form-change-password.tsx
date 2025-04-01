@@ -1,11 +1,11 @@
 'use client';
 
-import { Input} from '@nextui-org/react';
+import { Input} from "@heroui/react";
 import { useFormState } from 'react-dom';
 import { SubmitButton } from '@/components/ui/form-ui/submit-button';
 import { body, title } from '@/components/primitives';
 import { Lock } from 'lucide-react';
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
 import { changePassword } from '@/src/actions/users.actions';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';

@@ -1,4 +1,4 @@
-import { Tab, Tabs } from "@nextui-org/react"
+import { Tab, Tabs } from "@heroui/react"
 import { CoursiersDiaponible } from "../coursiers-disponibles/coursiers-disponible"
 import { CoursisersPasActivite } from "../coursiers-pas-activites/coursiers-pas-activite"
 import { FileAttenteLivreur } from "@/types/file-attente.model";

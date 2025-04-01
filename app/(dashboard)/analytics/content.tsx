@@ -1,5 +1,5 @@
 'use client';
-import { Card, CardBody, CardHeader, Tooltip, Input, Select, SelectItem, DateRangePicker, RangeValue, CalendarDate } from '@nextui-org/react';
+import { Card, CardBody, CardHeader, Tooltip, Input, Select, SelectItem, DateRangePicker, RangeValue, CalendarDate } from "@heroui/react";
 import { title } from '@/components/primitives';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { ChartConfig, ChartContainer } from '@/components/ui/chart';

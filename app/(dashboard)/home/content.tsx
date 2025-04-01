@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { title } from '@/components/primitives';
-import { Image, CircularProgress, Button } from '@nextui-org/react';
-import { Card, CardBody, CardHeader, Progress } from '@nextui-org/react';
+import { Image, CircularProgress, Button } from "@heroui/react";
+import { Card, CardBody, CardHeader, Progress } from "@heroui/react";
 import { Clock, Pizza, ChevronRight, Star } from 'lucide-react';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { categories, foodItems, bestSellers, orders } from '@/data';

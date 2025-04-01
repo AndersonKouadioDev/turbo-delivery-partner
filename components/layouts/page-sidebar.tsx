@@ -1,7 +1,7 @@
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { MenuIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import Link from 'next/link';
 import { title } from '@/components/primitives';
 

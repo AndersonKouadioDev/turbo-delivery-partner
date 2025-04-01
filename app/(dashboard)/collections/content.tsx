@@ -3,7 +3,7 @@ import { title } from '@/components/primitives';
 import { CollectionWithDishes } from '@/types/models';
 import createUrlFile from '@/utils/createUrlFile';
 
-import { Button, Card, CardBody, CardFooter, CardHeader, Image } from '@nextui-org/react';
+import { Button, Card, CardBody, CardFooter, CardHeader, Image } from "@heroui/react";
 import { IconPlus } from '@tabler/icons-react';
 import { ChevronRight, HandPlatter } from 'lucide-react';
 import Link from 'next/link';
