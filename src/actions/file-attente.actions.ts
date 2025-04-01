@@ -17,7 +17,6 @@ export async function fetchFilleAttente(restaurantID: string): Promise<FileAtten
             method: fileAttenteEndpoints.fetchFilleAttente.method,
             service: 'backend',
         });
-
         return data;
     } catch (error) {
         return [];

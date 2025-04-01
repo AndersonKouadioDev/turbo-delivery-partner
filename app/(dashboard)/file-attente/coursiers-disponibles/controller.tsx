@@ -18,7 +18,7 @@ export function useCoursiersDisponibleController({ searchKey, data, restaurantId
     const turboDisclosure = useDisclosure();
     const errorDisclosure = useDisclosure();
     const [selectValue, setSelectValue] = useState("");
-    const [filterData, setFilterData] = useState<any[]>([]);
+    const [filterData, setFilterData] = useState<any[]>(data);
     const confirm = useConfirm()
 
     useEffect(() => {
@@ -30,7 +30,7 @@ export function useCoursiersDisponibleController({ searchKey, data, restaurantId
         } else {
             setFilterData(data);
         }
-    }, [searchKey]);
+    }, [searchKey, data]);
 
     const handleTurboyOpen = () => {
         turboyDisclosure.onOpen();

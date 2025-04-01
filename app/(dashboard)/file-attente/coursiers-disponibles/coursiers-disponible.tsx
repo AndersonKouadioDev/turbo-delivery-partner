@@ -17,10 +17,9 @@ interface CoursiersDiaponibleProps {
 }
 
 export function CoursiersDiaponible({ data, searchKey, timeProgressions, currentDelivery, restaurantId }: CoursiersDiaponibleProps) {
-    console.log(data);
     const ctrl = useCoursiersDisponibleController({ data, searchKey, restaurantId });
     return (
-        <div className="max-h-[600px] lg:overflow-y-auto lg:overflow-x-hidden ">
+        <div className="max-h-[300px] lg:overflow-y-auto lg:overflow-x-hidden ">
             <div className="overflow-scroll max-w-[300px] md:max-w-[500px] lg:overflow-y-auto lg:overflow-x-hidden lg:max-w-full xl:max-w-full xl:overflow-y-auto">
                 <table className=" divide-y divide-gray-200 w-full ">
                     <tbody className=" divide-y overflow-scroll">

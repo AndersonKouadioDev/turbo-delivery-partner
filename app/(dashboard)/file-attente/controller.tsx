@@ -16,37 +16,31 @@ export function useFileAttenteController(
     const [tempRecuperation, setTempRecuperation] = useState(3 * 60);
     const [currentDelivery, setCurrentDelivery] = useState<FileAttenteLivreur>();
     const [timeProgressions, setTimeProgression] = useState(0);
-    const [datas, setData] = useState<FileAttenteLivreur[]>(initialData);
+    const [fileAttentes, setFileAttentes] = useState<FileAttenteLivreur[]>(initialData);
     const [haseError, setHasErreur] = useState(false);
     const [loading, setLoading] = useState(false);
     const [statistiqueCommandes, setStatistiquesCommande] = useState<StatistiqueFileAttente | null>(stattitiqueFileAttente);
-    const [livreurIndispoData, setLivreurIndispoData] = useState<FileAttenteLivreur[]>(livreurIndisponibles)
+    const [livreurIndispoData, setLivreurIndispoData] = useState<FileAttenteLivreur[]>(livreurIndisponibles);
 
     const fetchFileAttenteLivreur = async () => {
         try {
             const data = await fetchFilleAttente(restaurantId ?? '');
-            setData(data);
-        } catch (error) { } finally {
-            router.refresh();
-        }
+            setFileAttentes(data);
+        } catch (error) { }
     }
 
     const statisqueCommande = async () => {
         try {
             const data = await fetchStatistique(restaurantId ?? '');
             setStatistiquesCommande(data);
-        } catch (error) { } finally {
-            router.refresh();
-        }
+        } catch (error) { }
     }
 
     const fetchLivreurIndisponible = async () => {
         try {
             const data = await livreurIndisponible(restaurantId ?? '');
             setLivreurIndispoData(data);
-        } catch (error) { } finally {
-            router.refresh();
-        }
+        } catch (error) { }
     }
 
     const repositionLivreur = async (livreruId: string) => {
@@ -69,7 +63,7 @@ export function useFileAttenteController(
             toast.error(error?.message || "Une erreur s'est produite !");
             setHasErreur(true)
         } finally {
-            router.refresh();
+            // router.refresh();
             setLoading(false);
             statisqueCommande();
             fetchLivreurIndisponible()
@@ -77,10 +71,10 @@ export function useFileAttenteController(
     }
 
     useEffect(() => {
-        if (!haseError && stattitiqueFileAttente?.commandeEnAttente !== 0 && stattitiqueFileAttente?.coursier !== 0 && datas.length > 0) {
-            setCurrentDelivery(datas[0]);
+        if (!haseError && stattitiqueFileAttente?.commandeEnAttente !== 0 && stattitiqueFileAttente?.coursier !== 0 && fileAttentes.length > 0) {
+            setCurrentDelivery(fileAttentes[0]);
             if (tempRecuperation === 1) {
-                repositionLivreur(datas[0]?.livreurId);
+                repositionLivreur(fileAttentes[0]?.livreurId);
                 fetchFileAttenteLivreur();
             }
             const timer = setInterval(() => {
@@ -96,5 +90,5 @@ export function useFileAttenteController(
     const minutes = Math.floor(tempRecuperation / 60);
     const seconds = tempRecuperation % 60;
 
-    return { minutes, seconds, currentDelivery, datas, timeProgressions, statistiqueCommandes, livreurIndispoData };
+    return { minutes, seconds, currentDelivery, fileAttentes, timeProgressions, statistiqueCommandes, livreurIndispoData };
 }

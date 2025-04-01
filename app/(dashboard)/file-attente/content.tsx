@@ -74,7 +74,7 @@ export default function Content({ initialData, stattitiqueFileAttente, restauran
                     </CardBody>
                 </Card>
             </div>
-            <FileAttenteTab data={ctrl.datas} searchKey={searchKey}
+            <FileAttenteTab data={ctrl.fileAttentes} searchKey={searchKey}
                 timeProgressions={ctrl.timeProgressions}
                 currentDelivery={ctrl.currentDelivery}
                 livreurIndisponibles={ctrl.livreurIndispoData}
