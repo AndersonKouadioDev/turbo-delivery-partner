@@ -3,10 +3,11 @@
 import { apiClientHttp } from '@/lib/api-client-http';
 import { FileAttenteLivreur, StatistiqueFileAttente } from '@/types/file-attente.model';
 
-const BASE_URL = '/api';
+const BASE_URL = '/api/restaurant';
 const fileAttenteEndpoints = {
-    fetchFilleAttente: { endpoint: (restaurantId: string) => `${BASE_URL}/restaurant/file-attente/${restaurantId}`, method: 'GET' },
-    fetchStatistique: { endpoint: (id: string) => `${BASE_URL}/restaurant/file-attente/${id}/statistique`, method: 'GET' },
+    fetchFilleAttente: { endpoint: (restaurantId: string) => `${BASE_URL}/file-attente/${restaurantId}`, method: 'GET' },
+    fetchStatistique: { endpoint: (id: string) => `${BASE_URL}/file-attente/${id}/statistique`, method: 'GET' },
+    livreurIndisponible: { endpoint: (id: string) => `${BASE_URL}/file-attente/${id}/indisponible`, method: 'GET' },
 };
 
 export async function fetchFilleAttente(restaurantID: string): Promise<FileAttenteLivreur[]> {
@@ -20,6 +21,19 @@ export async function fetchFilleAttente(restaurantID: string): Promise<FileAtten
         return data;
     } catch (error) {
         return [];
+    }
+}
+
+export async function livreurIndisponible(restaurantId: string): Promise<FileAttenteLivreur[]> {
+    try {
+        const data = await apiClientHttp.request<FileAttenteLivreur[]>({
+            endpoint: fileAttenteEndpoints.livreurIndisponible.endpoint(restaurantId),
+            method: fileAttenteEndpoints.livreurIndisponible.method,
+            service: 'backend',
+        });
+        return data;
+    } catch (e) {
+        return []
     }
 }
 

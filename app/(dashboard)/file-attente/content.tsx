@@ -16,9 +16,10 @@ interface Props {
     initialData: FileAttenteLivreur[];
     stattitiqueFileAttente: StatistiqueFileAttente | null;
     restaurantId?: string;
+    livreurIndisponibles: FileAttenteLivreur[]
 }
-export default function Content({ initialData, stattitiqueFileAttente, restaurantId }: Props) {
-    const ctrl = useFileAttenteController(initialData, stattitiqueFileAttente, restaurantId)
+export default function Content({ initialData, stattitiqueFileAttente, restaurantId, livreurIndisponibles }: Props) {
+    const ctrl = useFileAttenteController(initialData, stattitiqueFileAttente, livreurIndisponibles, restaurantId)
     const [searchKey, setSearchKey] = useState("");
     const onChange = (event: any) => {
         setSearchKey(event.target.value)
@@ -73,7 +74,11 @@ export default function Content({ initialData, stattitiqueFileAttente, restauran
                     </CardBody>
                 </Card>
             </div>
-            <FileAttenteTab data={ctrl.datas} searchKey={searchKey} timeProgressions={ctrl.timeProgressions} currentDelivery={ctrl.currentDelivery} restaurantId={restaurantId} />
+            <FileAttenteTab data={ctrl.datas} searchKey={searchKey}
+                timeProgressions={ctrl.timeProgressions}
+                currentDelivery={ctrl.currentDelivery}
+                livreurIndisponibles={ctrl.livreurIndispoData}
+                restaurantId={restaurantId} />
         </PageWrapper>
     );
 }

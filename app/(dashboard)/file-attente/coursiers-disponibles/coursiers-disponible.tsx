@@ -61,15 +61,19 @@ export function CoursiersDiaponible({ data, searchKey, timeProgressions, current
                                             </td>
 
                                             <td className=" py-4 whitespace-nowrap flex w-[150px] gap-2">
-                                                {index === 0 ? (
+                                                {index === 0 && (
                                                     <>
                                                         Recupération <Bike color="red" size={20} className="font-bold" />
                                                     </>
-                                                ) : index === 2 ? (
-                                                    <>
-                                                        Se prépare <Bike color="red" size={20} className="font-bold" />
-                                                    </>
-                                                ) : ""}
+                                                )
+                                                }
+                                                {
+                                                    index === 1 && (
+                                                        <>
+                                                            Se prépare <Bike color="red" size={20} className="font-bold" />
+                                                        </>
+                                                    )
+                                                }
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 {/* <Button variant={"success"} className="h-7 text-md" onClick={() => ctrl.retirerLivreurs(item.id)} disabled={item.estRetirerDeLaFileAttente}>Ecrire au turboy</Button>&nbsp;&nbsp; */}

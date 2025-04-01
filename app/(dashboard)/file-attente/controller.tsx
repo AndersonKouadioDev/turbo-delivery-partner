@@ -1,4 +1,4 @@
-import { fetchFilleAttente, fetchStatistique } from "@/src/actions/file-attente.actions";
+import { fetchFilleAttente, fetchStatistique, livreurIndisponible } from "@/src/actions/file-attente.actions";
 import { repositionnerLivreur } from "@/src/actions/restaurant.actions";
 import { FileAttenteLivreur, StatistiqueFileAttente } from "@/types/file-attente.model";
 import { useRouter } from "next/navigation";
@@ -8,7 +8,9 @@ import { toast } from "react-toastify";
 export function useFileAttenteController(
     initialData: FileAttenteLivreur[],
     stattitiqueFileAttente: StatistiqueFileAttente | null,
-    restaurantId?: string
+    livreurIndisponibles: FileAttenteLivreur[],
+    restaurantId?: string,
+
 ) {
     const router = useRouter()
     const [tempRecuperation, setTempRecuperation] = useState(3 * 60);
@@ -18,6 +20,7 @@ export function useFileAttenteController(
     const [haseError, setHasErreur] = useState(false);
     const [loading, setLoading] = useState(false);
     const [statistiqueCommandes, setStatistiquesCommande] = useState<StatistiqueFileAttente | null>(stattitiqueFileAttente);
+    const [livreurIndispoData, setLivreurIndispoData] = useState<FileAttenteLivreur[]>(livreurIndisponibles)
 
     const fetchFileAttenteLivreur = async () => {
         try {
@@ -32,6 +35,15 @@ export function useFileAttenteController(
         try {
             const data = await fetchStatistique(restaurantId ?? '');
             setStatistiquesCommande(data);
+        } catch (error) { } finally {
+            router.refresh();
+        }
+    }
+
+    const fetchLivreurIndisponible = async () => {
+        try {
+            const data = await livreurIndisponible(restaurantId ?? '');
+            setLivreurIndispoData(data);
         } catch (error) { } finally {
             router.refresh();
         }
@@ -60,14 +72,15 @@ export function useFileAttenteController(
             router.refresh();
             setLoading(false);
             statisqueCommande();
+            fetchLivreurIndisponible()
         }
     }
 
     useEffect(() => {
-        if (!haseError && stattitiqueFileAttente?.commandeEnAttente !== 0 && stattitiqueFileAttente?.coursier !== 0 && initialData.length > 0) {
-            setCurrentDelivery(initialData[0]);
+        if (!haseError && stattitiqueFileAttente?.commandeEnAttente !== 0 && stattitiqueFileAttente?.coursier !== 0 && datas.length > 0) {
+            setCurrentDelivery(datas[0]);
             if (tempRecuperation === 1) {
-                repositionLivreur(initialData[0]?.livreurId);
+                repositionLivreur(datas[0]?.livreurId);
                 fetchFileAttenteLivreur();
             }
             const timer = setInterval(() => {
@@ -83,5 +96,5 @@ export function useFileAttenteController(
     const minutes = Math.floor(tempRecuperation / 60);
     const seconds = tempRecuperation % 60;
 
-    return { minutes, seconds, currentDelivery, datas, timeProgressions, statistiqueCommandes };
+    return { minutes, seconds, currentDelivery, datas, timeProgressions, statistiqueCommandes, livreurIndispoData };
 }
