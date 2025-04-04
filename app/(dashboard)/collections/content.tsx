@@ -1,9 +1,10 @@
 'use client';
+import EmptyDataTable from '@/components/commons/EmptyDataTable';
 import { title } from '@/components/primitives';
 import { CollectionWithDishes } from '@/types/models';
 import createUrlFile from '@/utils/createUrlFile';
 
-import { Button, Card, CardBody, CardFooter, CardHeader, Image } from "@heroui/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Image } from '@heroui/react';
 import { IconPlus } from '@tabler/icons-react';
 import { ChevronRight, HandPlatter } from 'lucide-react';
 import Link from 'next/link';
@@ -17,10 +18,10 @@ export default function Content({ data }: { data: CollectionWithDishes[] }) {
                     Ajouter un plat
                 </Button>
             </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {data &&
-                    data.length > 0 &&
-                    data.map((collection) => (
+
+            {data && data.length > 0 ? (
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {data.map((collection) => (
                         <Card key={collection.collectionModel.id} className="overflow-hidden">
                             <CardHeader className="flex justify-between gap-2">
                                 <Image
@@ -45,7 +46,10 @@ export default function Content({ data }: { data: CollectionWithDishes[] }) {
                             </CardFooter>
                         </Card>
                     ))}
-            </div>
+                </div>
+            ) : (
+                <EmptyDataTable />
+            )}
         </div>
     );
 }

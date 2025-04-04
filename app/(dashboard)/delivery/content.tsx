@@ -11,6 +11,7 @@ import DeliveryTools from './component/deliveryTools';
 import { getPaginationCourseExterne } from '@/src/actions/courses.actions';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { courses_statuses_filters } from '@/data';
+import EmptyDataTable from '@/components/commons/EmptyDataTable';
 
 type SortOption = (typeof SORT_OPTIONS)[keyof typeof SORT_OPTIONS];
 
@@ -304,11 +305,7 @@ export default function Content({ restaurant, initialData }: Props) {
                     </div>
                 </>
             ) : (
-                <Card className="min-h-52">
-                    <CardBody className="flex justify-center items-center">
-                        <p className="text-center text-default-500">Aucune course ne correspond à vos critères de recherche. Essayez de modifier vos filtres.</p>
-                    </CardBody>
-                </Card>
+                <EmptyDataTable />
             )}
         </div>
     );
