@@ -3,35 +3,35 @@ import { z } from 'zod';
 // Schéma pour les coordonnées géographiques
 const localisationCourseExterneSchema = z.object({
     longitude: z.number(),
-    latitude: z.number()
+    latitude: z.number(),
 });
 
 // Schéma pour le destinataire
 const destinataireCourseExterneSchema = z.object({
-    nomComplet: z.string().min(1, "Le nom complet est requis"),
-    contact: z.string().min(1, "Le contact est requis")
+    nomComplet: z.string().min(1, 'Le nom complet est requis'),
+    contact: z.string().min(1, 'Le contact est requis'),
 });
 
 // Enum pour les modes de paiement
-const modePaiementEnum = z.enum(["ESPECE", "WAVE"]);
+const modePaiementEnum = z.enum(['ESPECE', 'WAVE']);
 
 // Schéma pour une commande individuelle
 const commandeCourseExterneSchema = z.object({
-    libelle: z.string().min(1, "Le libellé est requis"),
-    numero: z.string().min(1, "Le numéro de commande est requis"),
-   
+    libelle: z.string().min(1, 'Le libellé est requis'),
+    numero: z.string().min(1, 'Le numéro de commande est requis'),
+
     destinataire: destinataireCourseExterneSchema,
     lieuRecuperation: localisationCourseExterneSchema,
     lieuLivraison: localisationCourseExterneSchema,
     modePaiement: modePaiementEnum,
-    prix: z.number().min(0, "Le prix doit être supérieur ou égal à 0"),
-    livraisonPaye: z.boolean()
+    prix: z.number().min(0, 'Le prix doit être supérieur ou égal à 0'),
+    livraisonPaye: z.boolean(),
 });
 
 // Schéma principal pour la liste des commandes
 export const courseExterneSchema = z.object({
     restaurantId: z.string().uuid("L'ID du restaurant doit être un UUID valide"),
-    commandes: z.array(commandeCourseExterneSchema).min(1, "Au moins une commande est requise")
+    commandes: z.array(commandeCourseExterneSchema).min(1, 'Au moins une commande est requise'),
 });
 
 // Type pour TypeScript
@@ -52,9 +52,10 @@ export const commandeSchema = z.object({
     }),
     lieuRecuperation: locationSchema,
     lieuLivraison: locationSchema,
-   modePaiement: modePaiementEnum,
+    modePaiement: modePaiementEnum,
     prix: z.number().min(0, 'Le prix doit être positif'),
     livraisonPaye: z.boolean(),
+    zoneId: z.string(),
 });
 
 export const AllCommandeSchema = z.object({
