@@ -15,9 +15,24 @@ import {
     updateAccompagnementSchema,
     updateBoissonSchema,
 } from '../schemas/restaurants.schema';
-import { FindOneRestaurant, OpeningHour, Restaurant, Collection, User, CollectionWithDishes, Dish, DishComplet, Accompaniment, Drink, Option, OptionValue, RepositionnerCommande } from '@/types/models';
+import {
+    FindOneRestaurant,
+    OpeningHour,
+    Restaurant,
+    Collection,
+    User,
+    CollectionWithDishes,
+    Dish,
+    DishComplet,
+    Accompaniment,
+    Drink,
+    Option,
+    OptionValue,
+    RepositionnerCommande,
+} from '@/types/models';
 import { unstable_update } from '@/auth';
 import { apiClientHttp } from '@/lib/api-client-http';
+import { DeliveryFee } from '@/types/restaurant';
 
 // Configuration
 const BASE_URL = '';
@@ -64,12 +79,16 @@ const restaurantEndpoints = {
         endpoint: (boissonID: string) => `/api/V1/turbo/resto/boisson/update/${boissonID}`,
         method: 'POST',
     },
+    getAllFraisLivraison: {
+        endpoint: (restaurantId: string) => `/api/restaurant/frais-livraison/${restaurantId}/restaurant`,
+        method: 'GET',
+    },
     addBoisson: { endpoint: `/api/V1/turbo/resto/boisson/create`, method: 'POST' },
     listBoisson: { endpoint: `/api/V1/turbo/resto/boisson/get`, method: 'GET' },
     addHoraire: { endpoint: `/api/V1/turbo/restaurant/add/horaire`, method: 'POST' },
     getHoraires: { endpoint: `/api/V1/turbo/restaurant/get/hours`, method: 'GET' },
     repositionnerLivreur: { endpoint: `/api/restaurant/file-attente/repositionner`, method: 'PUT' },
-    retirerLivreur: { endpoint: `/api/livreur/file-attente/retirer`, method: 'PUT' }
+    retirerLivreur: { endpoint: `/api/livreur/file-attente/retirer`, method: 'PUT' },
 };
 
 export async function createRestaurant(formData: FormData): Promise<ActionResult<{ restaurant: Restaurant; createdBy: User }>> {
@@ -264,6 +283,20 @@ export async function getCollections(): Promise<Collection[]> {
     }
 }
 
+export async function getAllFraisLivraison(restaurantId: string): Promise<DeliveryFee[]> {
+    try {
+        const data = await apiClientHttp.request<DeliveryFee[]>({
+            endpoint: restaurantEndpoints.getAllFraisLivraison.endpoint(restaurantId),
+            method: restaurantEndpoints.getAllFraisLivraison.method,
+            service: 'restaurant',
+        });
+
+        return data;
+    } catch (error) {
+        return [];
+    }
+}
+
 export async function getDishesGroupByCollection(): Promise<CollectionWithDishes[]> {
     try {
         const data = await apiClientHttp.request<CollectionWithDishes[]>({
@@ -274,9 +307,9 @@ export async function getDishesGroupByCollection(): Promise<CollectionWithDishes
         const newData =
             data && data?.length > 0
                 ? data.map((item: CollectionWithDishes) => ({
-                    collectionModel: item.collectionModel,
-                    totalPlat: item.totalPlat,
-                }))
+                      collectionModel: item.collectionModel,
+                      totalPlat: item.totalPlat,
+                  }))
                 : [];
         return newData;
     } catch (error) {
@@ -688,20 +721,19 @@ export async function repositionnerLivreur(commande: RepositionnerCommande): Pro
             endpoint: restaurantEndpoints.repositionnerLivreur.endpoint,
             method: restaurantEndpoints.repositionnerLivreur.method,
             service: 'backend',
-            data: commande
+            data: commande,
         });
         return {
             status: 'success',
             message: 'Livreur répositionné avec succès',
             data: data,
-        }
+        };
     } catch (error: any) {
         return {
             status: 'error',
             message: error?.response?.data ?? error?.response?.data?.message ?? 'Une erreur est survenue lors du repositionnement du livreur',
         };
     }
-
 }
 
 export async function retirerLivreur(livreurId: string): Promise<any> {
@@ -710,18 +742,17 @@ export async function retirerLivreur(livreurId: string): Promise<any> {
             endpoint: restaurantEndpoints.retirerLivreur.endpoint,
             method: restaurantEndpoints.retirerLivreur.method,
             service: 'restaurant',
-            data: { livreurId }
+            data: { livreurId },
         });
         return {
             status: 'success',
             message: 'Livreur retirer avec succès',
             data: data,
-        }
+        };
     } catch (error: any) {
         return {
             status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur s\'est produite !',
+            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur s'est produite !",
         };
     }
-
 }
