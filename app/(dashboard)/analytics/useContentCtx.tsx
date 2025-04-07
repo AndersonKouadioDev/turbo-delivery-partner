@@ -9,14 +9,14 @@ import { useSession } from 'next-auth/react';
 import { getAllChiffreAffaire } from '@/src/actions/statistiques.action';
 
 interface Props {
-    initialData: ChiffreAffaireRestaurant;
+    initialData: ChiffreAffaireRestaurant | null;
 }
 
 export default function useContentCtx({ initialData }: Props) {
     const { data: authData } = useSession();
     const [isLoading, setIsLoading] = useState(!initialData);
     const [loader, setLoader] = useState<boolean>(false);
-    const [data, setData] = useState<ChiffreAffaireRestaurant>(initialData);
+    const [data, setData] = useState<ChiffreAffaireRestaurant | null>(initialData);
     const [period, setPeriod] = useState(new Set(['customized']));
 
     const [dates, setDates] = useState<RangeValue<Date | null>>({
@@ -52,35 +52,35 @@ export default function useContentCtx({ initialData }: Props) {
     }, [dates.end, dates.start, authData?.user.restauranID]);
 
     // Calculate total orders and revenue
-    const totalOrders = data.nbCommandeTotalTermine + data.nbCommandeTotalEnAttente + data.nbCommandeTotalInitie + data.nbCommandeTotalEnCours;
+    const totalOrders = data && (data.nbCommandeTotalTermine + data.nbCommandeTotalEnAttente + data.nbCommandeTotalInitie + data.nbCommandeTotalEnCours);
 
-    const totalRevenue = data.commandeTotalTermine + data.commandeTotalEnAttente + data.commandeTotalInitie + data.commandeTotalEnCours;
-    const totalCommission = data.commissionChiffreAffaire + data.commissionCommande;
+    const totalRevenue = data && (data.commandeTotalTermine + data.commandeTotalEnAttente + data.commandeTotalInitie + data.commandeTotalEnCours);
+    const totalCommission = data && (data.commissionChiffreAffaire + data.commissionCommande);
 
     // Data for pie chart
     const orderStatusData = [
-        { name: 'Terminées', value: data.nbCommandeTotalTermine, color: '#10B981' },
-        { name: 'En Attente', value: data.nbCommandeTotalEnAttente, color: '#F59E0B' },
-        { name: 'Initiées', value: data.nbCommandeTotalInitie, color: '#3B82F6' },
-        { name: 'En Cours', value: data.nbCommandeTotalEnCours, color: '#6366F1' },
+        { name: 'Terminées', value: data && data.nbCommandeTotalTermine, color: '#10B981' },
+        { name: 'En Attente', value: data && data.nbCommandeTotalEnAttente, color: '#F59E0B' },
+        { name: 'Initiées', value: data && data.nbCommandeTotalInitie, color: '#3B82F6' },
+        { name: 'En Cours', value: data && data.nbCommandeTotalEnCours, color: '#6366F1' },
     ];
 
     const statCards = [
         {
             title: "Chiffre d'Affaires Total",
-            value: formatNumber(totalRevenue),
+            value: totalRevenue ? formatNumber(totalRevenue) : 0,
             icon: TbTrendingUp,
             color: 'from-green-500 to-green-600',
         },
         {
             title: 'Commandes Totales',
-            value: formatNumber(totalOrders),
+            value: totalOrders ? formatNumber(totalOrders) : 0,
             icon: TbReceipt,
             color: 'from-yellow-500 to-yellow-600',
         },
         {
             title: 'Commission Totale',
-            value: formatNumber(totalCommission),
+            value: totalCommission ? formatNumber(totalCommission) : 0,
             icon: TbMoneybag,
             color: 'from-red-500 to-red-600',
         },
@@ -90,9 +90,9 @@ export default function useContentCtx({ initialData }: Props) {
         {
             title: 'Commandes Terminées',
             stats: [
-                { label: 'Montant', value: formatNumber(data.commandeTotalTermine), icon: TbMoneybag },
-                { label: 'Nombre', value: formatNumber(data.nbCommandeTotalTermine), icon: TbReceipt },
-                { label: 'Livraison', value: formatNumber(data.fraisLivraisonTotalTermine), icon: TbChartBar },
+                { label: 'Montant', value: (data && data.commandeTotalTermine) ? formatNumber(data.commandeTotalTermine) : 0, icon: TbMoneybag },
+                { label: 'Nombre', value: (data && data.nbCommandeTotalTermine) ? formatNumber(data.nbCommandeTotalTermine) : 0, icon: TbReceipt },
+                { label: 'Livraison', value: (data && data.fraisLivraisonTotalTermine) ? formatNumber(data.fraisLivraisonTotalTermine) : 0, icon: TbChartBar },
             ],
             icon: TbCheck,
             color: 'bg-green-500',
@@ -101,9 +101,9 @@ export default function useContentCtx({ initialData }: Props) {
         {
             title: 'Commandes en Attente',
             stats: [
-                { label: 'Montant', value: formatNumber(data.commandeTotalEnAttente), icon: TbMoneybag },
-                { label: 'Nombre', value: formatNumber(data.nbCommandeTotalEnAttente), icon: TbReceipt },
-                { label: 'Livraison', value: formatNumber(data.fraisLivraisonTotalEnAttente), icon: TbChartBar },
+                { label: 'Montant', value: (data && data.commandeTotalEnAttente) ? formatNumber(data.commandeTotalEnAttente) : 0, icon: TbMoneybag },
+                { label: 'Nombre', value: (data && data.nbCommandeTotalEnAttente) ? formatNumber(data.nbCommandeTotalEnAttente) : 0, icon: TbReceipt },
+                { label: 'Livraison', value: (data && data.fraisLivraisonTotalEnAttente) ? formatNumber(data.fraisLivraisonTotalEnAttente) : 0, icon: TbChartBar },
             ],
             icon: TbHourglass,
             color: 'bg-yellow-500',
@@ -112,9 +112,9 @@ export default function useContentCtx({ initialData }: Props) {
         {
             title: 'Commandes en Cours',
             stats: [
-                { label: 'Montant Total', value: formatNumber(data.commandeTotalEnCours), icon: TbMoneybag },
-                { label: 'Nombre', value: formatNumber(data.nbCommandeTotalEnCours), icon: TbReceipt },
-                { label: 'Livraison', value: formatNumber(data.fraisLivraisonTotalEnCours), icon: TbChartBar },
+                { label: 'Montant Total', value: (data && data.commandeTotalEnCours) ? formatNumber(data.commandeTotalEnCours) : 0, icon: TbMoneybag },
+                { label: 'Nombre', value: (data && data.nbCommandeTotalEnCours) ? formatNumber(data.nbCommandeTotalEnCours) : 0, icon: TbReceipt },
+                { label: 'Livraison', value: (data && data.fraisLivraisonTotalEnCours) ? formatNumber(data.fraisLivraisonTotalEnCours) : 0, icon: TbChartBar },
             ],
             icon: TbHourglass,
             color: 'bg-violet-500',
@@ -123,9 +123,9 @@ export default function useContentCtx({ initialData }: Props) {
         {
             title: 'Commandes Initiées',
             stats: [
-                { label: 'Montant', value: formatNumber(data.commandeTotalInitie), icon: TbMoneybag },
-                { label: 'Nombre', value: formatNumber(data.nbCommandeTotalInitie), icon: TbReceipt },
-                { label: 'Livraison', value: formatNumber(data.fraisLivraisonTotalInitie), icon: TbChartBar },
+                { label: 'Montant', value: (data && data.commandeTotalInitie) ? formatNumber(data.commandeTotalInitie) : 0, icon: TbMoneybag },
+                { label: 'Nombre', value: (data && data.nbCommandeTotalInitie) ? formatNumber(data.nbCommandeTotalInitie) : 0, icon: TbReceipt },
+                { label: 'Livraison', value: (data && data.fraisLivraisonTotalInitie) ? formatNumber(data.fraisLivraisonTotalInitie) : 0, icon: TbChartBar },
             ],
             icon: TbClock,
             color: 'bg-blue-500',

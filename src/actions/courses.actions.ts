@@ -87,7 +87,6 @@ export async function getPaginationCourseExterne(idRestaurant: string, page: num
                 size: size.toString(),
             },
         });
-
         return data;
     } catch (error) {
         return null;
