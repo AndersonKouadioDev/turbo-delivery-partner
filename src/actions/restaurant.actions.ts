@@ -288,7 +288,7 @@ export async function getAllFraisLivraison(restaurantId: string): Promise<Delive
         const data = await apiClientHttp.request<DeliveryFee[]>({
             endpoint: restaurantEndpoints.getAllFraisLivraison.endpoint(restaurantId),
             method: restaurantEndpoints.getAllFraisLivraison.method,
-            service: 'restaurant',
+            service: 'backend',
         });
 
         return data;
@@ -307,9 +307,9 @@ export async function getDishesGroupByCollection(): Promise<CollectionWithDishes
         const newData =
             data && data?.length > 0
                 ? data.map((item: CollectionWithDishes) => ({
-                      collectionModel: item.collectionModel,
-                      totalPlat: item.totalPlat,
-                  }))
+                    collectionModel: item.collectionModel,
+                    totalPlat: item.totalPlat,
+                }))
                 : [];
         return newData;
     } catch (error) {

@@ -31,6 +31,7 @@ interface CommandeFormSectionProps {
 }
 
 export const CommandeFormSection = ({ index, form, remove, handleAddressSelect, restaurant, fraisLivraisons }: CommandeFormSectionProps) => {
+    console.log("fraisLivraisons", fraisLivraisons)
     return (
         <Card className="p-3 space-y-3 bg-background border-l-4 border-l-primary">
             <div className="flex justify-between items-center bg-muted/50 dark:bg-muted p-2 rounded-lg">

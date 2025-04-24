@@ -17,7 +17,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 interface Props {
-    initialData: ChiffreAffaireRestaurant;
+    initialData: ChiffreAffaireRestaurant | null;
 }
 
 export default function Content({ initialData }: Props) {
@@ -122,7 +122,7 @@ export default function Content({ initialData }: Props) {
                                     <TbChartBar className="w-8 h-8" />
                                 </div>
                                 <div>
-                                    <p className="text-3xl font-bold">{data.commissionChiffreAffaire.toLocaleString()} XOF</p>
+                                    <p className="text-3xl font-bold">{data ? data?.commissionChiffreAffaire.toLocaleString() : 0} XOF</p>
                                 </div>
                             </div>
                             <TbArrowUpRight className="w-8 h-8 opacity-80" />

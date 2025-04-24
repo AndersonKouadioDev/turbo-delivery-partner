@@ -184,7 +184,7 @@ export default function Content({ restaurant, initialData }: Props) {
                         <Skeleton key={index} className="rounded-lg h-52" />
                     ))}
                 </div>
-            ) : data?.content.length ? (
+            ) : (data && data?.content.length) ? (
                 <>
                     <div className="grid grid-cols-1 gap-6">
                         {dataFilter.map((delivery) => (

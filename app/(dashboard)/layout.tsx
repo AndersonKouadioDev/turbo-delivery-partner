@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Bell, Home, Menu, Gauge, Settings, Pizza, MessageSquare, ShoppingBag, TicketCheck } from 'lucide-react';
+import { Bell, Home, Menu, Gauge, Settings, Pizza, MessageSquare, ShoppingBag, TicketCheck, Hammer } from 'lucide-react';
 
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DashboardNavItems } from '@/components/dashboard/dashboard-nav-items';
@@ -67,10 +67,16 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
             label: 'Messages',
         },
         {
+            href: '/gestion-restaurant',
+            icon: <Hammer className="h-5 w-5" />,
+            label: 'Gestion de restaurant',
+        },
+        {
             href: '/settings',
             icon: <Settings className="h-5 w-5" />,
             label: 'Paramètres',
         },
+
     ];
 
     return (
