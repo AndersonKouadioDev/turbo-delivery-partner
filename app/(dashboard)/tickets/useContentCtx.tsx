@@ -1,9 +1,9 @@
 'use client';
 
-import { getAllBonLivraisons } from "@/src/actions/tickets.actions";
-import { BonLivraisonVM } from "@/types";
-import { PaginatedResponse } from "@/types/models";
-import { CalendarDate, RangeValue, Switch } from "@heroui/react";
+import { getAllBonLivraisons } from '@/src/actions/tickets.actions';
+import { BonLivraisonVM } from '@/types';
+import { PaginatedResponse } from '@/types/models';
+import { CalendarDate, RangeValue, Switch } from '@heroui/react';
 import { Key, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -11,7 +11,6 @@ export const columns = [
     { name: 'Référence', uid: 'reference' },
     { name: 'Date et Heure', uid: 'date' },
     { name: 'Livreur', uid: 'livreur' },
-    { name: 'Restaurant', uid: 'restaurant' },
     { name: 'Coût livraison', uid: 'coutLivraison' },
     { name: 'Coût commande', uid: 'coutCommande' },
     { name: 'Terminé', uid: 'statut' },
@@ -23,46 +22,51 @@ interface Props {
 }
 
 export default function useContentCtx({ initialData, restaurantId }: Props) {
+    console.log(initialData);
     const [isLoading, setIsLoading] = useState(!initialData);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize] = useState(10);
     const [data, setData] = useState<PaginatedResponse<BonLivraisonVM> | null>(initialData);
 
-    const [dates, setDates] = useState<RangeValue<Date | null>>({
-        start: null,
-        end: null,
-    });
+    const [dates, setDates] = useState<RangeValue<CalendarDate> | null>(null);
 
     const handleDateChange = (value: RangeValue<CalendarDate>) => {
-        setDates({
-            start: value.start ? new Date(value.start.toString()) : null,
-            end: value.end ? new Date(value.end.toString()) : null,
-        });
-    };
-
-
-    // Fonction de récupération des données
-    const fetchData = async (page: number) => {
-        setCurrentPage(page);
-        setIsLoading(true);
-        try {
-            const newData = await getAllBonLivraisons(restaurantId ?? "", page - 1, pageSize, { dates: { start: dates.start, end: dates?.end } });
-            setData(newData);
-        } catch (error) {
-            toast.error('Erreur lors de la récupération des données');
-        } finally {
-            setIsLoading(false);
+        if (value.start && value.end) {
+            const newDates = {
+                start: value.start,
+                end: value.end,
+            };
+            setDates((state) => newDates);
+            handlePageChange(1);
         }
+    };
+    const handlePageChange = (page: number) => {
+        setCurrentPage((state) => page);
     };
 
     useEffect(() => {
-        fetchData(1)
-    }, [dates.end, dates.start])
+        const fetchData = async () => {
+            if ((dates?.start && dates?.end) || currentPage || pageSize) {
+                setIsLoading(true);
+                try {
+                    const newData = await getAllBonLivraisons(restaurantId ?? '', currentPage - 1, pageSize, { dates: { start: dates?.start?.toString() ?? '', end: dates?.end?.toString() ?? '' } });
+                    setData(newData);
+                } catch (error) {
+                    toast.error('Erreur lors de la récupération des données');
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+        };
+        fetchData();
+    }, [dates?.start, dates?.end, currentPage, pageSize, restaurantId]);
 
     const renderCell = useCallback((bonLivraison: BonLivraisonVM, columnKey: Key) => {
         const cellValue = bonLivraison[columnKey as keyof BonLivraisonVM];
         switch (columnKey) {
+            case 'livreur':
+                return <p>{cellValue?.toString() ?? '-'}</p>;
             case 'coutLivraison':
                 return <p>{String(cellValue) + ' FCFA'}</p>;
             case 'coutCommande':
@@ -78,9 +82,9 @@ export default function useContentCtx({ initialData, restaurantId }: Props) {
         renderCell,
         columns,
         data,
-        fetchData,
+        handlePageChange,
         currentPage,
         isLoading,
-        handleDateChange
+        handleDateChange,
     };
 }

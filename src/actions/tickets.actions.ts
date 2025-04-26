@@ -12,7 +12,7 @@ const ticketsEndpoints = {
 };
 
 export async function getAllBonLivraisons(restaurantId: string, page: number = 0, size: number = 10,
-    { dates: { start, end } }: { dates: RangeValue<Date | null> }): Promise<PaginatedResponse<BonLivraisonVM>> {
+    { dates: { start, end } }: { dates: RangeValue<string | null> }): Promise<PaginatedResponse<BonLivraisonVM>> {
     try {
         const data = await apiClientHttp.request<PaginatedResponse<BonLivraisonVM>>({
             endpoint: ticketsEndpoints.bonLivraisons.endpoint(restaurantId),
