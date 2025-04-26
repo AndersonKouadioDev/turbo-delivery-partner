@@ -19,6 +19,7 @@ class ApiClientHttp {
             (response) => response,
             async (error: AxiosError) => {
                 if (error.response?.status === 401) {
+                    //TODO : refrech token 
                     const url = new URL('/api/auth/logout', process.env.NEXT_PUBLIC_URL || '');
                     await fetch(url.toString(), { method: 'POST' });
                 }
