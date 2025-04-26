@@ -63,12 +63,12 @@ export default function Content({ initialData, stattitiqueFileAttente, restauran
                     <CardBody className="overflow-visible py-2">
                         <div className="mt-3 ">
                             <div className={`text-md text-gray-500 items-center  text-white font-bold `}>Temps de recupération</div>
-                            <div className='flex flex-wrap gap-4 justify-between items-center'>
-                                <div className={`pt-2 text-gray-400 text-3xl text-white font-bold`}>
+                            <div className='flex flex-wrap lg:flex-nowrap xl:flex-nowrap gap-4 justify-between items-center'>
+                                <div className={`pt-2 text-gray-400 text-2xl text-white font-bold`}>
                                     {String(ctrl.minutes).padStart(2, "0")} : {String(ctrl.seconds).padStart(2, "0")}
                                 </div>
 
-                                <div className='bg-primary mr-3 p-3 rounded-full pl-4 pr-4 text-center'>Position: <span className='font-bold text-1xl'>{ctrl.currentDelivery?.position}</span></div>
+                                <div className='bg-primary mr-1 p-1 rounded-full pl-4 pr-4 text-center text-md flex gap-1'>Position: <span className='font-bold text-1xl'>{ctrl.currentDelivery?.position} 5</span></div>
                             </div>
                         </div>
                     </CardBody>
