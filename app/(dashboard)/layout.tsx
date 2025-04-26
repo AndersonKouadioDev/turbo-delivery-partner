@@ -52,6 +52,11 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
             label: "File d'attente",
         },
         {
+            href: '/tickets',
+            icon: <Hammer className="h-5 w-5" />,
+            label: "Gestion des tickets",
+        },
+        {
             href: '/notification',
             icon: <Bell className="h-5 w-5" />,
             label: 'Notification',
