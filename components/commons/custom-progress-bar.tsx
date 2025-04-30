@@ -11,9 +11,6 @@ function CustomProgressBar({ position, nomPrenom, progress }: CustomProgressBarP
     return (
         <div className=" h-full bg-gradient-to-r from-orange-200 to-orange-400 flex items-center z-index-[1000] rounded-lg"
             style={{ width: `${progress}%` }}>
-            <div className="rounded-lg px-3 py-1 text-sm border p-1 border-gray-400 m-1">
-                Position : {position}
-            </div>
             <div className="flex items-center gap-4 text-sm font-bold">
                 <div className="w-8 h-8 rounded-full overflow-hidden">
                     <img

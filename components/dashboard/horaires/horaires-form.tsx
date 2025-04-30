@@ -1,15 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Switch, Button } from '@nextui-org/react';
+import { Switch, Button } from '@heroui/react';
 import { DayOfWeek, WeekSchedule } from '@/types';
-import { useFormStatus } from 'react-dom';
 import { toast } from 'react-toastify';
 import { addHoraire } from '@/src/actions/restaurant.actions';
 
 export default function HorairesForm() {
-    const { pending } = useFormStatus();
-
+    const [pending, setPending] = useState(false);
     const [schedule, setSchedule] = useState<WeekSchedule>({
         LUNDI: { enabled: true, openingTime: '05:00', closingTime: '01:00' },
         MARDI: { enabled: true, openingTime: '05:00', closingTime: '01:00' },
@@ -51,6 +49,7 @@ export default function HorairesForm() {
     };
 
     const handleSubmit = async () => {
+        setPending(true);
         const enabledDays = Object.entries(schedule).filter(([_, value]) => value.enabled);
 
         if (!enabledDays.length) {
@@ -75,6 +74,8 @@ export default function HorairesForm() {
         } catch (error) {
             console.error('Erreur lors de l’enregistrement des horaires :', error);
             toast.error('Une erreur est survenue. Veuillez réessayer.');
+        } finally {
+            setPending(false);
         }
     };
 
@@ -122,7 +123,7 @@ export default function HorairesForm() {
                 ))}
             </div>
 
-            <Button className="w-full bg-primary text-white" onClick={handleSubmit} disabled={pending} isLoading={pending}>
+            <Button className="w-full bg-primary text-white" onPress={handleSubmit} disabled={pending} isLoading={pending}>
                 Enregister
             </Button>
         </div>

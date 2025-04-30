@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Form } from '@/components/ui/form';
-import { BreadcrumbItem, Breadcrumbs, Button } from '@nextui-org/react';
+import { BreadcrumbItem, Breadcrumbs, Button } from '@heroui/react';
 import { AllCommandeSchema, FormValues } from '@/src/schemas/courses.schema';
 import { CommandeFormSection } from './components/CommandeFormSection';
 import { MapComponent } from '../component/MapComponent';
@@ -18,17 +18,18 @@ import { useRouter } from 'next/navigation';
 import { SubmitButton } from '@/components/ui/form-ui/submit-button';
 import { MarkerData } from '@/types';
 import { ROUTE_COLORS } from '@/data';
+import { DeliveryFee } from '@/types/restaurant';
 
 // Liste de 20 couleurs distinctes
-
 
 export interface CourseExterneFormProps {
     initialData?: FormValues;
     isEditing?: boolean;
     restaurant: Restaurant;
+    fraisLivraisons: DeliveryFee[];
 }
 
-const CourseExterneForm = ({ initialData, isEditing = false, restaurant }: CourseExterneFormProps) => {
+const CourseExterneForm = ({ initialData, isEditing = false, restaurant, fraisLivraisons }: CourseExterneFormProps) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [markers, setMarkers] = useState<MarkerData[]>([]);
 
@@ -58,6 +59,7 @@ const CourseExterneForm = ({ initialData, isEditing = false, restaurant }: Cours
                     modePaiement: 'ESPECE',
                     prix: 0,
                     livraisonPaye: false,
+                    zoneId: '',
                 },
             ],
         },
@@ -109,7 +111,6 @@ const CourseExterneForm = ({ initialData, isEditing = false, restaurant }: Cours
                 if (isNaN(startLat) || isNaN(startLng) || isNaN(endLat) || isNaN(endLng)) {
                     return null;
                 }
-                console.log(startLat, startLng, endLat, endLng);
                 return {
                     start: { lat: startLat, lng: startLng },
                     end: { lat: endLat, lng: endLng },
@@ -123,6 +124,7 @@ const CourseExterneForm = ({ initialData, isEditing = false, restaurant }: Cours
 
     const [state, formAction] = useFormState(
         async (prevState: any, formData: FormData) => {
+            console.log("form.getValues()", form.getValues())
             const result = await addCourseExterne(form.getValues(), restaurant.id);
             if (result.status === 'success') {
                 toast.success(result.message);
@@ -144,6 +146,7 @@ const CourseExterneForm = ({ initialData, isEditing = false, restaurant }: Cours
 
     return (
         <div className="mx-auto py-8 px-4 space-y-6">
+             
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold text-primary">{isEditing ? 'Modifier la demande coursier' : 'Nouvelle demande coursier'}</h1>
             </div>
@@ -159,7 +162,15 @@ const CourseExterneForm = ({ initialData, isEditing = false, restaurant }: Cours
                 <Form {...form}>
                     <form action={formAction} className="space-y-6">
                         {fields.map((field, index) => (
-                            <CommandeFormSection key={field.id} index={index} form={form} remove={remove} handleAddressSelect={handleAddressSelect} restaurant={restaurant} />
+                            <CommandeFormSection
+                                key={field.id}
+                                index={index}
+                                form={form}
+                                remove={remove}
+                                handleAddressSelect={handleAddressSelect}
+                                restaurant={restaurant}
+                                fraisLivraisons={fraisLivraisons}
+                            />
                         ))}
 
                         <Button
@@ -187,6 +198,7 @@ const CourseExterneForm = ({ initialData, isEditing = false, restaurant }: Cours
                                     modePaiement: 'ESPECE',
                                     prix: 0,
                                     livraisonPaye: false,
+                                    zoneId: '',
                                 })
                             }
                         >

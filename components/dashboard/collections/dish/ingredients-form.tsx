@@ -1,7 +1,7 @@
 // 'use client';
 
 // import { Control, Controller, useFieldArray } from 'react-hook-form';
-// import { Input, Button } from '@nextui-org/react';
+// import { Input, Button } from '@heroui/react';
 // import { CreateDishSchema } from '@/src/schemas/restaurants.schema';
 // import { Trash2 } from 'lucide-react';
 

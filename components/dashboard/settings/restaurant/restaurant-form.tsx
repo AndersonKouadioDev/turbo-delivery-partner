@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardBody, CardFooter, CardHeader, Input, Divider } from '@nextui-org/react';
+import { Card, CardBody, CardFooter, CardHeader, Input, Divider } from "@heroui/react";
 import { useFormState } from 'react-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

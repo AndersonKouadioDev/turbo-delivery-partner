@@ -1,6 +1,6 @@
 "use client";
 import "react-phone-number-input/style.css";
-import { Select, SelectItem, SelectProps } from "@nextui-org/react";
+import { Select, SelectItem, SelectProps } from "@heroui/react";
 import { ChangeEvent } from "react";
 import { getCountries } from "react-phone-number-input/input";
 import fr from "react-phone-number-input/locale/fr.json";
@@ -66,7 +66,6 @@ export const SelectCountry = ({
           color="primary"
           startContent={country.flag}
           textValue={country.label}
-          value={country.value}
         >
           {country.label}
         </SelectItem>

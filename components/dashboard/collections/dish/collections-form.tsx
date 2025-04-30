@@ -3,7 +3,7 @@
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 import { _createDishSchema } from '@/src/schemas/restaurants.schema';
 import { useState } from 'react';
-import { Input, RadioGroup, Radio } from '@nextui-org/react';
+import { Input, RadioGroup, Radio } from "@heroui/react";
 import { Collection } from '@/types/models';
 import { useSearchParams } from 'next/navigation';
 

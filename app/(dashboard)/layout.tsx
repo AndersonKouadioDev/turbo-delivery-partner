@@ -1,15 +1,16 @@
 import Link from 'next/link';
-import { Bell, Home, Menu, Gauge, Settings, Pizza, MessageSquare, ShoppingBag, TicketCheck } from 'lucide-react';
+import { Bell, Home, Menu, Gauge, Settings, Pizza, MessageSquare, ShoppingBag, TicketCheck, Hammer } from 'lucide-react';
 
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DashboardNavItems } from '@/components/dashboard/dashboard-nav-items';
-import { Button } from '@nextui-org/react';
+import { Button } from '@heroui/react';
 import { DashboardUserDropdown } from '@/components/dashboard/dashboard-user-dropdown';
 import { Logo } from '@/components/icons';
 import ThemeSwitch from '@/components/layouts/themeSwitch';
 import { auth } from '@/auth';
 import { findOneRestaurant } from '@/src/actions/restaurant.actions';
 import { TbTruckDelivery } from 'react-icons/tb';
+import Notifications from '@/components/dashboard/notifications/notifications';
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -21,7 +22,6 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
     const data = await findOneRestaurant();
     const restaurant = data?.restaurant;
 
-    console.log(session);
     // console.log(restaurant);
 
     const navItems = [
@@ -49,7 +49,17 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
         {
             href: '/file-attente',
             icon: <TbTruckDelivery className="h-5 w-5" />,
-            label: 'File d\'attente',
+            label: "File d'attente",
+        },
+        {
+            href: '/tickets',
+            icon: <Hammer className="h-5 w-5" />,
+            label: "Gestion des tickets",
+        },
+        {
+            href: '/notification',
+            icon: <Bell className="h-5 w-5" />,
+            label: 'Notification',
         },
         {
             href: '/orders',
@@ -62,10 +72,16 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
             label: 'Messages',
         },
         {
+            href: '/gestion-restaurant',
+            icon: <Hammer className="h-5 w-5" />,
+            label: 'Gestion de restaurant',
+        },
+        {
             href: '/settings',
             icon: <Settings className="h-5 w-5" />,
             label: 'Paramètres',
         },
+
     ];
 
     return (
@@ -77,7 +93,9 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
                             <Logo />
                             <span className="">Turbo Delivery</span>
                         </Link>
-                        <Button variant="bordered" startContent={<Bell className="h-4 w-4" />} className="ml-auto h-8 w-8" isIconOnly={true} radius="sm" />
+                        {/* <Button variant="bordered" startContent={
+                            <Bell className="h-4 w-4" />} className="ml-auto h-8 w-8" isIconOnly={true} radius="sm" /> */}
+                        <Notifications />
                     </div>
                     <div className="flex-1">
                         <DashboardNavItems navItems={navItems} />
@@ -95,6 +113,9 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
                             <DashboardNavItems navItems={navItems} />
                         </SheetContent>
                     </Sheet>
+                    <div className="md:hidden lg:hidden xl:hidden">
+                        <Notifications />
+                    </div>
                     <div className="w-full flex-1 flex items-center justify-end">
                         {/* <DashboardSearchBar /> */}
                         {/* <ThemeSwitch /> */}

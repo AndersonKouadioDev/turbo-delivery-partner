@@ -2,7 +2,7 @@
 import { title } from '@/components/primitives';
 import { CourseExterne, PaginatedResponse, Restaurant } from '@/types/models';
 import { Clock, MapPin, User, Package, CreditCard, Store, ChevronDown, ChevronUp, Search } from 'lucide-react';
-import { Button, Card, CardBody, CardHeader, Input, Chip, Divider, Pagination, Skeleton, Select, SelectItem } from '@nextui-org/react';
+import { Button, Card, CardBody, CardHeader, Input, Chip, Divider, Pagination, Skeleton, Select, SelectItem } from "@heroui/react";
 import { IconPlus } from '@tabler/icons-react';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -11,6 +11,7 @@ import DeliveryTools from './component/deliveryTools';
 import { getPaginationCourseExterne } from '@/src/actions/courses.actions';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { courses_statuses_filters } from '@/data';
+import EmptyDataTable from '@/components/commons/EmptyDataTable';
 
 type SortOption = (typeof SORT_OPTIONS)[keyof typeof SORT_OPTIONS];
 
@@ -183,7 +184,7 @@ export default function Content({ restaurant, initialData }: Props) {
                         <Skeleton key={index} className="rounded-lg h-52" />
                     ))}
                 </div>
-            ) : data?.content.length ? (
+            ) : (data && data?.content.length) ? (
                 <>
                     <div className="grid grid-cols-1 gap-6">
                         {dataFilter.map((delivery) => (
@@ -304,11 +305,7 @@ export default function Content({ restaurant, initialData }: Props) {
                     </div>
                 </>
             ) : (
-                <Card className="min-h-52">
-                    <CardBody className="flex justify-center items-center">
-                        <p className="text-center text-default-500">Aucune course ne correspond à vos critères de recherche. Essayez de modifier vos filtres.</p>
-                    </CardBody>
-                </Card>
+                <EmptyDataTable />
             )}
         </div>
     );

@@ -1,6 +1,6 @@
 import { ButtonBack } from "@/components/ui/navigation-ui/button-back";
 import { title } from "@/components/primitives";
-import { Divider } from "@nextui-org/react";
+import { Divider } from "@heroui/react";
 
 export default function Policy() {
   const edit_1 = <div>10 Novembre 2024</div>;

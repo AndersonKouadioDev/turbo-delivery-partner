@@ -1,4 +1,4 @@
-import { Input, Kbd } from '@nextui-org/react';
+import { Input, Kbd } from "@heroui/react";
 import { IconSearch } from '@tabler/icons-react';
 import React from 'react';
 

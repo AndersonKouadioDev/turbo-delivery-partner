@@ -1,11 +1,8 @@
-import React, { Suspense } from "react";
-import Content from "./home/content";
-import Loading from "@/components/layouts/loading";
+import { auth } from '@/auth';
+import Content from './home/content';
+import { findOneRestaurant } from '@/src/actions/restaurant.actions';
 
 export default async function Page() {
-  return (
-    <Suspense fallback={<Loading/>}>
-      <Content />
-    </Suspense>
-  );
+    const restaurant = await findOneRestaurant();
+    return <Content restaurant={restaurant} />;
 }

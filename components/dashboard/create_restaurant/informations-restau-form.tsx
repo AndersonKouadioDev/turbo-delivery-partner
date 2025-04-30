@@ -1,7 +1,7 @@
 'use client';
 
 import { Control, Controller, FieldErrors } from 'react-hook-form';
-import { Input, Textarea } from '@nextui-org/react';
+import { Input, Textarea } from "@heroui/react";
 
 import { _createRestaurantSchema } from '@/src/schemas/restaurants.schema';
 

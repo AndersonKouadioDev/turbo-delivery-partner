@@ -1,0 +1,90 @@
+'use client';
+
+import { getAllBonLivraisons } from '@/src/actions/tickets.actions';
+import { BonLivraisonVM } from '@/types';
+import { PaginatedResponse } from '@/types/models';
+import { CalendarDate, RangeValue, Switch } from '@heroui/react';
+import { Key, useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
+export const columns = [
+    { name: 'Référence', uid: 'reference' },
+    { name: 'Date et Heure', uid: 'date' },
+    { name: 'Livreur', uid: 'livreur' },
+    { name: 'Coût livraison', uid: 'coutLivraison' },
+    { name: 'Coût commande', uid: 'coutCommande' },
+    { name: 'Terminé', uid: 'statut' },
+];
+
+interface Props {
+    initialData: PaginatedResponse<BonLivraisonVM> | null;
+    restaurantId?: string;
+}
+
+export default function useContentCtx({ initialData, restaurantId }: Props) {
+    console.log(initialData);
+    const [isLoading, setIsLoading] = useState(!initialData);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize] = useState(10);
+    const [data, setData] = useState<PaginatedResponse<BonLivraisonVM> | null>(initialData);
+
+    const [dates, setDates] = useState<RangeValue<CalendarDate> | null>(null);
+
+    const handleDateChange = (value: RangeValue<CalendarDate>) => {
+        if (value.start && value.end) {
+            const newDates = {
+                start: value.start,
+                end: value.end,
+            };
+            setDates((state) => newDates);
+            handlePageChange(1);
+        }
+    };
+    const handlePageChange = (page: number) => {
+        setCurrentPage((state) => page);
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if ((dates?.start && dates?.end) || currentPage || pageSize) {
+                setIsLoading(true);
+                try {
+                    const newData = await getAllBonLivraisons(restaurantId ?? '', currentPage - 1, pageSize, { dates: { start: dates?.start?.toString() ?? '', end: dates?.end?.toString() ?? '' } });
+                    setData(newData);
+                } catch (error) {
+                    toast.error('Erreur lors de la récupération des données');
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+        };
+        fetchData();
+    }, [dates?.start, dates?.end, currentPage, pageSize, restaurantId]);
+
+    const renderCell = useCallback((bonLivraison: BonLivraisonVM, columnKey: Key) => {
+        const cellValue = bonLivraison[columnKey as keyof BonLivraisonVM];
+        switch (columnKey) {
+            case 'livreur':
+                return <p>{cellValue?.toString() ?? '-'}</p>;
+            case 'coutLivraison':
+                return <p>{String(cellValue) + ' FCFA'}</p>;
+            case 'coutCommande':
+                return <p>{String(cellValue) + ' FCFA'}</p>;
+            case 'statut':
+                return cellValue == 'TERMINER' ? <Switch size="sm" color="primary" readOnly isSelected /> : <Switch size="sm" isSelected={false} readOnly />;
+            default:
+                return cellValue;
+        }
+    }, []);
+
+    return {
+        renderCell,
+        columns,
+        data,
+        handlePageChange,
+        currentPage,
+        isLoading,
+        handleDateChange,
+    };
+}

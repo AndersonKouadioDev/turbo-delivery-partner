@@ -1,48 +1,86 @@
 'use client';
 
 import { ChiffreAffaireRestaurant } from '@/types/statistiques.model';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { TbMoneybag, TbChartBar, TbReceipt, TbClock, TbTrendingUp, TbCheck, TbHourglass } from 'react-icons/tb';
 import { formatNumber } from '@/utils/formatNumber';
+import { CalendarDate, RangeValue } from '@heroui/react';
+import { useSession } from 'next-auth/react';
+import { getAllChiffreAffaire } from '@/src/actions/statistiques.action';
 
 interface Props {
-    initialData: ChiffreAffaireRestaurant;
+    initialData: ChiffreAffaireRestaurant | null;
 }
 
 export default function useContentCtx({ initialData }: Props) {
+    const { data: authData } = useSession();
     const [isLoading, setIsLoading] = useState(!initialData);
-    const [data, setData] = useState<ChiffreAffaireRestaurant>(initialData);
+    const [loader, setLoader] = useState<boolean>(false);
+    const [data, setData] = useState<ChiffreAffaireRestaurant | null>(initialData);
+    const [period, setPeriod] = useState(new Set(['customized']));
 
+    const [dates, setDates] = useState<RangeValue<CalendarDate> | null>(null);
+
+    const handleFetchData = useCallback(
+        async (dateRange = dates) => {
+            setLoader(true);
+            const data = await getAllChiffreAffaire({
+                restaurantID: authData?.user.restauranID ?? '',
+                dates: {
+                    start: dateRange?.start?.toString() ?? '',
+                    end: dateRange?.end?.toString() ?? '',
+                },
+            });
+
+            if (data) {
+                setData(data);
+            }
+
+            setLoader(false);
+        },
+        [authData?.user.restauranID],
+    );
+
+    const handleDateChange = (value: RangeValue<CalendarDate>) => {
+        if (value.start && value.end) {
+            const newDates = {
+                start: value.start,
+                end: value.end,
+            };
+            setDates(newDates);
+            handleFetchData(newDates);
+        }
+    };
     // Calculate total orders and revenue
-    const totalOrders = data.nbCommandeTotalTermine + data.nbCommandeTotalEnAttente + data.nbCommandeTotalInitie + data.nbCommandeTotalEnCours;
+    const totalOrders = data && data.nbCommandeTotalTermine + data.nbCommandeTotalEnAttente + data.nbCommandeTotalInitie + data.nbCommandeTotalEnCours;
 
-    const totalRevenue = data.commandeTotalTermine + data.commandeTotalEnAttente + data.commandeTotalInitie + data.commandeTotalEnCours;
-    const totalCommission = data.commissionChiffreAffaire + data.commissionCommande;
+    const totalRevenue = data && data.commandeTotalTermine + data.commandeTotalEnAttente + data.commandeTotalInitie + data.commandeTotalEnCours;
+    const totalCommission = data && data.commissionChiffreAffaire + data.commissionCommande;
 
     // Data for pie chart
     const orderStatusData = [
-        { name: 'Terminées', value: data.nbCommandeTotalTermine, color: '#10B981' },
-        { name: 'En Attente', value: data.nbCommandeTotalEnAttente, color: '#F59E0B' },
-        { name: 'Initiées', value: data.nbCommandeTotalInitie, color: '#3B82F6' },
-        { name: 'En Cours', value: data.nbCommandeTotalEnCours, color: '#6366F1' },
+        { name: 'Terminées', value: data && data.nbCommandeTotalTermine, color: '#10B981' },
+        { name: 'En Attente', value: data && data.nbCommandeTotalEnAttente, color: '#F59E0B' },
+        { name: 'Initiées', value: data && data.nbCommandeTotalInitie, color: '#3B82F6' },
+        { name: 'En Cours', value: data && data.nbCommandeTotalEnCours, color: '#6366F1' },
     ];
 
     const statCards = [
         {
             title: "Chiffre d'Affaires Total",
-            value: formatNumber(totalRevenue),
+            value: totalRevenue ? formatNumber(totalRevenue) : 0,
             icon: TbTrendingUp,
             color: 'from-green-500 to-green-600',
         },
         {
             title: 'Commandes Totales',
-            value: formatNumber(totalOrders),
+            value: totalOrders ? formatNumber(totalOrders) : 0,
             icon: TbReceipt,
             color: 'from-yellow-500 to-yellow-600',
         },
         {
             title: 'Commission Totale',
-            value: formatNumber(totalCommission),
+            value: totalCommission ? formatNumber(totalCommission) : 0,
             icon: TbMoneybag,
             color: 'from-red-500 to-red-600',
         },
@@ -52,42 +90,42 @@ export default function useContentCtx({ initialData }: Props) {
         {
             title: 'Commandes Terminées',
             stats: [
-                { label: 'Montant', value: formatNumber(data.commandeTotalTermine), icon: TbMoneybag },
-                { label: 'Nombre', value: formatNumber(data.nbCommandeTotalTermine), icon: TbReceipt },
-                { label: 'Livraison', value: formatNumber(data.fraisLivraisonTotalTermine), icon: TbChartBar },
+                { label: 'Montant', value: data && data.commandeTotalTermine ? formatNumber(data.commandeTotalTermine) : 0, icon: TbMoneybag },
+                { label: 'Nombre', value: data && data.nbCommandeTotalTermine ? formatNumber(data.nbCommandeTotalTermine) : 0, icon: TbReceipt },
+                { label: 'Livraison', value: data && data.fraisLivraisonTotalTermine ? formatNumber(data.fraisLivraisonTotalTermine) : 0, icon: TbChartBar },
             ],
             icon: TbCheck,
             color: 'bg-green-500',
-            description: "Pour les commandes livrées avec paiement reçu du livreur.",
+            description: 'Pour les commandes livrées avec paiement reçu du livreur.',
         },
         {
             title: 'Commandes en Attente',
             stats: [
-                { label: 'Montant', value: formatNumber(data.commandeTotalEnAttente), icon: TbMoneybag },
-                { label: 'Nombre', value: formatNumber(data.nbCommandeTotalEnAttente), icon: TbReceipt },
-                { label: 'Livraison', value: formatNumber(data.fraisLivraisonTotalEnAttente), icon: TbChartBar },
+                { label: 'Montant', value: data && data.commandeTotalEnAttente ? formatNumber(data.commandeTotalEnAttente) : 0, icon: TbMoneybag },
+                { label: 'Nombre', value: data && data.nbCommandeTotalEnAttente ? formatNumber(data.nbCommandeTotalEnAttente) : 0, icon: TbReceipt },
+                { label: 'Livraison', value: data && data.fraisLivraisonTotalEnAttente ? formatNumber(data.fraisLivraisonTotalEnAttente) : 0, icon: TbChartBar },
             ],
             icon: TbHourglass,
             color: 'bg-yellow-500',
-            description: "Pour les commandes livrées mais dont le paiement du livreur est en attente.",
+            description: 'Pour les commandes livrées mais dont le paiement du livreur est en attente.',
         },
         {
             title: 'Commandes en Cours',
             stats: [
-                { label: 'Montant Total', value: formatNumber(data.commandeTotalEnCours), icon: TbMoneybag },
-                { label: 'Nombre', value: formatNumber(data.nbCommandeTotalEnCours), icon: TbReceipt },
-                { label: 'Livraison', value: formatNumber(data.fraisLivraisonTotalEnCours), icon: TbChartBar },
+                { label: 'Montant Total', value: data && data.commandeTotalEnCours ? formatNumber(data.commandeTotalEnCours) : 0, icon: TbMoneybag },
+                { label: 'Nombre', value: data && data.nbCommandeTotalEnCours ? formatNumber(data.nbCommandeTotalEnCours) : 0, icon: TbReceipt },
+                { label: 'Livraison', value: data && data.fraisLivraisonTotalEnCours ? formatNumber(data.fraisLivraisonTotalEnCours) : 0, icon: TbChartBar },
             ],
             icon: TbHourglass,
             color: 'bg-violet-500',
-            description: "Pour les commandes actuellement prises en charge par un livreur.",
+            description: 'Pour les commandes actuellement prises en charge par un livreur.',
         },
         {
             title: 'Commandes Initiées',
             stats: [
-                { label: 'Montant', value: formatNumber(data.commandeTotalInitie), icon: TbMoneybag },
-                { label: 'Nombre', value: formatNumber(data.nbCommandeTotalInitie), icon: TbReceipt },
-                { label: 'Livraison', value: formatNumber(data.fraisLivraisonTotalInitie), icon: TbChartBar },
+                { label: 'Montant', value: data && data.commandeTotalInitie ? formatNumber(data.commandeTotalInitie) : 0, icon: TbMoneybag },
+                { label: 'Nombre', value: data && data.nbCommandeTotalInitie ? formatNumber(data.nbCommandeTotalInitie) : 0, icon: TbReceipt },
+                { label: 'Livraison', value: data && data.fraisLivraisonTotalInitie ? formatNumber(data.fraisLivraisonTotalInitie) : 0, icon: TbChartBar },
             ],
             icon: TbClock,
             color: 'bg-blue-500',
@@ -97,12 +135,17 @@ export default function useContentCtx({ initialData }: Props) {
 
     return {
         data,
-        isLoading,
+        isLoading: loader || isLoading,
+        setIsLoading,
         orderStatusData,
         statCards,
+        period,
+        setPeriod,
         detailCards,
         totalOrders,
         totalRevenue,
         totalCommission,
+        handleDateChange,
+        dates,
     };
 }

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@nextui-org/react';
+import { Checkbox } from "@heroui/react";
 import { Separator } from '@/components/ui/separator';
 import { Trash2, Plus } from 'lucide-react';
 import { ConfirmationModal } from '@/components/ui/confirmation-modal';
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import { DishComplet, Option, OptionValue } from '@/types/models';
 import { toast } from 'react-toastify';
 import { addOption, addOptionValue, updateOption, updateOptionValue } from '@/src/actions/restaurant.actions';

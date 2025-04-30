@@ -1,9 +1,9 @@
 "use client";
 import { ButtonBack } from "@/components/ui/navigation-ui/button-back";
 import { title } from "@/components/primitives";
-import { Listbox, ListboxItem } from "@nextui-org/react";
+import { Listbox, ListboxItem } from "@heroui/react";
 import { Check, LanguagesIcon } from "lucide-react";
-import { Divider } from "@nextui-org/react";
+import { Divider } from "@heroui/react";
 
 export default function Languages() {
   return (

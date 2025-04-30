@@ -2,7 +2,7 @@ import getFolderAndFileName from './getFolderAndFileName';
 
 const serveFile = (folder: string, file: string) => `/api/serve/file/${folder}/${file}`;
 
-function createUrlFile(path: string, service: 'restaurant' | 'erp' | 'delivery' | 'client') {
+function createUrlFile(path: string, service: 'restaurant' | 'erp' | 'delivery' | 'client' | 'backend') {
     let base_url = '';
     if (service === 'restaurant') {
         base_url = process.env.NEXT_PUBLIC_API_RESTO_URL ?? '';
@@ -15,6 +15,9 @@ function createUrlFile(path: string, service: 'restaurant' | 'erp' | 'delivery' 
     }
     if (service === 'client') {
         base_url = process.env.NEXT_PUBLIC_API_CLIENT_URL ?? '';
+    }
+    if (service === 'backend') {
+        base_url = process.env.NEXT_PUBLIC_API_BACKEND_URL ?? '';
     }
     const { folderName, fileName } = getFolderAndFileName(path);
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardBody, CardFooter, CardHeader, Button, Divider, Input } from '@nextui-org/react';
+import { Card, CardBody, CardFooter, CardHeader, Button, Divider, Input } from "@heroui/react";
 
 import { TbInfoCircle } from 'react-icons/tb';
 import { useState } from 'react';

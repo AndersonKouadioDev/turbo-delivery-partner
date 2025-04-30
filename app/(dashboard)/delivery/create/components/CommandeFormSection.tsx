@@ -2,11 +2,12 @@ import { TrashIcon } from 'lucide-react';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Button, Switch, Select, SelectItem } from '@nextui-org/react';
+import { Button, Switch, Select, SelectItem } from '@heroui/react';
 import { AddressFields } from './AddressFields';
 import { InputPhone } from '@/components/ui/form-ui/input-phone';
 import 'react-phone-number-input/style.css';
 import { Restaurant } from '@/types/models';
+import { DeliveryFee } from '@/types/restaurant';
 
 // Ajout de l'enum pour le mode de paiement
 const modePaiementOptions = [
@@ -26,9 +27,11 @@ interface CommandeFormSectionProps {
     remove: (index: number) => void;
     handleAddressSelect: (index: number, type: 'lieuRecuperation' | 'lieuLivraison') => void;
     restaurant: Restaurant;
+    fraisLivraisons: DeliveryFee[];
 }
 
-export const CommandeFormSection = ({ index, form, remove, handleAddressSelect, restaurant }: CommandeFormSectionProps) => {
+export const CommandeFormSection = ({ index, form, remove, handleAddressSelect, restaurant, fraisLivraisons }: CommandeFormSectionProps) => {
+    console.log("fraisLivraisons", fraisLivraisons)
     return (
         <Card className="p-3 space-y-3 bg-background border-l-4 border-l-primary">
             <div className="flex justify-between items-center bg-muted/50 dark:bg-muted p-2 rounded-lg">
@@ -137,6 +140,21 @@ export const CommandeFormSection = ({ index, form, remove, handleAddressSelect, 
                         <div className="bg-primary/5 dark:bg-primary/10 p-2 rounded-lg">
                             <AddressFields index={index} type="lieuRecuperation" label="Lieu de récupération" form={form} handleAddressSelect={handleAddressSelect} />
                         </div>
+                        <FormField
+                            control={form.control}
+                            name={`commandes.${index}.zoneId`}
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <FormLabel className="text-sm">Zone de livraison</FormLabel>
+                                    <Select value={field.value} onChange={(e) => field.onChange(e.target.value)} variant="bordered" size="sm" className="h-8">
+                                        {fraisLivraisons.map((mode) => (
+                                            <SelectItem key={mode.id}>{mode.name}</SelectItem>
+                                        ))}
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                     </div>
 
                     {/* Updated Autres informations section with Mode de paiement */}
@@ -151,9 +169,7 @@ export const CommandeFormSection = ({ index, form, remove, handleAddressSelect, 
                                         <FormLabel className="text-sm">Mode de paiement</FormLabel>
                                         <Select value={field.value} onChange={(e) => field.onChange(e.target.value)} variant="bordered" size="sm" className="h-8">
                                             {modePaiementOptions.map((mode) => (
-                                                <SelectItem key={mode.value} value={mode.value}>
-                                                    {mode.label}
-                                                </SelectItem>
+                                                <SelectItem key={mode.value}>{mode.label}</SelectItem>
                                             ))}
                                         </Select>
                                         <FormMessage />

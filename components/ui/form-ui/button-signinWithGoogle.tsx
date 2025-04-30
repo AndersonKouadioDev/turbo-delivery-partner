@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button } from '@nextui-org/react';
+import { Button } from "@heroui/react";
 import { FcGoogle } from 'react-icons/fc';
 import { signIn } from 'next-auth/react';
 

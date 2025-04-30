@@ -40,3 +40,24 @@ export interface MarkerData {
     end: google.maps.LatLngLiteral;
     color: string;
 }
+
+interface LocalTime {
+    hour?: number;
+    minute?: number;
+    second?: number;
+    nano?: number;
+}
+
+export type statutType = "En de recupération" | "Annuler" | "Récupérer" | "En cours de livraison" | "En attente de versement" | "Terminer";
+
+export interface BonLivraisonVM {
+    commandeId?: string;
+    reference?: string;
+    livreur?: string;
+    restaurant?: string;
+    coutLivraison?: string;
+    coutCommande?: string;
+    date?: string;
+    heure?: LocalTime;
+    statut?: statutType
+}

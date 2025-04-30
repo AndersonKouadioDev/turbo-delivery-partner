@@ -9,13 +9,13 @@ export default async function Page() {
 
     return (
         <Suspense fallback={<Loading />}>
-            <InWorking
+            {/* <InWorking
                 titre="Notre Nouvelle Fonctionnalité Arrive Bientôt"
                 message="Notre équipe travaille actuellement sur cette page pour vous offrir une meilleure expérience"
                 datePrevue="1er Avril 2024"
                 showDate={true}
-            />
-            {/* <Content data={data} /> */}
+            /> */}
+            <Content data={data} />
         </Suspense>
     );
 }

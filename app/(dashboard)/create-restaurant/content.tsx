@@ -1,11 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFormState } from 'react-dom';
-import { useRouter } from 'next/navigation';
 
 import { title } from '@/components/primitives';
 import { FormControls, StepIndicator } from '@/components/ui/form-ui/form';
@@ -16,6 +14,7 @@ import { DocumentRestauForm } from '@/components/dashboard/create_restaurant/doc
 import { createRestaurant } from '@/src/actions/restaurant.actions';
 import { toast } from 'react-toastify';
 import { _createRestaurantSchema, createRestaurantSchema } from '@/src/schemas/restaurants.schema';
+import { useState } from 'react';
 
 const steps: string[] = ["Informations sur l'établissement", "Adresse de l'établissement", "Documents de l'établissement"];
 
@@ -24,12 +23,11 @@ export default function CreateRestaurantContent() {
 
     const [state, formAction] = useFormState(
         async (_: any, formData: FormData) => {
-            
-            console.log("getValues", getValues());
-            formData.set('idLocation',getValues().idLocation)
-            formData.set('longitude',getValues().longitude)
-            formData.set('latitude',getValues().latitude)
-      
+            console.log('getValues', getValues());
+            formData.set('idLocation', getValues().idLocation);
+            formData.set('longitude', getValues().longitude);
+            formData.set('latitude', getValues().latitude);
+
             const result = await createRestaurant(formData);
             if (result.status === 'success') {
                 toast.success(result.message);
@@ -75,7 +73,7 @@ export default function CreateRestaurantContent() {
             longitude: '',
         },
     });
-    
+
     const nextStep = async () => {
         const fieldsToValidate = getFieldsToValidate(currentStep);
         const isValid = await trigger(fieldsToValidate);
@@ -86,6 +84,7 @@ export default function CreateRestaurantContent() {
             }
         }
     };
+
     const prevStep = () => {
         if (currentStep > 0) {
             setCurrentStep(currentStep - 1);
