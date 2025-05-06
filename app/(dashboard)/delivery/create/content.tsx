@@ -125,6 +125,7 @@ const CourseExterneForm = ({ initialData, isEditing = false, restaurant, fraisLi
     const [state, formAction] = useFormState(
         async (prevState: any, formData: FormData) => {
             console.log("form.getValues()", form.getValues())
+            console.log("data", form.getValues())
             const result = await addCourseExterne(form.getValues(), restaurant.id);
             if (result.status === 'success') {
                 toast.success(result.message);
