@@ -13,7 +13,7 @@ interface ContentProps {
 }
 
 export default function Content({ initialData, restaurantId }: ContentProps) {
-    const { columns, renderCell, data, fetchData, currentPage, isLoading, handleDateChange } = useContentCtx({ initialData, restaurantId });
+    const { columns, renderCell, data, handlePageChange, currentPage, isLoading, handleDateChange } = useContentCtx({ initialData, restaurantId });
 
     return (
         <div className="w-full h-full pb-10 flex flex-1 flex-col gap-4">
@@ -55,7 +55,7 @@ export default function Content({ initialData, restaurantId }: ContentProps) {
             </Table>
             <div className="flex h-fit z-10 justify-center mt-8 fixed bottom-4">
                 <div className="bg-gray-200 absolute inset-0 w-full h-full blur-sm opacity-50"></div>
-                <Pagination total={data?.totalPages ?? 1} page={currentPage} onChange={fetchData} showControls color="primary" variant="bordered" isDisabled={isLoading} />
+                <Pagination total={data?.totalPages ?? 1} page={currentPage} onChange={handlePageChange} showControls color="primary" variant="bordered" isDisabled={isLoading} />
             </div>
         </div>
     );

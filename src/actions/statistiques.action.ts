@@ -11,7 +11,7 @@ const statistiquesEndpoints = {
     getAllChiffreAffaire: { endpoint: (restaurantID: string) => `${BASE_URL}/${restaurantID}`, method: 'GET' },
 };
 
-export async function getAllChiffreAffaire({ restaurantID, dates }: { restaurantID: string; dates?: RangeValue<Date | null> }): Promise<ChiffreAffaireRestaurant | null> {
+export async function getAllChiffreAffaire({ restaurantID, dates }: { restaurantID: string; dates?: RangeValue<string | null> }): Promise<ChiffreAffaireRestaurant | null> {
     try {
         const data = await apiClientHttp.request<ChiffreAffaireRestaurant>({
             endpoint: statistiquesEndpoints.getAllChiffreAffaire.endpoint(restaurantID),
