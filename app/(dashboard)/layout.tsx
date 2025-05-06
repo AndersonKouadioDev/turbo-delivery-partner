@@ -6,7 +6,6 @@ import { DashboardNavItems } from '@/components/dashboard/dashboard-nav-items';
 import { Button } from '@heroui/react';
 import { DashboardUserDropdown } from '@/components/dashboard/dashboard-user-dropdown';
 import { Logo } from '@/components/icons';
-import ThemeSwitch from '@/components/layouts/themeSwitch';
 import { auth } from '@/auth';
 import { findOneRestaurant } from '@/src/actions/restaurant.actions';
 import { TbTruckDelivery } from 'react-icons/tb';
@@ -21,8 +20,6 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
 
     const data = await findOneRestaurant();
     const restaurant = data?.restaurant;
-
-    // console.log(restaurant);
 
     const navItems = [
         {

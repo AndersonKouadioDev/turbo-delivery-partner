@@ -1,4 +1,3 @@
-import { auth } from '@/auth';
 import Content from './home/content';
 import { findOneRestaurant } from '@/src/actions/restaurant.actions';
 import Loading from '@/components/layouts/loading';

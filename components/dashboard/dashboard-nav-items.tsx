@@ -4,7 +4,6 @@ import Link from 'next/link';
 
 import { usePathname } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
-import { SheetClose } from '../ui/sheet';
 
 export const DashboardNavItems = ({
     navItems,
@@ -20,7 +19,6 @@ export const DashboardNavItems = ({
     return (
         <nav className="grid md:items-start md:px-2 md:text-sm lg:px-4 gap-2 text-lg font-medium">
             {navItems.map((item, index) => (
-                <SheetClose key={index}>
                     <Link
                         key={index}
                         href={item.href}
@@ -30,7 +28,6 @@ export const DashboardNavItems = ({
                         {item.label}
                         {item.badge && <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">{item.badge}</Badge>}
                     </Link>
-                </SheetClose>
             ))}
         </nav>
     );
