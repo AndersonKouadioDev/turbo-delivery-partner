@@ -49,21 +49,31 @@ export const DocumentRestauForm: React.FC<FormStepProps> = ({ errors, control })
                 <Controller
                     control={control}
                     name="dateService"
-                    render={({ field: { onChange, value, ...field } }) => (
-                        <DateInput
-                            {...field}
-                            isRequired
-                            aria-invalid={errors.dateService ? 'true' : 'false'}
-                            aria-label="dateService input"
-                            errorMessage={errors.dateService?.message ?? ''}
-                            isInvalid={!!errors.dateService}
-                            label="Date de début de service"
-                            labelPlacement="outside"
-                            name="dateService"
-                            onChange={(value) => onChange(value?.toString())}
-                            variant="bordered"
-                        />
-                    )}
+                    render={({ field: { onChange, value, ...field } }) => {
+                        console.log("value", value)
+                        return (
+                            <DateInput
+                                {...field}
+                                isRequired
+                                aria-invalid={errors.dateService ? 'true' : 'false'}
+                                aria-label="dateService input"
+                                errorMessage={errors.dateService?.message ?? ''}
+                                isInvalid={!!errors.dateService}
+                                label="Date de début de service"
+                                labelPlacement="outside"
+                                name="dateService"
+                                onChange={(value: any) => {
+                                    if (value?.year && value?.month && value?.day) {
+                                        const nativeDate = new Date(value.year, value.month - 1, value.day);
+                                        onChange(nativeDate?.toISOString().slice(0, 10))
+                                    } else {
+                                        onChange(value?.toString());
+                                    }
+                                }}
+                                variant="bordered"
+                            />
+                        )
+                    }}
                 />
             </div>
         </div>
