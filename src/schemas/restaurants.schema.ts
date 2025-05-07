@@ -18,7 +18,15 @@ export const createRestaurantSchema = z.object({
         .refine((file) => file.size > 0, "La carte d'identité est requise")
         .refine((file) => file.size <= 10 * 1024 * 1024, 'La taille du document ne doit pas dépasser 5 Mo')
         .refine((file) => ['application/pdf'].includes(file.type), 'Format de fichier non supporté (PDF, JPEG, PNG uniquement)'),
-    dateService: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format de date invalide (YYYY-MM-DD)'),
+    dateService: z.preprocess(
+        (val) => {
+            if (val instanceof Date) {
+                return val.toISOString().slice(0, 10);
+            }
+            return val;
+        },
+        z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format de date invalide (YYYY-MM-DD)')
+    ),
     description: z.string().min(1, 'La description est requise'),
     logoUrl: z
         .instanceof(File)
