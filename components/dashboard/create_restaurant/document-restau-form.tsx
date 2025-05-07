@@ -60,7 +60,7 @@ export const DocumentRestauForm: React.FC<FormStepProps> = ({ errors, control })
                             label="Date de début de service"
                             labelPlacement="outside"
                             name="dateService"
-                            onChange={(value) => onChange(value)}
+                            onChange={(value) => onChange(String(value))}
                             variant="bordered"
                         />
                     )}
