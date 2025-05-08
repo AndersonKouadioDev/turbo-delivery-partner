@@ -22,7 +22,6 @@ interface Props {
 }
 
 export default function useContentCtx({ initialData, restaurantId }: Props) {
-    console.log(initialData);
     const [isLoading, setIsLoading] = useState(!initialData);
 
     const [currentPage, setCurrentPage] = useState(1);
