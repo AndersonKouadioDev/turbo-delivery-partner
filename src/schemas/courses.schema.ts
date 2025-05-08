@@ -17,9 +17,9 @@ const modePaiementEnum = z.enum(['ESPECE', 'WAVE']);
 
 // Schéma pour une commande individuelle
 const commandeCourseExterneSchema = z.object({
-    libelle: z.string().min(1, 'Le libellé est requis'),
+    libelle: z.string().optional(),
     numero: z.string().min(1, 'Le numéro de commande est requis'),
-
+    zoneId: z.string().min(1, "Vous devez selectionner une zone !"),
     destinataire: destinataireCourseExterneSchema,
     lieuRecuperation: localisationCourseExterneSchema,
     lieuLivraison: localisationCourseExterneSchema,
@@ -44,7 +44,7 @@ export const locationSchema = z.object({
 });
 
 export const commandeSchema = z.object({
-    libelle: z.string().min(1, 'Le libellé est requis'),
+    libelle: z.string().optional(),
     numero: z.string().min(1, 'Le numéro est requis'),
     destinataire: z.object({
         nomComplet: z.string().min(1, 'Le nom est requis'),
@@ -55,7 +55,7 @@ export const commandeSchema = z.object({
     modePaiement: modePaiementEnum,
     prix: z.number().min(0, 'Le prix doit être positif'),
     livraisonPaye: z.boolean(),
-    zoneId: z.string(),
+    zoneId: z.string().min(1, "Vous devez selectionner une zone !"),
 });
 
 export const AllCommandeSchema = z.object({

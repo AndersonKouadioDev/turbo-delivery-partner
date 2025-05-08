@@ -290,7 +290,6 @@ export async function getAllFraisLivraison(restaurantId: string): Promise<Delive
             method: restaurantEndpoints.getAllFraisLivraison.method,
             service: 'backend',
         });
-
         return data;
     } catch (error) {
         return [];

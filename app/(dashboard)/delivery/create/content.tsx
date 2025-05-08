@@ -64,7 +64,7 @@ const CourseExterneForm = ({ initialData, isEditing = false, restaurant, fraisLi
             ],
         },
     });
-
+    console.log("form++++++++++++++++++++++++++++", form.formState.errors)
     const { fields, append, remove } = useFieldArray({
         control: form.control,
         name: 'commandes',

@@ -9,7 +9,6 @@ export default async function Page() {
     const restaurant = data?.restaurant;
 
     const fraisLivraisons = await getAllFraisLivraison(restaurant?.id ?? '');
-    console.log("getAllFraisLivraison", getAllFraisLivraison)
 
     if (!restaurant) {
         redirect('/auth/signout');

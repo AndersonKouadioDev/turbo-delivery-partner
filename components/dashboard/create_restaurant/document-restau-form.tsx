@@ -64,7 +64,7 @@ export const DocumentRestauForm: React.FC<FormStepProps> = ({ errors, control })
                                 name="dateService"
                                 onChange={(value: any) => {
                                     if (value?.year && value?.month && value?.day) {
-                                        const nativeDate = new Date(value.year, value.month - 1, value.day);
+                                        const nativeDate = new Date(value.year, value?.month - 1, value.day);
                                         onChange(nativeDate?.toISOString().slice(0, 10))
                                     } else {
                                         onChange(value?.toString());

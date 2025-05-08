@@ -57,6 +57,7 @@ export async function addCourseExterne(formData: any, restaurantId: string): Pro
             data,
         };
     } catch (error: any) {
+        console.log("error", error)
         return {
             status: 'error',
             message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout de l'horaire",
