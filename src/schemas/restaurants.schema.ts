@@ -20,6 +20,7 @@ export const createRestaurantSchema = z.object({
         .refine((file) => ['application/pdf'].includes(file.type), 'Format de fichier non supporté (PDF, JPEG, PNG uniquement)'),
     dateService: z.preprocess(
         (val) => {
+            console.log('Valeur reçue dans preprocess :', typeof val);
             if (val instanceof Date) {
                 return val.toISOString().slice(0, 10);
             }
