@@ -1,7 +1,7 @@
 'use client';
 
 import { ChiffreAffaireRestaurant } from '@/types/statistiques.model';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { TbMoneybag, TbChartBar, TbReceipt, TbClock, TbTrendingUp, TbCheck, TbHourglass } from 'react-icons/tb';
 import { formatNumber } from '@/utils/formatNumber';
 import { CalendarDate, RangeValue } from '@heroui/react';
@@ -56,6 +56,7 @@ export default function useContentCtx({ initialData }: Props) {
 
     const totalRevenue = data && data.commandeTotalTermine + data.commandeTotalEnAttente + data.commandeTotalInitie + data.commandeTotalEnCours;
     const totalCommission = data && data.commissionChiffreAffaire + data.commissionCommande;
+    const totalFraisLivraison = data?.fraisLivraisonTotalTermine;
 
     // Data for pie chart
     const orderStatusData = [
@@ -71,6 +72,7 @@ export default function useContentCtx({ initialData }: Props) {
             value: totalRevenue ? formatNumber(totalRevenue) : 0,
             icon: TbTrendingUp,
             color: 'from-green-500 to-green-600',
+            url: '/delivery/commande-terminers'
         },
         {
             title: 'Commandes Totales',
@@ -83,6 +85,13 @@ export default function useContentCtx({ initialData }: Props) {
             value: totalCommission ? formatNumber(totalCommission) : 0,
             icon: TbMoneybag,
             color: 'from-red-500 to-red-600',
+        },
+        {
+            title: 'Total Frais Livraison Terminée',
+            value: totalFraisLivraison ? formatNumber(totalFraisLivraison) : 0,
+            icon: TbMoneybag,
+            color: 'from-red-500 to-red-600',
+            url: '/tikets-terminers'
         },
     ];
 

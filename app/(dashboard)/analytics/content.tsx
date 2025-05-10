@@ -8,6 +8,7 @@ import useContentCtx from './useContentCtx';
 import { TbArrowUpRight, TbChartBar, TbMoneybag } from 'react-icons/tb';
 import { Info } from 'lucide-react';
 import Loading from '@/components/layouts/loading';
+import Link from 'next/link';
 
 const chartConfig = {
     orders: {
@@ -22,7 +23,7 @@ interface Props {
 
 export default function Content({ initialData }: Props) {
     const { data, orderStatusData, statCards, detailCards, handleDateChange, dates, isLoading } = useContentCtx({ initialData });
-
+    console.log("data", data)
     return (
         <>
             {isLoading ? (
@@ -56,9 +57,18 @@ export default function Content({ initialData }: Props) {
                                                 {stat.value} {stat.title.includes('Commandes') ? '' : 'XOF'}
                                             </span>
                                         </div>
-                                        <div className={`p-3 rounded-full bg-gradient-to-r ${stat.color}`}>
-                                            <stat.icon className="w-6 h-6 text-white" />
-                                        </div>
+                                        {
+                                            stat.url ?
+                                                <Link href={stat.url}>
+                                                    <div className={`p-3 rounded-full bg-gradient-to-r ${stat.color}`}>
+                                                        <stat.icon className="w-6 h-6 text-white" />
+                                                    </div></Link>
+                                                :
+                                                <div className={`p-3 rounded-full bg-gradient-to-r ${stat.color}`}>
+                                                    <stat.icon className="w-6 h-6 text-white" />
+                                                </div>
+                                        }
+
                                     </div>
                                 </CardBody>
                             </Card>
@@ -120,7 +130,7 @@ export default function Content({ initialData }: Props) {
                             {/* Commission par Commande */}
                             <Card className="bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-xl hover:shadow-2xl transition-all duration-200">
                                 <CardHeader className="pb-0 pt-4 px-6">
-                                    <h4 className="text-lg font-medium opacity-90">Commission par Commande</h4>
+                                    <h4 className="text-lg font-medium opacity-90">Commission montant fixe</h4>
                                 </CardHeader>
                                 <CardBody className="py-6">
                                     <div className="flex items-center justify-between">
