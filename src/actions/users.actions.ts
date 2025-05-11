@@ -27,6 +27,7 @@ const usersEndpoints = {
 };
 
 export async function loginUser(prevState: any, formData: FormData): Promise<ActionResult<any>> {
+    console.log("data++++++++++++++++", formData)
     const {
         success,
         data: formdata,
@@ -38,6 +39,7 @@ export async function loginUser(prevState: any, formData: FormData): Promise<Act
             useDynamicValidation: true,
         },
     );
+
     if (!success && errorsInArray) {
         return {
             status: 'error',
@@ -57,6 +59,7 @@ export async function loginUser(prevState: any, formData: FormData): Promise<Act
             message: 'Connexion réussie',
         };
     } catch (error) {
+        console.log("error+++++++++++++++++", error)
         return {
             status: 'error',
             message: 'Erreur lors de la connexion',

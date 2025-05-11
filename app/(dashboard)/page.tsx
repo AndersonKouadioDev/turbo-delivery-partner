@@ -4,6 +4,7 @@ import Loading from '@/components/layouts/loading';
 
 export default async function Page() {
     const restaurant = await findOneRestaurant();
+
     if (!restaurant) {
         return <Loading />
     }

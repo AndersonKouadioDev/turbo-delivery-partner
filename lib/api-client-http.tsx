@@ -62,7 +62,6 @@ class ApiClientHttp {
     private async getHeaders(service: ServiceType): Promise<AxiosHeaders> {
         const session = await this.getSession();
         const headers = new AxiosHeaders();
-
         if (service !== 'backend') {
             headers.set('Authorization', session?.user?.token ? `Bearer ${session.user.token}` : '');
         }

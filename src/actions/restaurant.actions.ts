@@ -141,6 +141,7 @@ export async function createRestaurant(formData: FormData): Promise<ActionResult
             data: data,
         };
     } catch (error: any) {
+        console.log("error+++++++++++++++++++++++++++++++++", error)
         if (error?.response?.status == 413) {
             return {
                 status: 'error',
