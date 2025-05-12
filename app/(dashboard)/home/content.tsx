@@ -14,12 +14,14 @@ export default function Content({ restaurant }: { restaurant: FindOneRestaurant 
 
     return (
         <div className="w-full h-full flex flex-1 flex-col gap-4 lg:gap-6 mb-10">
-            <div className='flex justify-center text-center items-center'>
-                <div className='flex flex-col'>
-                    <Image alt="logo lunion-booking" height={45} src={'/assets/images/logo.png'} width={45} className='ml-10 rounded-full' />
-                    <span className='mt-2'>Bonjour,</span>
-                    <p className='text-2xl font-bold text-gray-500'>{restaurant && restaurant?.restaurant?.nomEtablissement}</p>
+            <div className='flex-col gap-2 items-center justify-center text-center'>
+                <div className='flex justify-center text-center items-center'>
+                    <div className='flex flex-col'>
+                        <Image alt="logo lunion-booking" height={45} src={'/assets/images/logo.png'} width={45} className=' rounded-full' />
+                        <span className='mt-2'>Bonjour,</span>
+                    </div>
                 </div>
+                <p className='text-2xl font-bold text-gray-500'>{restaurant && restaurant?.restaurant?.nomEtablissement}</p>
             </div>
             <div className='flex justify-center'>
                 <div className='max-w-sm  lg:max-w-3xl md:max-w-3xl xl:max-w-3xl text-center text-gray-500'>

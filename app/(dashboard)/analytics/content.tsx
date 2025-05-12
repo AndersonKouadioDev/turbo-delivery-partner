@@ -23,7 +23,7 @@ interface Props {
 
 export default function Content({ initialData }: Props) {
     const { data, orderStatusData, statCards, detailCards, handleDateChange, dates, isLoading } = useContentCtx({ initialData });
-    console.log("data", data)
+
     return (
         <>
             {isLoading ? (
@@ -49,28 +49,41 @@ export default function Content({ initialData }: Props) {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {statCards.map((stat, index) => (
                             <Card key={index} className="bg-white border-none shadow-md hover:shadow-lg transition-shadow">
-                                <CardBody className="p-6">
-                                    <div className={`flex items-center justify-between`}>
-                                        <div className="flex flex-col gap-1">
-                                            <span className="text-sm text-gray-500">{stat.title}</span>
-                                            <span className="text-2xl font-bold">
-                                                {stat.value} {stat.title.includes('Commandes') ? '' : 'XOF'}
-                                            </span>
-                                        </div>
-                                        {
-                                            stat.url ?
-                                                <Link href={stat.url}>
+                                {
+                                    stat.url ?
+                                        <Link href={stat.url}>
+                                            <CardBody className="p-6">
+                                                <div className={`flex items-center justify-between`}>
+                                                    <div className="flex flex-col gap-1">
+                                                        <span className="text-sm text-gray-500">{stat.title}</span>
+                                                        <span className="text-2xl font-bold">
+                                                            {stat.value} {stat.title.includes('Commandes') ? '' : 'XOF'}
+                                                        </span>
+                                                    </div>
+
                                                     <div className={`p-3 rounded-full bg-gradient-to-r ${stat.color}`}>
                                                         <stat.icon className="w-6 h-6 text-white" />
-                                                    </div></Link>
-                                                :
+                                                    </div>
+                                                </div>
+                                            </CardBody>
+                                        </Link>
+                                        :
+                                        <CardBody className="p-6">
+                                            <div className={`flex items-center justify-between`}>
+                                                <div className="flex flex-col gap-1">
+                                                    <span className="text-sm text-gray-500">{stat.title}</span>
+                                                    <span className="text-2xl font-bold">
+                                                        {stat.value} {stat.title.includes('Commandes') ? '' : 'XOF'}
+                                                    </span>
+                                                </div>
+
                                                 <div className={`p-3 rounded-full bg-gradient-to-r ${stat.color}`}>
                                                     <stat.icon className="w-6 h-6 text-white" />
                                                 </div>
-                                        }
+                                            </div>
+                                        </CardBody>
 
-                                    </div>
-                                </CardBody>
+                                }
                             </Card>
                         ))}
                     </div>
@@ -110,7 +123,12 @@ export default function Content({ initialData }: Props) {
                             {/* Commission sur Chiffre d'Affaires */}
                             <Card className="bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-xl hover:shadow-2xl transition-all duration-200">
                                 <CardHeader className="pb-0 pt-4 px-6">
-                                    <h4 className="text-lg font-medium opacity-90">Commission sur Chiffre Affaire</h4>
+                                    <div className='flex gap-2 items-center'>
+                                        <h4 className="text-lg font-medium opacity-90">Commission sur Chiffre Affaire</h4>
+                                        <Tooltip content="Commission en type pourcentage" className='bg-yellow-200 font-bold'>
+                                            <Info size={18} className='cursor-pointer mt-2' />
+                                        </Tooltip>
+                                    </div>
                                 </CardHeader>
                                 <CardBody className="py-6">
                                     <div className="flex items-center justify-between">
@@ -130,7 +148,13 @@ export default function Content({ initialData }: Props) {
                             {/* Commission par Commande */}
                             <Card className="bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-xl hover:shadow-2xl transition-all duration-200">
                                 <CardHeader className="pb-0 pt-4 px-6">
-                                    <h4 className="text-lg font-medium opacity-90">Commission montant fixe</h4>
+                                    <div className='flex gap-2 items-center'>
+                                        <h4 className="text-lg font-medium opacity-90">Commission montant fixe</h4>
+                                        <Tooltip content="Commission en type fixe" className='bg-yellow-200 font-bold'>
+                                            <Info size={18} className='cursor-pointer' />
+                                        </Tooltip>
+                                    </div>
+
                                 </CardHeader>
                                 <CardBody className="py-6">
                                     <div className="flex items-center justify-between">
@@ -247,8 +271,9 @@ export default function Content({ initialData }: Props) {
                             </Card>
                         ))}
                     </div>
-                </div>
-            )}
+                </div >
+            )
+            }
         </>
     );
 }
