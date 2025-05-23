@@ -26,7 +26,12 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # local env files
+<<<<<<< HEAD
 .env.local
+=======
+.env*
+
+>>>>>>> 73ed80e (first)
 # vercel
 .vercel
 

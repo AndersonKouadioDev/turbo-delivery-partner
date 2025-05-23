@@ -2,14 +2,13 @@
 
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell, Pagination, RangeValue, CalendarDate, DateRangePicker, Button } from '@heroui/react';
 import { title } from '@/components/primitives';
-import { ArrowLeft, Calendar, Cherry, CircleDollarSign, CircleFadingPlus, DollarSign, Home, Printer, SquareMenu, ToggleRight, User } from 'lucide-react';
+import { Calendar, Cherry, CircleDollarSign, CircleFadingPlus, DollarSign, Home, Printer, SquareMenu, ToggleRight, User } from 'lucide-react';
 import { PaginatedResponse } from '@/types/models';
 import { BonLivraisonVM } from '@/types';
 import useContentCtx from './useContentCtx';
-import Link from 'next/link';
 
 interface ContentProps {
-    initialData: BonLivraisonVM[] | null;
+    initialData: PaginatedResponse<BonLivraisonVM> | null;
     restaurantId?: string;
 }
 
@@ -17,11 +16,8 @@ export default function Content({ initialData, restaurantId }: ContentProps) {
     const { columns, renderCell, data, handlePageChange, currentPage, isLoading, handleDateChange, type } = useContentCtx({ initialData, restaurantId });
     return (
         <div className="w-full h-full pb-10 flex flex-1 flex-col gap-4 min-w[200px] overflow-auto ">
-            <span className='ml-2'>Rechercher par période</span>
-            <div className='flex justify-between items-center'>
-                <DateRangePicker className="max-w-xs relative" onChange={(value) => handleDateChange(value as RangeValue<CalendarDate>)} />
-                <Link href={"/analytics"} className='text-blue-400 font-bold flex gap-2 mr-3 cursor-pointer'><ArrowLeft size={18} /> Retour</Link>
-            </div>
+            <span>Rechercher par période</span>
+            <DateRangePicker className="max-w-xs relative" onChange={(value) => handleDateChange(value as RangeValue<CalendarDate>)} />
             <div className="flex items-center justify-between">
                 <h1 className={title({ size: 'h3', class: 'text-primary' })}>Gestions des tickets : Commandes terminées</h1>
             </div>
@@ -49,35 +45,37 @@ export default function Content({ initialData, restaurantId }: ContentProps) {
                                 )}
                                 {
 
-                                    (type === "FIXE") ?
-                                        "Commission (Montant fixe)"
+                                    (type === "commision-en-montant-fixe" && column.name === "Commission (Montant fixe)") ?
+                                        column.name
                                         :
-                                        (type === "POURCENTAGE") ?
+                                        (type === "commision-en-pourcentage" && column.name === "Commission") ?
                                             column.name
                                             :
                                             column.name === "Commission" ? <></>
                                                 :
-                                                column.name
+                                                column.name === "Commission (Montant fixe)" ? <></>
+                                                    :
+                                                    column.name
                                 }
                             </div>
                         </TableColumn>
                     )}
                 </TableHeader>
-                <TableBody items={data ?? []} emptyContent={'No rows to display.'}>
+                <TableBody items={data?.content ?? []} emptyContent={'No rows to display.'}>
                     {(item) => <TableRow key={item.commandeId}>{(columnKey) => <TableCell>{renderCell(item, columnKey) as React.ReactNode}</TableCell>}</TableRow>}
                 </TableBody>
             </Table>
             {/* justify-center */}
             <div className="flex-wrap  lg:flex md:flex xl:flex h-fit z-10  mt-8 fixed bottom-4 items-center w-full">
                 <div className="bg-gray-200 absolute inset-0 w-full h-full blur-sm opacity-50"></div>
-                <Pagination total={1} page={currentPage} onChange={handlePageChange} showControls color="primary" variant="bordered" isDisabled={isLoading} />
+                <Pagination total={data?.totalPages ?? 1} page={currentPage} onChange={handlePageChange} showControls color="primary" variant="bordered" isDisabled={isLoading} />
                 <div className='absolute right-0  bottom-10 lg:bottom-0 xl:bottom-0 lg:right-[30%] md:right-[30%] xl:right-[30%] flex-wrap  lg:flex xl:flex gap-4 items-center pr-4'>
                     <div className=' border border-primary/50 rounded-lg pl-2 pr-2 lg:mt-0  xl:mt-0'>
                         <div className='flex gap-2 items-center '>
                             <CircleDollarSign size={25} className='text-primary font-[1000]' />
                             <div>
                                 <div className='text-md'>Total de frais de livraison</div>
-                                <span className='text-primary font-[1000]'>{data && data.reduce(
+                                <span className='text-primary font-[1000]'>{data && data.content.reduce(
                                     (acc, item) => acc + (Number(item.coutLivraison) || 0), 0)} FCFA</span>
                             </div>
                         </div>
@@ -87,7 +85,7 @@ export default function Content({ initialData, restaurantId }: ContentProps) {
                             <CircleDollarSign size={25} className='text-primary font-[1000]' />
                             <div >
                                 <div className=''>Total des commandes</div>
-                                <span className='text-primary font-[1000]'>{data && data.reduce(
+                                <span className='text-primary font-[1000]'>{data && data.content.reduce(
                                     (acc, item) => acc + (Number(item.coutCommande) || 0), 0)} FCFA</span>
                             </div>
                         </div>
@@ -99,10 +97,7 @@ export default function Content({ initialData, restaurantId }: ContentProps) {
                                 <CircleDollarSign size={25} className='text-primary font-[1000]' />
                                 <div >
                                     <div className=''>Total des commssions</div>
-                                    <span className='text-primary font-[1000]'>
-                                        {data && data.reduce(
-                                            (acc, item) => acc + (Number(item.commission) || 0), 0)} FCFA
-                                    </span>
+                                    <span className='text-primary font-[1000]'>250000 FCFA</span>
                                 </div>
                             </div>
                         </div>

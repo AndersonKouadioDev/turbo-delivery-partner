@@ -142,7 +142,7 @@ export default function Content({ initialData }: Props) {
                                                     <p className="text-3xl font-bold">{data?.commissionChiffreAffaire.toLocaleString() ?? 0} XOF</p>
                                                 </div>
                                             </div>
-                                            <Link href={"/tikets-terminers/POURCENTAGE"}>
+                                            <Link href={"/tikets-terminers/commision-en-pourcentage"}>
                                                 <TbArrowUpRight className="w-8 h-8 opacity-80" />
                                             </Link>
                                         </div>
@@ -174,7 +174,7 @@ export default function Content({ initialData }: Props) {
                                                     <p className="text-3xl font-bold">{data?.commissionCommande.toLocaleString() ?? 0} XOF</p>
                                                 </div>
                                             </div>
-                                            <Link href={"/tikets-terminers/FIXE"}>
+                                            <Link href={"/tikets-terminers/commision-en-montant-fixe"}>
                                                 <TbArrowUpRight className="w-8 h-8 opacity-80" />
                                             </Link>
 
