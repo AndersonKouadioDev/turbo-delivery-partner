@@ -16,7 +16,8 @@ export function FormEmail() {
 
             if (result.status === 'success') {
                 toast.success(result.message || 'Bravo ! vous avez réussi');
-            } else {
+            }
+            if (result.message) {
                 toast.error(result.message || "Erreur lors de l'envoi de l'email");
             }
 

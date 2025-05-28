@@ -141,18 +141,28 @@ export async function createRestaurant(formData: FormData): Promise<ActionResult
             data: data,
         };
     } catch (error: any) {
-        console.log("error+++++++++++++++++++++++++++++++++", error)
         if (error?.response?.status == 413) {
             return {
                 status: 'error',
                 message: 'Fichiers volumineux. Utilisez des fichiers de moins de 5Mo',
             };
         }
-
-        return {
-            status: 'error',
-            message: JSON.stringify(error?.response?.data) ?? error?.response?.data?.message ?? 'Erreur lors de la création du restaurant',
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de la création du restaurant",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de la création du restaurant",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors de la création du restaurant",
+            };
+        }
     }
 }
 
@@ -199,10 +209,22 @@ export async function addHoraire(formData: FormData): Promise<ActionResult<Openi
             data: data,
         };
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout de l'horaire",
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout de l'horaire",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout de l'horaire",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors de l'ajout de l'horaire",
+            };
+        }
     }
 }
 
@@ -263,10 +285,22 @@ export async function addPicture(formData: FormData): Promise<ActionResult<any>>
                 message: 'Fichiers volumineux. Utilisez des fichiers de moins de 5Mo',
             };
         }
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout des images",
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout des images",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout des images",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors de l'ajout des images",
+            };
+        }
     }
 }
 
@@ -389,10 +423,22 @@ export async function addDish(formData: FormData): Promise<ActionResult<Dish | n
                 message: 'Fichiers volumineux. Utilisez des fichiers de moins de 5Mo',
             };
         }
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout du plat",
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout du plat",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout du plat",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors de l'ajout du plat",
+            };
+        }
     }
 }
 
@@ -429,10 +475,22 @@ export async function addAccompaniment(formData: FormData): Promise<ActionResult
             data: data,
         };
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout du Accompagnement",
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout du Accompagnement",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout du Accompagnement",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors de l'ajout du Accompagnement",
+            };
+        }
     }
 }
 
@@ -469,10 +527,22 @@ export async function updateAccompaniment(id: string, formData: FormData): Promi
             data: data,
         };
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de la mise à jour de l'accompagnement",
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout du Accompagnement",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout du Accompagnement",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors de l'ajout du Accompagnement",
+            };
+        }
     }
 }
 
@@ -510,10 +580,22 @@ export async function addBoisson(formData: FormData): Promise<ActionResult<Drink
             data: data,
         };
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout de la boisson",
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout de la boisson",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout de la boisson",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors de l'ajout de la boisson",
+            };
+        }
     }
 }
 
@@ -550,10 +632,22 @@ export async function updateBoisson(id: string, formData: FormData): Promise<Act
             data: data,
         };
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur lors de la mise à jour de la boisson',
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout de la boisson",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout de la boisson",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors de l'ajout de la boisson",
+            };
+        }
     }
 }
 
@@ -590,10 +684,22 @@ export async function addOption(formData: FormData): Promise<ActionResult<Option
             data: data,
         };
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout de l'option",
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout de l'option",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout de l'option",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors de l'ajout de l'option",
+            };
+        }
     }
 }
 
@@ -629,10 +735,22 @@ export async function addOptionValue(formData: FormData): Promise<ActionResult<O
             data: data,
         };
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout de la valeur de l'option",
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout de la valeur de l'option",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout de la valeur de l'option",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors de l'ajout de la valeur de l'option",
+            };
+        }
     }
 }
 
@@ -669,10 +787,22 @@ export async function updateOption(formData: FormData): Promise<ActionResult<Opt
             data: data,
         };
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de la mise à jour de l'option",
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout de la valeur de l'option",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout de la valeur de l'option",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors de l'ajout de la valeur de l'option",
+            };
+        }
     }
 }
 
@@ -708,10 +838,22 @@ export async function updateOptionValue(formData: FormData): Promise<ActionResul
             data: data,
         };
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? "rreur lors de la mise à jour de la valeur de l'option",
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de la mise à jour de la valeur de l'option",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de la mise à jour de la valeur de l'option",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors de la mise à jour de la valeur de l'option",
+            };
+        }
     }
 }
 
@@ -729,10 +871,22 @@ export async function repositionnerLivreur(commande: RepositionnerCommande): Pro
             data: data,
         };
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? 'Une erreur est survenue lors du repositionnement du livreur',
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Une erreur est survenue lors du repositionnement du livreur",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Une erreur est survenue lors du repositionnement du livreur",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Une erreur est survenue lors du repositionnement du livreur",
+            };
+        }
     }
 }
 
@@ -750,9 +904,21 @@ export async function retirerLivreur(livreurId: string): Promise<any> {
             data: data,
         };
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur s'est produite !",
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur s'est produite ",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur s'est produite ",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur s'est produite ",
+            };
+        }
     }
 }

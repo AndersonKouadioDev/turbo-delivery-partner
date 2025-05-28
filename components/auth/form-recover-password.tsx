@@ -17,7 +17,6 @@ export function FormRecoverPassword() {
         async (prevState: any, formData: FormData) => {
             formData.set('token', token || '');
             const result = await newPassword(prevState, formData);
-
             if (result.status === 'success') {
                 toast.success(result.message || 'Bravo ! vous avez réussi');
                 // router.push('/auth');

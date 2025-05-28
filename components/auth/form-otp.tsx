@@ -31,6 +31,16 @@ export function FormOTP() {
         },
     );
 
+    const renvoyers = async () => {
+        const result = await resendEmail();
+        if (result.status === 'error') {
+            toast.error(result.message);
+        } else {
+            toast.success(result.message);
+            // router.push('/');
+        }
+    }
+
     return (
         <div className="w-full max-w-md space-y-8 bg-background p-10 rounded-lg shadow-xl">
             <div className="text-center">
@@ -63,7 +73,7 @@ export function FormOTP() {
                         size: 'caption',
                         className: 'text-primary cursor-pointer text-center hover:underline',
                     })}
-                    onClick={async () => await resendEmail()}
+                    onClick={renvoyers}
                 >
                     Renvoyer le code
                 </button>

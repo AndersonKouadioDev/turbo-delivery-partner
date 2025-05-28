@@ -57,11 +57,22 @@ export async function addCourseExterne(formData: any, restaurantId: string): Pro
             data,
         };
     } catch (error: any) {
-        console.log("error", error)
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'ajout de l'horaire",
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout de l'horaire",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'ajout de l'horaire !",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: 'Erreur lors de l\'ajout de l\'horaire !',
+            };
+        }
     }
 }
 
@@ -123,10 +134,22 @@ export async function terminerCourseExterne(courseId: string): Promise<ActionRes
             data: data,
         };
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur lors du traitement',
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors du traitement",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors du traitement",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors du traitement",
+            };
+        }
     }
 }
 
@@ -147,9 +170,21 @@ export async function cancelCourseExterne(courseId: string, restaurantId: string
             data,
         };
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur lors du traitement',
-        };
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors du traitement",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors du traitement",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors du traitement",
+            };
+        }
     }
 }

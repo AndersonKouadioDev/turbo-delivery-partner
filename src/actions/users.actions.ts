@@ -57,11 +57,23 @@ export async function loginUser(prevState: any, formData: FormData): Promise<Act
             status: 'success',
             message: 'Connexion réussie',
         };
-    } catch (error) {
-        return {
-            status: 'error',
-            message: 'Erreur lors de la connexion',
-        };
+    } catch (error: any) {
+        if (error?.response?.data && error.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de la connexion",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de la connexion",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: 'Usename ou mot de passe incorrect !',
+            };
+        }
     }
 }
 
@@ -92,15 +104,28 @@ export async function registerStepFirst(prevState: any, formData: FormData): Pro
             service: 'restaurant',
         });
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'inscription étape 1",
-        };
+        if (error?.response?.data && error?.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'inscription étape 1",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'inscription étape 1",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors de l'inscription étape 1",
+            };
+        }
     }
     cookies().set('email_otp', formdata.email);
     redirect('/auth/signin?step=2');
 }
-export async function resendEmail(): Promise<void> {
+export async function resendEmail(): Promise<any> {
+    console.log("entre+++++++++++++++++++++++++++++++++++++++")
     // Processing
     const hasCookie = cookies().has('email_otp');
 
@@ -115,10 +140,22 @@ export async function resendEmail(): Promise<void> {
                 service: 'restaurant',
             });
         } catch (error: any) {
-            // return {
-            //     status: 'error',
-            //     message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'inscription étape 1",
-            // };
+            if (error?.response?.data && error?.response?.data?.detail) {
+                return {
+                    status: 'error',
+                    message: error?.response?.data?.detail ?? "Erreur lors de l'inscription étape 1",
+                };
+            } else if (error?.response?.data?.message) {
+                return {
+                    status: 'error',
+                    message: error?.response?.data?.detail ?? "Erreur lors de l'inscription étape 1",
+                };
+            } else {
+                return {
+                    status: 'error',
+                    message: "Erreur lors de l'inscription étape 1",
+                };
+            }
         }
     }
 }
@@ -151,10 +188,22 @@ export async function registerStepSecond(prevState: any, formData: FormData): Pr
             service: 'restaurant',
         });
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? "Erreur lors de l'envoi du code de validation",
-        };
+        if (error?.response?.data && error?.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'envoi du code de validation",
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? "Erreur lors de l'envoi du code de validation",
+            };
+        } else {
+            return {
+                status: 'error',
+                message: "Erreur lors de l'envoi du code de validation",
+            };
+        }
     }
     redirect('/auth/signin?step=3');
 }
@@ -210,10 +259,22 @@ export async function registerFinalStep(prevState: any, formData: FormData): Pro
             },
         };
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur lors de la création du compte',
-        };
+        if (error?.response?.data && error?.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? 'Erreur lors de la création du compte',
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.message ?? 'Erreur lors de la création du compte',
+            };
+        } else {
+            return {
+                status: 'error',
+                message: 'Erreur lors de la création du compte',
+            };
+        }
     }
 }
 
@@ -261,10 +322,23 @@ export async function changePassword(prevState: any, formData: FormData): Promis
             data: data,
         };
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur lors du changement de mot de passe',
-        };
+        console.log("error------------------------------------", error)
+        if (error?.response?.data && error?.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? 'Erreur lors du changement de mot de passe',
+            };
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? error?.response?.data?.message ?? 'Erreur lors du changement de mot de passe',
+            };
+        } else {
+            return {
+                status: "error",
+                message: "Une erreur s'est produite"
+            }
+        }
     }
 }
 
@@ -296,10 +370,22 @@ export async function forgetPassword(prevState: any, formData: FormData): Promis
             service: 'restaurant',
         });
     } catch (error: any) {
-        return {
-            status: 'error',
-            message: error?.response?.data ?? error?.response?.data?.message ?? 'Erreur lors du changement de mot de passe',
-        };
+        if (error?.response?.data && error?.response?.data?.detail) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? 'Erreur lors du changement de mot de passe',
+            };
+        } else if (error?.response?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.message ?? 'Erreur lors du changement de mot de passe',
+            };
+        } else {
+            return {
+                status: 'error',
+                message: 'Erreur lors du changement de mot de passe',
+            };
+        }
     }
     // Récupérer le token à partir de l'URL dans le champ "link"
     const link = data?.link; // Récupérer l'URL
@@ -355,17 +441,21 @@ export async function newPassword(prevState: any, formData: FormData): Promise<A
         });
     } catch (error: any) {
         if (error?.response?.data) {
-            if (error?.response?.data?.message) {
-                return {
-                    status: 'error',
-                    message: error?.response?.data?.message ?? 'Erreur lors du changement de mot de passe',
-                };
+            return {
+                status: 'error',
+                message: error?.response?.data?.detail ?? 'Erreur lors du changement de mot de passe',
             }
+        } else if (error?.response?.data?.message) {
+            return {
+                status: 'error',
+                message: error?.response?.data?.message ?? 'Erreur lors du changement de mot de passe',
+            };
+        } else {
+            return {
+                status: 'error',
+                message: 'Erreur lors du changement de mot de passe',
+            };
         }
-        return {
-            status: 'error',
-            message: 'Erreur lors du changement de mot de passe',
-        };
     }
 
     redirect('/auth');

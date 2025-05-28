@@ -10,7 +10,7 @@ export default function ActivationPending() {
     useEffect(() => {
         const interval = setInterval(() => {
             router.push('/');
-        }, 30 * 1000); // 2 minutes en millisecondes
+        }, 10 * 1000); // 2 minutes en millisecondes
 
         // Nettoyage lors du démontage du composant
         return () => clearInterval(interval);

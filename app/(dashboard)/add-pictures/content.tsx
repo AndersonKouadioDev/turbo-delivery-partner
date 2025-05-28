@@ -73,7 +73,7 @@ export default function FileUploadForm() {
     const handleFiles = (files: File[]) => {
         // const validFiles = files.filter((file) => file.type.startsWith('image/') && file.size <= 5 * 1024 * 1024).slice(0, 5);
         const validFiles = files;
-        
+
         validFiles.forEach((file) => {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -156,6 +156,7 @@ export default function FileUploadForm() {
                                                     ))}
                                                 </div>
                                             )}
+                                            <div className='text-primary'> <i> <b>NB :</b> NB : Veuillez sélectionner toutes les images que vous souhaitez ajouter avant de procéder à l'ajout</i></div>
                                         </div>
                                     )}
                                 />
