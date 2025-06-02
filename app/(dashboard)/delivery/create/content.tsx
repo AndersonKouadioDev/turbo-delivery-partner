@@ -64,7 +64,6 @@ const CourseExterneForm = ({ initialData, isEditing = false, restaurant, fraisLi
             ],
         },
     });
-    console.log("form++++++++++++++++++++++++++++", form.formState.errors)
     const { fields, append, remove } = useFieldArray({
         control: form.control,
         name: 'commandes',
@@ -124,8 +123,6 @@ const CourseExterneForm = ({ initialData, isEditing = false, restaurant, fraisLi
 
     const [state, formAction] = useFormState(
         async (prevState: any, formData: FormData) => {
-            console.log("form.getValues()", form.getValues())
-            console.log("data", form.getValues())
             const result = await addCourseExterne(form.getValues(), restaurant.id);
             if (result.status === 'success') {
                 toast.success(result.message);
@@ -147,7 +144,7 @@ const CourseExterneForm = ({ initialData, isEditing = false, restaurant, fraisLi
 
     return (
         <div className="mx-auto py-8 px-4 space-y-6">
-             
+
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold text-primary">{isEditing ? 'Modifier la demande coursier' : 'Nouvelle demande coursier'}</h1>
             </div>

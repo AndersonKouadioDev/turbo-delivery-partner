@@ -5,6 +5,7 @@ import { Button } from "@heroui/react";
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+
 export default function ActivationPending() {
     const router = useRouter();
     useEffect(() => {

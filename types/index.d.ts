@@ -61,3 +61,14 @@ export interface BonLivraisonVM {
     heure?: LocalTime;
     statut?: statutType
 }
+
+export type FormatsSupportes = "PDF" | "EXCEL" | "HTML";
+export type TypeCommission = 'POURCENTAGE' | 'FIXE';
+
+export interface ParametreBonLivraisonFacture {
+    restaurantId: string;
+    debut?: string;
+    fin?: string;
+    type?: TypeCommission
+    format: FormatsSupportes
+}

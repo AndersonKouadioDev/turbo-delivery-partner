@@ -3,7 +3,7 @@
 import { getAllBonLivraisons } from '@/src/actions/tickets.actions';
 import { BonLivraisonVM } from '@/types';
 import { PaginatedResponse } from '@/types/models';
-import { CalendarDate, RangeValue, Switch } from '@heroui/react';
+import { CalendarDate, RangeValue, Switch, useDisclosure } from '@heroui/react';
 import { useParams } from 'next/navigation';
 import { Key, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -25,6 +25,7 @@ interface Props {
 }
 
 export default function useContentCtx({ initialData, restaurantId }: Props) {
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const { type } = useParams();
     const [isLoading, setIsLoading] = useState(!initialData);
     const [currentPage, setCurrentPage] = useState(1);
@@ -106,6 +107,8 @@ export default function useContentCtx({ initialData, restaurantId }: Props) {
         currentPage,
         isLoading,
         handleDateChange,
-        type
+        type,
+        onOpen,
+        onClose, isOpen
     };
 }
