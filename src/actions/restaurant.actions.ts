@@ -115,7 +115,7 @@ export async function createRestaurant(formData: FormData): Promise<ActionResult
     try {
         // Create a new FormData object to ensure we're sending multipart/form-data
         const sendFormData = createFormData(formdata);
-
+console.log(formdata)
         const data = await apiClientHttp.request<{ restaurant: Restaurant; createdBy: User }>({
             endpoint: restaurantEndpoints.create.endpoint,
             method: restaurantEndpoints.create.method,
